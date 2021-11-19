@@ -38,6 +38,7 @@ export default function Register({ navigation }) {
   useEffect(() => {
     setIsLoading(false);
   }, []);
+
   function backToLogin() {
     navigation.navigate('Login');
   }
@@ -59,7 +60,7 @@ export default function Register({ navigation }) {
         // postcode: postcode,
         // country: country,
       },
-    });
+    })
   }
 
   if (isLoading) {
