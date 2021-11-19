@@ -16,6 +16,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import Navigator from './routes/HomeStack';
 
+console.log(APOLLO_SERVER_URI, APOLLO_WEB_SERVER_URI)
+
 const getFonts = () => {
   return Font.loadAsync({
     Roboto_medium: require('./assets/fonts/Roboto-Medium.ttf'),
@@ -27,8 +29,8 @@ export default function App() {
   const email = useRef('');
   const token = useRef('');
   const [initial, setInitial] = useState('');
-  const uri = APOLLO_SERVER_URI;
-  const webUri = APOLLO_WEB_SERVER_URI;
+  const uri = 'http://localhost:8000/graphql';
+  const webUri = 'ws://localhost:8000/graphql';
 
   const storeToken = async (value) => {
     try {
