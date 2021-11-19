@@ -173,7 +173,7 @@ export default function Item({ navigation, route }) {
             {typeError ? (
               <Text style={{ color: 'red', fontSize: 25 }}>{typeError}</Text>
             ) : null}
-  
+
             <Text style={{ fontWeight: '700', fontSize: 18 }}>
               Item Description:
             </Text>
@@ -202,7 +202,7 @@ export default function Item({ navigation, route }) {
     );
   }
 
-  
+  return null
 }
 
 const styles = StyleSheet.create({

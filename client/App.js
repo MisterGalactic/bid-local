@@ -10,13 +10,11 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { APOLLO_SERVER_URI, APOLLO_WEB_SERVER_URI } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { WebSocketLink } from 'apollo-link-ws';
-import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading'
 import * as Font from 'expo-font';
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import Navigator from './routes/HomeStack';
-
-console.log(APOLLO_SERVER_URI, APOLLO_WEB_SERVER_URI)
 
 const getFonts = () => {
   return Font.loadAsync({
@@ -29,8 +27,8 @@ export default function App() {
   const email = useRef('');
   const token = useRef('');
   const [initial, setInitial] = useState('');
-  const uri = 'http://localhost:8000/graphql';
-  const webUri = 'ws://localhost:8000/graphql';
+  const uri = APOLLO_SERVER_URI;
+  const webUri = APOLLO_WEB_SERVER_URI;
 
   const storeToken = async (value) => {
     try {
@@ -117,6 +115,7 @@ export default function App() {
       ) : (
         <AppLoading
           startAsync={getFonts}
+          onError={console.warn}
           onFinish={() => {
             setFontsLoaded(true);
           }}
