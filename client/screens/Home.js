@@ -13,6 +13,7 @@ import {
 import DropDownPicker from 'react-native-dropdown-picker';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Navbar from '../components/Navbar';
+import Tabbar from '../components/Tabbar';
 import Timer from '../components/Timer';
 import { GET_CATEGORIES, GET_ITEMS } from '../queries/home';
 import { useQuery, useLazyQuery } from '@apollo/client';
@@ -92,7 +93,7 @@ export default function Home({ navigation }) {
     return output;
   }
 
-  
+
   return (
     <>
       <Navbar navigation={navigation} canGoBack={false} />
@@ -144,6 +145,7 @@ export default function Home({ navigation }) {
           </View>
         </View>
       </ScrollView>
+      <Tabbar navigation={navigation} canGoBack={false}/>
     </>
   );
 }
