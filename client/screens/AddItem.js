@@ -95,7 +95,7 @@ export default function AddItem({ navigation, route }) {
         picUrl1: imageUrls[0] ? imageUrls[0] : '',
         picUrl2: imageUrls[1] ? imageUrls[1] : '',
         picUrl3: imageUrls[2] ? imageUrls[2] : '',
-        auctionEnd: new Date(Date.now()+6000*parseInt(price)),
+        auctionEnd: new Date(Date.now()+60000*parseInt(time)),
         categoryId: selectedCategories[0].id,
       },
     };
@@ -188,7 +188,7 @@ export default function AddItem({ navigation, route }) {
             value={time}
             onChangeText={(text) => handleTime(text)}
             keyboardType="numeric"
-            placeholder="0,00"
+            placeholder="0"
           />
           {typeError ? (
             <Text style={{ color: 'purple', fontSize: 18 }}>{typeError}</Text>
