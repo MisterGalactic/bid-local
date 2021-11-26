@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { CLOUDINARY_KEY, CLOUDINARY_URL } from '@env';
+import { CLOUDINARY_PRESET, CLOUDINARY_URL } from '@env';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import {
@@ -100,17 +100,19 @@ export default function AddItem({ navigation, route }) {
       base64: true,
     });
 
-    console.log(result);
     if (!result.cancelled) {
       setImages((imgs) => [...imgs, result.uri]);
       let base64Img = `data:image/jpg;base64,${result.base64}`;
 
       let data = {
         file: base64Img,
-        upload_preset: CLOUDINARY_KEY,
+        // upload_preset: CLOUDINARY_PRESET,
+        upload_preset: 'i5ubfrjz',
       };
 
-      fetch(CLOUDINARY_URL, {
+      console.log('initiated')
+      // fetch(CLOUDINARY_URL, {
+      fetch('https://api.cloudinary.com/v1_1/dtuqopc5y/image/upload', {
         body: JSON.stringify(data),
         headers: {
           'content-type': 'application/json',
@@ -118,8 +120,11 @@ export default function AddItem({ navigation, route }) {
         method: 'POST',
       }).then(async (r) => {
         let data = await r.json();
+        console.log("data", data)
         setImageUrls((urls) => [...urls, data.secure_url]);
-      });
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 

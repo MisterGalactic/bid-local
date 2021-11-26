@@ -10,7 +10,7 @@ export default function Navbar({navigation, canGoBack}) {
   return (
     <>
     <Header style={{backgroundColor: '#ffffff'}}>
-    <StatusBar backgroundColor='#CC8F00'/>
+    <StatusBar backgroundColor='#ffffff'/>
       <Left style={{flex: 1}}>
         {canGoBack
           ?
