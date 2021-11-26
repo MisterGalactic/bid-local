@@ -20,6 +20,7 @@ import { CREATE_ITEM, GET_CATEGORIES } from '../queries/addItem';
 export default function AddItem({ navigation, route }) {
   const [title, setTitle] = React.useState('');
   const [price, setPrice] = React.useState('');
+  const [time, setTime] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [createItem, { data, error }] = useMutation(CREATE_ITEM);
   const categories = useQuery(GET_CATEGORIES);
@@ -63,6 +64,28 @@ export default function AddItem({ navigation, route }) {
     }
   }
 
+  function handleTime(input) {
+    setTypeError('');
+    if (input) {
+      if (input.search(/[^0-9,]/g) === -1) {
+        // if string only contains (0123456789,)
+        if (input.indexOf(',') !== -1) {
+          input = input.slice(0, input.indexOf(',') + 3);
+          if (input.search(/(,).*\1/g) === -1) {
+            // if string doesn't contain multiple commas
+            setTime(input);
+          }
+        } else {
+          setTime(input);
+        }
+      } else {
+        setTypeError('Invalid Character');
+      }
+    } else {
+      setTime(input);
+    }
+  }
+
   function handleSubmit() {
     const queryVariables = {
       item: {
@@ -72,7 +95,7 @@ export default function AddItem({ navigation, route }) {
         picUrl1: imageUrls[0] ? imageUrls[0] : '',
         picUrl2: imageUrls[1] ? imageUrls[1] : '',
         picUrl3: imageUrls[2] ? imageUrls[2] : '',
-        auctionEnd: new Date(Date.now()+3600000*Math.random()),
+        auctionEnd: new Date(Date.now()+6000*parseInt(price)),
         categoryId: selectedCategories[0].id,
       },
     };
@@ -153,6 +176,17 @@ export default function AddItem({ navigation, route }) {
             style={styles.textBoxes}
             value={price}
             onChangeText={(text) => handleCurrency(text)}
+            keyboardType="numeric"
+            placeholder="0,00"
+          />
+          {typeError ? (
+            <Text style={{ color: 'purple', fontSize: 18 }}>{typeError}</Text>
+          ) : null}
+          <Text style={{ marginTop: 15 }}>Duration (Minutes):</Text>
+          <TextInput
+            style={styles.textBoxes}
+            value={time}
+            onChangeText={(text) => handleTime(text)}
             keyboardType="numeric"
             placeholder="0,00"
           />
