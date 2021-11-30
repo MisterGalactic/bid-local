@@ -19,45 +19,63 @@ import Timer from '../components/Timer';
 import { GET_ITEM_BY_ID, PLACE_A_BID, GET_USER_INFO } from '../queries/item';
 import bidSubscription from '../queries/subscription';
 
+const ImageList = ({ item, index }) => {
+  return (
+    <ImageBackground
+      key={index}
+      style={styles.itemImage}
+      resizeMode="contain"
+      source={item}
+    />
+  );
+};
+
 export default function Item({ navigation, route }) {
-  bidSubscription();
+  // const { data: subData } = bidSubscription();
   const windowWidth = Dimensions.get('window').width;
   const [offerBid, setOfferBid] = useState('');
   const [images, setImages] = useState([]);
   const [typeError, setTypeError] =useState('');
   const [highestBidder, setHighestBidder] = useState(false);
-  const [refresh, setRefresh] = useState(false);
+  // const [refresh, setRefresh] = useState(false);
 
+  const [changeItem, { data: changedItem }] = useMutation(PLACE_A_BID);
   const user = useQuery(GET_USER_INFO);
-  const [changeItem, changedItem] = useMutation(PLACE_A_BID);
-  const [getItem, { loading, error, data }] = useLazyQuery(GET_ITEM_BY_ID, {
+  const { loading, error, data } = useQuery(GET_ITEM_BY_ID, {
     variables: {
       id: route.params.id,
     },
+    pollInterval: 1000
   });
 
-  const onRefresh = useCallback(() => {
-    setRefresh(true);
-    getItem();
-    setRefresh(false);
-  }, []);
+  // useEffect(()=>{
+  //   getItem();
+  // }, []);
 
-  useEffect(()=>{
-    getItem();
-  }, []);
+  // useEffect(() => {
+  //   console.log(subData)
+  //   console.log('Getting new data because of sub')
+  //   getItem()
+  // }, [subData])
 
   useEffect(() => {
+    console.log('data', data)
     if (data) {
-      if (data.get_item_by_Id.picUrl3 !== '')
+      if (data.get_item_by_Id.picUrl3 !== '') {
         setImages([
           {uri:data.get_item_by_Id.picUrl1},
           {uri:data.get_item_by_Id.picUrl2},
-          {uri:data.get_item_by_Id.picUrl3}]);
-      else if (data.get_item_by_Id.picUrl2 !== '')
+          {uri:data.get_item_by_Id.picUrl3}
+        ]);
+      } else if (data.get_item_by_Id.picUrl2 !== '') {
         setImages([
           {uri:data.get_item_by_Id.picUrl1},
-          {uri:data.get_item_by_Id.picUrl2}]);
-      else setImages([{uri:data.get_item_by_Id.picUrl1}]);
+          {uri:data.get_item_by_Id.picUrl2}
+        ]);
+      } else {
+        setImages([{uri:data.get_item_by_Id.picUrl1}]);
+      }
+
       if (user.data) {
         if (user.data.get_user_info.id===data.get_item_by_Id.bidder) {
           setHighestBidder(true);
@@ -66,30 +84,13 @@ export default function Item({ navigation, route }) {
     }
   }, [data]);
 
-  const imageList = ({ item, index }) => {
-    return (
-      <ImageBackground
-        key={index}
-        style={styles.itemImage}
-        resizeMode="contain"
-        source={item}
-      />
-    );
-  };
+  // const handleRefresh = useCallback(() => {
+  //   setRefresh(true);
+  //   getItem();
+  //   setRefresh(false);
+  // }, []);
 
-  function LatestBid() {
-    if (offerBid<=data.get_item_by_Id.minimumBid) {
-      setTypeError('Bid is lower than current highest bid.');
-      return;
-    }
-      const mutationVariables = {
-        itemId: route.params.id,
-        biddingPrice: parseInt(offerBid)-data.get_item_by_Id.minimumBid,
-      };
-    changeItem({ variables: mutationVariables });
-  }
-
-  function handleCurrency(input) {
+  const handleCurrency = (input) => {
     setTypeError('');
     if (input) {
       if (input.search(/[^0-9,]/g) === -1) {
@@ -111,13 +112,28 @@ export default function Item({ navigation, route }) {
     }
   }
 
-  if (loading)
-    return (
-      <SafeAreaView style={styles.loadingContainer}>
-        <Text style={styles.loading}>Loading...</Text>
-        <Image source={require('../assets/ecommerce.gif')} />
-      </SafeAreaView>
-    );
+  const handleMakeOffer = () => {
+    console.log('make offer')
+    if (offerBid<=data.get_item_by_Id.minimumBid) {
+      setTypeError('Bid is lower than current highest bid.');
+      return;
+    }
+
+    console.log('offer maded!')
+    changeItem({
+      variables: {
+        itemId: route.params.id,
+        biddingPrice: parseInt(offerBid)-data.get_item_by_Id.minimumBid,
+      }
+    });
+  }
+
+  if (loading) return (
+    <SafeAreaView style={styles.loadingContainer}>
+      <Text style={styles.loading}>Loading...</Text>
+      <Image source={require('../assets/ecommerce.gif')} />
+    </SafeAreaView>
+  );
   if (error) return <Text>Error: {error}</Text>;
   if (data) {
     return (
@@ -125,9 +141,9 @@ export default function Item({ navigation, route }) {
         <Navbar navigation={navigation} canGoBack={true} />
         <ScrollView
           style={styles.container}
-          refreshControl={
-            <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
-          }
+          // refreshControl={
+          //   <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
+          // }
         >
           <Carousel
             containerCustomStyle={{
@@ -138,14 +154,14 @@ export default function Item({ navigation, route }) {
             data={images}
             sliderWidth={windowWidth}
             itemWidth={windowWidth - windowWidth / 6}
-            renderItem={imageList}
+            renderItem={ImageList}
           />
           <View style={styles.itemInfo}>
             <Text style={styles.itemTitle}>{data.get_item_by_Id.name}</Text>
             <Text style={styles.itemPrice}>{data.get_item_by_Id.minimumBid}€</Text>
             {user&&highestBidder?
               <Text>You are the current highest bidder.</Text>:
-              <Text>Another user is the current highest bidder.</Text>}
+              <Text>{data.get_item_by_Id.bidder}Another user is the current highest bidder.</Text>}
             <View style={styles.time}>
               <Text style={{ color: 'white', fontSize: 16 }}>Time Left:</Text>
               <Timer style={{ color: 'white', fontSize: 25 }} deadline={data.get_item_by_Id.auctionEnd}/>
@@ -164,7 +180,7 @@ export default function Item({ navigation, route }) {
               <TouchableHighlight
                 style={styles.bidButton}
                 onPress={() => {
-                  LatestBid();
+                  handleMakeOffer();
                 }}
               >
                 <Text style={{ fontSize: 16, color: 'white' }}>MAKE OFFER</Text>

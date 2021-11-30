@@ -29,8 +29,8 @@ export default function App() {
   const email = useRef('');
   const token = useRef('');
   const [initial, setInitial] = useState('');
-  const uri = 'https://imaker-bid-local-server.herokuapp.com/graphql';
-  const webUri = 'wss://imaker-bid-local-server.herokuapp.com/graphql';
+  const uri = 'http://localhost:8000/graphql';
+  const webUri = 'ws://localhost:8000/graphql';
 
   const storeToken = async (value) => {
     try {
