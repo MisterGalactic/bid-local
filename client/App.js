@@ -16,6 +16,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import Navigator from './routes/HomeStack';
 
+console.log(APOLLO_SERVER_URI, APOLLO_WEB_SERVER_URI)
+
 const getFonts = () => {
   return Font.loadAsync({
     Roboto_medium: require('./assets/fonts/Roboto-Medium.ttf'),
@@ -27,8 +29,8 @@ export default function App() {
   const email = useRef('');
   const token = useRef('');
   const [initial, setInitial] = useState('');
-  const uri = APOLLO_SERVER_URI;
-  const webUri = APOLLO_WEB_SERVER_URI;
+  const uri = 'https://imaker-bid-local-server.herokuapp.com/graphql';
+  const webUri = 'wss://imaker-bid-local-server.herokuapp.com/graphql';
 
   const storeToken = async (value) => {
     try {
@@ -41,7 +43,6 @@ export default function App() {
   const getToken = async () => {
     try {
       const value = await AsyncStorage.getItem('@token')
-      console.log('value: ', value);
       if(value !== null) {
         token.current = value;
         return true;
