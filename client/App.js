@@ -29,8 +29,8 @@ export default function App() {
   const email = useRef('');
   const token = useRef('');
   const [initial, setInitial] = useState('');
-  const uri = 'http://localhost:8000/graphql';
-  const webUri = 'ws://localhost:8000/graphql';
+  const uri = APOLLO_SERVER_URI;
+  const webUri = APOLLO_WEB_SERVER_URI;
 
   const storeToken = async (value) => {
     try {

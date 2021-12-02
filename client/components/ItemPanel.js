@@ -29,7 +29,7 @@ export default function Panel(props) {
 
   function saveChanges() {
     const queryVariables = {
-      itemId: props.id,
+      ItemId: props.id,
       item: {
         name: title,
         minPrice: props.price,

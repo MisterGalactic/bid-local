@@ -31,6 +31,12 @@ export default function AddItem({ navigation, route }) {
   const [typeError, setTypeError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
+  const [isPic1Loading, setIsPic1Loading] = useState(false)
+  const [isPic2Loading, setIsPic2Loading] = useState(false)
+  const [isPic3Loading, setIsPic3Loading] = useState(false)
+
+  const isImageUploading = isPic1Loading || isPic2Loading || isPic3Loading
+
   useEffect(() => {
     setIsLoading(false);
   }, []);
@@ -87,19 +93,21 @@ export default function AddItem({ navigation, route }) {
   }
 
   function handleSubmit() {
-    const queryVariables = {
-      item: {
-        name: title,
-        minPrice: parseInt(price),
-        description: description,
-        picUrl1: imageUrls[0] ? imageUrls[0] : '',
-        picUrl2: imageUrls[1] ? imageUrls[1] : '',
-        picUrl3: imageUrls[2] ? imageUrls[2] : '',
-        auctionEnd: new Date(Date.now()+60000*parseInt(time)),
-        categoryId: selectedCategories[0].id,
-      },
-    };
-    createItem({ variables: queryVariables });
+    if (!isImageUploading) {
+      const queryVariables = {
+        item: {
+          name: title,
+          minPrice: parseInt(price),
+          description: description,
+          picUrl1: imageUrls[0] ? imageUrls[0] : '',
+          picUrl2: imageUrls[1] ? imageUrls[1] : '',
+          picUrl3: imageUrls[2] ? imageUrls[2] : '',
+          auctionEnd: new Date(Date.now()+60000*parseInt(time)),
+          CategoryId: selectedCategories[0].id,
+        },
+      };
+      createItem({ variables: queryVariables });
+    }
   }
 
   function handleCategories(cat) {
@@ -124,6 +132,17 @@ export default function AddItem({ navigation, route }) {
     });
 
     if (!result.cancelled) {
+      if (imageUrls.length === 0) {
+        console.log('initiating 1')
+        setIsPic1Loading(true)
+      } else if (imageUrls.length === 1) {
+        console.log('initiating 2')
+        setIsPic2Loading(true)
+      } else {
+        console.log('initiating 3')
+        setIsPic3Loading(true)
+      }
+
       setImages((imgs) => [...imgs, result.uri]);
       let base64Img = `data:image/jpg;base64,${result.base64}`;
 
@@ -133,7 +152,6 @@ export default function AddItem({ navigation, route }) {
         upload_preset: 'i5ubfrjz',
       };
 
-      console.log('initiated')
       // fetch(CLOUDINARY_URL, {
       fetch('https://api.cloudinary.com/v1_1/dtuqopc5y/image/upload', {
         body: JSON.stringify(data),
@@ -147,6 +165,14 @@ export default function AddItem({ navigation, route }) {
         setImageUrls((urls) => [...urls, data.secure_url]);
       }).catch((err) => {
         console.log(err)
+      }).finally(() => {
+        if (imageUrls.length === 0) {
+          setIsPic1Loading(false)
+        } else if (imageUrls.length === 1) {
+          setIsPic2Loading(false)
+        } else {
+          setIsPic3Loading(false)
+        }
       })
     }
   }
@@ -253,10 +279,11 @@ export default function AddItem({ navigation, route }) {
                 padding: 15,
               }}
             >
-              ADD ITEM
+              { isImageUploading ? 'Uploading Image' : 'ADD ITEM' }
             </Text>
           </TouchableHighlight>
         </ScrollView>
+
         {showModal ? (
           <View style={styles.categoryModal}>
             <ScrollView style={styles.categoryModalContent}>

@@ -25,7 +25,7 @@ export default function ExpandableComponent (props) {
 
   function handleDelete() {
     const deleteVariables = {
-      itemId: props.id
+      ItemId: props.id
     };
     deleteItemById({ variables: deleteVariables });
   }

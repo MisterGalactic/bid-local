@@ -16,11 +16,11 @@ query get_user_info {
 
 export const UPDATE_ITEM = gql`
 mutation update_item (
-  $itemId: ID!
+  $ItemId: ID!
   $item: ItemUpdate!
 ) {
   update_item (
-    itemId: $itemId
+    ItemId: $ItemId
     item: $item
   ) {
     id
@@ -32,10 +32,10 @@ mutation update_item (
 
 export const DELETE_ITEM = gql`
 mutation delete_item_by_id (
-  $itemId: ID!
+  $ItemId: ID!
 ) {
   delete_item_by_id (
-    itemId: $itemId
+    ItemId: $ItemId
   )
 }
 `;

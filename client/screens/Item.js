@@ -31,64 +31,58 @@ const ImageList = ({ item, index }) => {
 };
 
 export default function Item({ navigation, route }) {
-  // const { data: subData } = bidSubscription();
+  const { data: subData } = bidSubscription();
   const windowWidth = Dimensions.get('window').width;
   const [offerBid, setOfferBid] = useState('');
   const [images, setImages] = useState([]);
   const [typeError, setTypeError] =useState('');
   const [highestBidder, setHighestBidder] = useState(false);
-  // const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
-  const [changeItem, { data: changedItem }] = useMutation(PLACE_A_BID);
+  const [changeItem] = useMutation(PLACE_A_BID);
   const user = useQuery(GET_USER_INFO);
-  const { loading, error, data } = useQuery(GET_ITEM_BY_ID, {
+  const [getItem, { loading, error, data }] = useLazyQuery(GET_ITEM_BY_ID, {
     variables: {
       id: route.params.id,
-    },
-    pollInterval: 1000
+    }
   });
 
-  // useEffect(()=>{
-  //   getItem();
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log(subData)
-  //   console.log('Getting new data because of sub')
-  //   getItem()
-  // }, [subData])
+  useEffect(() => {
+    if (subData?.bidPlaced?.id === data?.get_item_by_Id?.id) {
+      getItem()
+    }
+  }, [subData])
 
   useEffect(() => {
-    console.log('data', data)
     if (data) {
       if (data.get_item_by_Id.picUrl3 !== '') {
         setImages([
-          {uri:data.get_item_by_Id.picUrl1},
-          {uri:data.get_item_by_Id.picUrl2},
-          {uri:data.get_item_by_Id.picUrl3}
+          { uri: data.get_item_by_Id.picUrl1 },
+          { uri: data.get_item_by_Id.picUrl2 },
+          { uri: data.get_item_by_Id.picUrl3 }
         ]);
       } else if (data.get_item_by_Id.picUrl2 !== '') {
         setImages([
-          {uri:data.get_item_by_Id.picUrl1},
-          {uri:data.get_item_by_Id.picUrl2}
+          { uri: data.get_item_by_Id.picUrl1 },
+          { uri: data.get_item_by_Id.picUrl2 }
         ]);
       } else {
-        setImages([{uri:data.get_item_by_Id.picUrl1}]);
+        setImages([{ uri: data.get_item_by_Id.picUrl1 }]);
       }
 
-      if (user.data) {
-        if (user.data.get_user_info.id===data.get_item_by_Id.bidder) {
-          setHighestBidder(true);
-        }
+      if (user?.data?.get_user_info?.id === data?.get_item_by_Id?.bidder) {
+        setHighestBidder(true);
+      } else {
+        setHighestBidder(false);
       }
     }
   }, [data]);
 
-  // const handleRefresh = useCallback(() => {
-  //   setRefresh(true);
-  //   getItem();
-  //   setRefresh(false);
-  // }, []);
+  const handleRefresh = useCallback(() => {
+    setRefresh(true);
+    getItem();
+    setRefresh(false);
+  }, []);
 
   const handleCurrency = (input) => {
     setTypeError('');
@@ -122,8 +116,8 @@ export default function Item({ navigation, route }) {
     console.log('offer maded!')
     changeItem({
       variables: {
-        itemId: route.params.id,
-        biddingPrice: parseInt(offerBid)-data.get_item_by_Id.minimumBid,
+        ItemId: route.params.id,
+        biddingPrice: parseInt(offerBid),
       }
     });
   }
@@ -141,9 +135,9 @@ export default function Item({ navigation, route }) {
         <Navbar navigation={navigation} canGoBack={true} />
         <ScrollView
           style={styles.container}
-          // refreshControl={
-          //   <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
-          // }
+          refreshControl={
+            <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
+          }
         >
           <Carousel
             containerCustomStyle={{
@@ -159,9 +153,13 @@ export default function Item({ navigation, route }) {
           <View style={styles.itemInfo}>
             <Text style={styles.itemTitle}>{data.get_item_by_Id.name}</Text>
             <Text style={styles.itemPrice}>{data.get_item_by_Id.minimumBid}€</Text>
-            {user&&highestBidder?
-              <Text>You are the current highest bidder.</Text>:
-              <Text>{data.get_item_by_Id.bidder}Another user is the current highest bidder.</Text>}
+            {
+              user && highestBidder? (
+                <Text>You are the current highest bidder.</Text>
+              ) : (
+                <Text>{data.get_item_by_Id.bidder}Another user is the current highest bidder.</Text>
+              )
+            }
             <View style={styles.time}>
               <Text style={{ color: 'white', fontSize: 16 }}>Time Left:</Text>
               <Timer style={{ color: 'white', fontSize: 25 }} deadline={data.get_item_by_Id.auctionEnd}/>

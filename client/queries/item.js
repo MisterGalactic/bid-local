@@ -1,17 +1,11 @@
 import { gql } from '@apollo/client';
 
 export const PLACE_A_BID = gql`
-mutation place_a_bid (
-  $itemId: ID!,
-  $biddingPrice: Int
-) {
-  place_a_bid (
-    itemId: $itemId
-    biddingPrice: $biddingPrice
-  ) {
-    id
+  mutation place_a_bid ($ItemId: ID!, $biddingPrice: Int) {
+    place_a_bid (ItemId: $ItemId, biddingPrice: $biddingPrice) {
+      id
+    }
   }
-}
 `;
 
 export const GET_ITEM_BY_ID = gql`

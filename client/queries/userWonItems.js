@@ -24,10 +24,10 @@ query won_item_list {
 
 export const DELETE_ITEM = gql`
 mutation delete_item_by_id (
-  $itemId: ID!
+  $ItemId: ID!
 ) {
   delete_item_by_id (
-    itemId: $itemId
+    ItemId: $ItemId
   )
 }
 `;

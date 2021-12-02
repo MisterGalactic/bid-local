@@ -2,11 +2,11 @@ import { gql } from '@apollo/client';
 
 export const PLACE_BID = gql`
 mutation place_a_bid(
-  $itemId: ID!,
+  $ItemId: ID!,
   $biddingPrice:Int
   ) {
   place_a_bid(
-    itemId: $itemId,
+    ItemId: $ItemId,
     biddingPrice:$biddingPrice,
   ) {
     minimumBid{

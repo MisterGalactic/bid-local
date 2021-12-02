@@ -98,7 +98,7 @@ export default function UserInfo({ navigation, route }) {
       };
       changeUser({ variables: queryVariables });
       changeUserAddress({ variables: {
-        addressId: user.data.get_user_info.address.id,
+        AddressId: user.data.get_user_info.address.id,
         address: address
       } })
     }
