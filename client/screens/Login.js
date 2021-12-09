@@ -69,7 +69,7 @@ export default function Login({ navigation, route }) {
               autoCapitalize='none'
               onChangeText={(text) => setInitialEmail(text)}
               value={initialEmail}
-              style={{ color: 'white', fontFamily: 'Roboto_medium' }}
+              style={{ color: 'gray', fontFamily: 'Roboto_medium' }}
             />
           </Item>
           <Item floatingLabel style={styles.labelContainer}>
@@ -79,7 +79,7 @@ export default function Login({ navigation, route }) {
               autoCapitalize='none'
               onChangeText={(text) => setPassword(text)}
               value ={password}
-              style={{ color: 'white', fontFamily: 'Roboto_medium' }}/>
+              style={{ color: 'gray', fontFamily: 'Roboto_medium' }}/>
           </Item>
           <View>
             <Button rounded onPress={login} style={styles.button}>
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: 'Roboto_medium',
-    color: 'white',
+    color: 'black',
   },
   labelContainer: {
     alignSelf: 'center',
@@ -156,13 +156,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     fontFamily: 'Roboto_medium',
     fontSize: 30,
-    color: 'white',
+    color: 'black',
     marginBottom: '5%',
   },
   register: {
     marginTop: '5%',
     alignItems: 'center',
-    color: 'white',
+    color: 'gray',
     fontFamily: 'Roboto_medium',
     fontFamily: 'Roboto_medium',
   },

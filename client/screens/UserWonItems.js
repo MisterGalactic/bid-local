@@ -123,11 +123,11 @@ function Panel(props) {
           </View>
           <View style={{ marginRight: 'auto' ,borderLeftWidth: 1, paddingLeft:5}}>
             <Text style={{fontWeight: 'bold'}}>{props.user.phoneNumber}</Text>
-            <Text>{props.user.address.firstLineAddress}</Text>
-            {props.user.address.secondLineAddress?<Text>{props.user.address.secondLineAddress}</Text>:null}
-            <Text>{props.user.address.city}</Text>
-            <Text>{props.user.address.postcode}</Text>
-            <Text>{props.user.address.country}</Text>
+            <Text>{props.user?.address?.firstLineAddress}</Text>
+            {props.user?.address?.secondLineAddress?<Text>{props.user?.address?.secondLineAddress}</Text>:null}
+            <Text>{props.user?.address?.city}</Text>
+            <Text>{props.user?.address?.postcode}</Text>
+            <Text>{props.user?.address?.country}</Text>
           </View>
         </View>
       </View>

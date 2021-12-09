@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "client",
+    "name": "Auction App TVP",
     "slug": "auctionlocalbid",
     "version": "12.0.0",
     "orientation": "portrait",
@@ -10,7 +10,6 @@
       "resizeMode": "cover",
       "backgroundColor": "#FFFFFF"
     },
-
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -26,17 +25,18 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-          "splash": {
-            "mdpi": "assets/splash.png",
-            "hdpi": "assets/splash/hdpi.png",
-            "xhdpi": "assets/splash/xhdpi.png",
-            "xxhdpi": "assets/splash/xxhdpi.png",
-            "xxxhdpi": "assets/splash/xxxhdpi.png"
-          }
+      "splash": {
+        "mdpi": "assets/splash.png",
+        "hdpi": "assets/splash/hdpi.png",
+        "xhdpi": "assets/splash/xhdpi.png",
+        "xxhdpi": "assets/splash/xxhdpi.png",
+        "xxxhdpi": "assets/splash/xxxhdpi.png"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
-    // "sourceExts": [ "js", "json", "ts", "tsx", "jsx", "vue"]
+    },
+    "description": "",
+    "githubUrl": "https://github.com/MisterGalactic/bid-local"
   }
 }
