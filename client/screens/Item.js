@@ -157,7 +157,7 @@ export default function Item({ navigation, route }) {
               user && highestBidder? (
                 <Text>You are the current highest bidder.</Text>
               ) : (
-                <Text>{data.get_item_by_Id.bidder}Another user is the current highest bidder.</Text>
+                <Text>Another user is the current highest bidder.</Text>
               )
             }
             <View style={styles.time}>
