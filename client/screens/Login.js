@@ -69,7 +69,7 @@ export default function Login({ navigation, route }) {
               autoCapitalize='none'
               onChangeText={(text) => setInitialEmail(text)}
               value={initialEmail}
-              style={{ color: 'gray', fontFamily: 'Roboto_medium' }}
+              style={{ color: 'black', fontFamily: 'Roboto_medium' }}
             />
           </Item>
           <Item floatingLabel style={styles.labelContainer}>
@@ -79,7 +79,7 @@ export default function Login({ navigation, route }) {
               autoCapitalize='none'
               onChangeText={(text) => setPassword(text)}
               value ={password}
-              style={{ color: 'gray', fontFamily: 'Roboto_medium' }}/>
+              style={{ color: 'black', fontFamily: 'Roboto_medium' }}/>
           </Item>
           <View>
             <Button rounded onPress={login} style={styles.button}>

@@ -91,12 +91,12 @@ export default function Register({ navigation }) {
             <Input
               onChangeText={(text) => setRegisterEmail(text)}
               value={registerEmail}
-              style={{ color: 'white', fontFamily: 'Roboto_medium' }}
+              style={{ color: 'black', fontFamily: 'Roboto_medium' }}
             />
           </Item>
           <Item floatingLabel last style={styles.labelContainer}>
             <Label style={styles.label}>Password</Label>
-            <Input style={{ color: 'white', fontFamily: 'Roboto_medium' }} />
+            <Input style={{ color: 'black', fontFamily: 'Roboto_medium' }} />
           </Item>
           <View>
             <Button rounded onPress={register} style={styles.button}>
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: 'Roboto_medium',
-    color: 'white',
+    color: 'black',
   },
   labelContainer: {
     alignSelf: 'center',
@@ -173,13 +173,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     fontFamily: 'Roboto_medium',
     fontSize: 30,
-    color: 'white',
+    color: 'black',
     marginBottom: '5%',
   },
   register: {
     marginTop: '5%',
     alignItems: 'center',
-    color: 'white',
+    color: 'gray',
     fontFamily: 'Roboto_medium',
     fontFamily: 'Roboto_medium',
   },
