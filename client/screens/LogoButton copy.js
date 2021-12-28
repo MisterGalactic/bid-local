@@ -21,11 +21,11 @@ import bidSubscription from '../queries/subscription';
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function Home({ navigation }) {
+export default function LogoButton({ navigation }) {
   bidSubscription();
-  const categories = useQuery(GET_CATEGORIES);
   const [currentCategory, setCurrentCategory] = useState('ALL');
   const [refresh, setRefresh] = useState(false);
+  const categories = useQuery(GET_CATEGORIES);
   const [getItems, items] = useLazyQuery(GET_ITEMS, {
     fetchPolicy: 'cache-and-network',
   });
@@ -80,8 +80,8 @@ export default function Home({ navigation }) {
                   style={styles.itemTime}
                   deadline={component.auctionEnd}/>
               </ImageBackground>
-            <Text style={styles.itemPrice}>${component.minimumBid}</Text>
             <Text style={styles.itemTitle}>{component.name}</Text>
+            <Text style={styles.itemPrice}>{component.minimumBid}€</Text>
           </View>
         </TouchableWithoutFeedback>
         )
@@ -95,60 +95,29 @@ export default function Home({ navigation }) {
 
 
   return (
-    <>
-      <Navbar navigation={navigation} canGoBack={false} />
-      <ScrollView
-        style={styles.container}
-        refreshControl={
-          <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
-        }
-      >
-        <View style={styles.homeContent}>
-          <DropDownPicker
-            dropDownMaxHeight={1500}
-            items={[{ name: 'ALL' }, ...categories.data.get_categories].map(
-              (cat) => ({
-                label: cat.name.charAt(0) + cat.name.slice(1).toLowerCase(),
-                value: cat.name,
-              }),
-            )}
-            defaultValue={'ALL'}
-            containerStyle={{
-              height: 40,
-              width: 150,
-              marginBottom: 20,
-            }}
-            style={{
-              backgroundColor: null,
-              borderWidth: 1,
-              borderColor: 'black',
-              fontFamily: 'Roboto_medium',
-            }}
-            itemStyle={{
-              justifyContent: 'flex-start',
-            }}
-            arrowColor="gray"
-            arrowSize={20}
-            labelStyle={{
-              fontSize: 22,
-              color: 'gray',
-              fontFamily: 'Roboto_medium',
-            }}
-            dropDownStyle={{
-              backgroundColor: 'white',
-              borderWidth: 1,
-              borderTopWidth: 1,
-              borderColor: 'black',
-            }}
-            onChangeItem={(cat) => setCurrentCategory(cat.value)}
+    <ImageBackground
+      style={{ flex: 1 }}
+      source={require('../assets/login-background-keyboard.jpg')}
+    >
+      <View style={styles.homeContent}>
+        <View style={styles.logo}>
+          <Image
+            style={styles.logoPic}
+            source={require('../assets/circle_icon.png')}
           />
-          <View style={styles.homeItems}>
-            {items.data ? categoryTest() : null}
-          </View>
         </View>
-      </ScrollView>
+        <View style={styles.logo}>
+          <Image
+            style={styles.qrCode}
+            source={require('../assets/qr_code.png')}
+          />
+        </View>
+        <View style={styles.title}>
+          <Text style={styles.title}>Wong Tai Fung</Text>
+        </View>
+      </View>
       <Tabbar navigation={navigation} canGoBack={false}/>
-    </>
+    </ImageBackground>
   );
 }
 
@@ -158,6 +127,29 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#fff',
     fontFamily: 'Roboto_medium',
+  },
+  logo: {
+    marginBottom: '5%',
+    resizeMode: 'contain',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoPic: {
+    width: '25%',
+    resizeMode: 'contain',
+  },
+  qrCode: {
+    width: '75%',
+    resizeMode: 'contain',
+  },
+  title: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: 'Roboto_medium',
+    fontSize: 30,
+    color: 'orange',
+    marginTop: '5%',
+    marginBottom: '5%',
   },
   categoryTitle: {
     fontSize: 22,
@@ -196,15 +188,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'Roboto_medium',
   },
-
   itemTitle: {
-    fontSize: 16,
-    color: '#666666',
+    fontSize: 20,
     fontFamily: 'Roboto_medium',
   },
-
   itemPrice: {
-    fontSize: 20,
+    fontSize: 16,
+    color: '#666666',
     fontFamily: 'Roboto_medium',
   },
   loading: {

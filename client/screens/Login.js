@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
+  KeyboardAvoidingView
 } from 'react-native';
 import { Item, Input, Label, Button } from 'native-base';
 import { SIGN_IN } from '../queries/login';
@@ -61,7 +62,7 @@ export default function Login({ navigation, route }) {
         <View style={styles.title}>
           <Text style={styles.title}>Sign In</Text>
         </View>
-        <View style={styles.container}>
+        <KeyboardAvoidingView behavior="padding" style={styles.container}>
           <Item floatingLabel style={styles.labelContainer}>
             <Label style={styles.label}>{'   '}Email</Label>
             <Input
@@ -97,7 +98,7 @@ export default function Login({ navigation, route }) {
           <TouchableOpacity style={styles.register} onPress={register}>
             <Text style={styles.register}>Not signed up? Register here</Text>
           </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       </ImageBackground>
     );
   }

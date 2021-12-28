@@ -21,11 +21,11 @@ import bidSubscription from '../queries/subscription';
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function Home({ navigation }) {
+export default function Cart({ navigation }) {
   bidSubscription();
-  const categories = useQuery(GET_CATEGORIES);
   const [currentCategory, setCurrentCategory] = useState('ALL');
   const [refresh, setRefresh] = useState(false);
+  const categories = useQuery(GET_CATEGORIES);
   const [getItems, items] = useLazyQuery(GET_ITEMS, {
     fetchPolicy: 'cache-and-network',
   });
@@ -80,8 +80,8 @@ export default function Home({ navigation }) {
                   style={styles.itemTime}
                   deadline={component.auctionEnd}/>
               </ImageBackground>
-            <Text style={styles.itemPrice}>${component.minimumBid}</Text>
             <Text style={styles.itemTitle}>{component.name}</Text>
+            <Text style={styles.itemPrice}>{component.minimumBid}€</Text>
           </View>
         </TouchableWithoutFeedback>
         )
@@ -104,8 +104,9 @@ export default function Home({ navigation }) {
         }
       >
         <View style={styles.homeContent}>
+          <Text style={styles.title}>Cart</Text>
+          <Text style={styles.categoryTitle}>Category:</Text>
           <DropDownPicker
-            dropDownMaxHeight={1500}
             items={[{ name: 'ALL' }, ...categories.data.get_categories].map(
               (cat) => ({
                 label: cat.name.charAt(0) + cat.name.slice(1).toLowerCase(),
@@ -115,30 +116,28 @@ export default function Home({ navigation }) {
             defaultValue={'ALL'}
             containerStyle={{
               height: 40,
-              width: 150,
               marginBottom: 20,
             }}
             style={{
-              backgroundColor: null,
-              borderWidth: 1,
-              borderColor: 'black',
+              backgroundColor: '#06D6A0',
+              borderWidth: 0,
               fontFamily: 'Roboto_medium',
             }}
             itemStyle={{
               justifyContent: 'flex-start',
             }}
-            arrowColor="gray"
+            arrowColor="white"
             arrowSize={20}
             labelStyle={{
               fontSize: 22,
-              color: 'gray',
+              color: 'white',
               fontFamily: 'Roboto_medium',
             }}
             dropDownStyle={{
-              backgroundColor: 'white',
-              borderWidth: 1,
+              backgroundColor: '#06D6A0',
+              borderWidth: 0,
               borderTopWidth: 1,
-              borderColor: 'black',
+              borderColor: 'white',
             }}
             onChangeItem={(cat) => setCurrentCategory(cat.value)}
           />
@@ -196,15 +195,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'Roboto_medium',
   },
-
   itemTitle: {
-    fontSize: 16,
-    color: '#666666',
+    fontSize: 20,
     fontFamily: 'Roboto_medium',
   },
-
   itemPrice: {
-    fontSize: 20,
+    fontSize: 16,
+    color: '#666666',
     fontFamily: 'Roboto_medium',
   },
   loading: {

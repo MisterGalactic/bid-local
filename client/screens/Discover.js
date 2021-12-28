@@ -1,12 +1,15 @@
+import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   StyleSheet,
   Text,
   View,
+  SectionList,
   ScrollView,
   ImageBackground,
   Dimensions,
   Image,
+  FlatList,
   SafeAreaView,
   RefreshControl,
 } from 'react-native';
@@ -21,11 +24,11 @@ import bidSubscription from '../queries/subscription';
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function Home({ navigation }) {
+export default function Discover({ navigation }) {
   bidSubscription();
-  const categories = useQuery(GET_CATEGORIES);
   const [currentCategory, setCurrentCategory] = useState('ALL');
   const [refresh, setRefresh] = useState(false);
+  const categories = useQuery(GET_CATEGORIES);
   const [getItems, items] = useLazyQuery(GET_ITEMS, {
     fetchPolicy: 'cache-and-network',
   });
@@ -80,8 +83,8 @@ export default function Home({ navigation }) {
                   style={styles.itemTime}
                   deadline={component.auctionEnd}/>
               </ImageBackground>
-            <Text style={styles.itemPrice}>${component.minimumBid}</Text>
             <Text style={styles.itemTitle}>{component.name}</Text>
+            <Text style={styles.itemPrice}>{component.minimumBid}€</Text>
           </View>
         </TouchableWithoutFeedback>
         )
@@ -93,6 +96,119 @@ export default function Home({ navigation }) {
     return output;
   }
 
+  const SECTIONS = [
+    {
+      title: 'Featured',
+      horizontal: true,
+      data: [
+        {
+          key: '1',
+          text: 'Item text 1',
+          uri: 'https://picsum.photos/id/1/200',
+        },
+        {
+          key: '2',
+          text: 'Item text 2',
+          uri: 'https://picsum.photos/id/10/200',
+        },
+
+        {
+          key: '3',
+          text: 'Item text 3',
+          uri: 'https://picsum.photos/id/1002/200',
+        },
+        {
+          key: '4',
+          text: 'Item text 4',
+          uri: 'https://picsum.photos/id/1006/200',
+        },
+        {
+          key: '5',
+          text: 'Item text 5',
+          uri: 'https://picsum.photos/id/1008/200',
+        },
+      ],
+    },
+    {
+      title: 'Trendy',
+      horizontal: true,
+      data: [
+        {
+          key: '1',
+          text: 'Item text 1',
+          uri: 'https://picsum.photos/id/1011/200',
+        },
+        {
+          key: '2',
+          text: 'Item text 2',
+          uri: 'https://picsum.photos/id/1012/200',
+        },
+
+        {
+          key: '3',
+          text: 'Item text 3',
+          uri: 'https://picsum.photos/id/1013/200',
+        },
+        {
+          key: '4',
+          text: 'Item text 4',
+          uri: 'https://picsum.photos/id/1015/200',
+        },
+        {
+          key: '5',
+          text: 'Item text 5',
+          uri: 'https://picsum.photos/id/1016/200',
+        },
+      ],
+    },
+    {
+      title: 'Beauty',
+      horizontal: true,
+      data: [
+        {
+          key: '1',
+          text: 'Item text 1',
+          uri: 'https://picsum.photos/id/1020/200',
+        },
+        {
+          key: '2',
+          text: 'Item text 2',
+          uri: 'https://picsum.photos/id/1024/200',
+        },
+
+        {
+          key: '3',
+          text: 'Item text 3',
+          uri: 'https://picsum.photos/id/1027/200',
+        },
+        {
+          key: '4',
+          text: 'Item text 4',
+          uri: 'https://picsum.photos/id/1035/200',
+        },
+        {
+          key: '5',
+          text: 'Item text 5',
+          uri: 'https://picsum.photos/id/1038/200',
+        },
+      ],
+    },
+  ];
+
+  const ListItem = ({ item }) => {
+    return (
+      <View style={styles.item}>
+        <Image
+          source={{
+            uri: item.uri,
+          }}
+          style={styles.itemPhoto}
+          resizeMode="cover"
+        />
+        <Text style={styles.itemText}>{item.text}</Text>
+      </View>
+    );
+  };
 
   return (
     <>
@@ -103,48 +219,34 @@ export default function Home({ navigation }) {
           <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
         }
       >
-        <View style={styles.homeContent}>
-          <DropDownPicker
-            dropDownMaxHeight={1500}
-            items={[{ name: 'ALL' }, ...categories.data.get_categories].map(
-              (cat) => ({
-                label: cat.name.charAt(0) + cat.name.slice(1).toLowerCase(),
-                value: cat.name,
-              }),
-            )}
-            defaultValue={'ALL'}
-            containerStyle={{
-              height: 40,
-              width: 150,
-              marginBottom: 20,
-            }}
-            style={{
-              backgroundColor: null,
-              borderWidth: 1,
-              borderColor: 'black',
-              fontFamily: 'Roboto_medium',
-            }}
-            itemStyle={{
-              justifyContent: 'flex-start',
-            }}
-            arrowColor="gray"
-            arrowSize={20}
-            labelStyle={{
-              fontSize: 22,
-              color: 'gray',
-              fontFamily: 'Roboto_medium',
-            }}
-            dropDownStyle={{
-              backgroundColor: 'white',
-              borderWidth: 1,
-              borderTopWidth: 1,
-              borderColor: 'black',
-            }}
-            onChangeItem={(cat) => setCurrentCategory(cat.value)}
-          />
-          <View style={styles.homeItems}>
-            {items.data ? categoryTest() : null}
-          </View>
+        <View style={styles.container}>
+          <StatusBar style="light" />
+          <SafeAreaView style={{ flex: 1 }}>
+            <SectionList
+              contentContainerStyle={{ paddingHorizontal: 10 }}
+              stickySectionHeadersEnabled={false}
+              sections={SECTIONS}
+              renderSectionHeader={({ section }) => (
+                <>
+                  <Text style={styles.sectionHeader}>{section.title}</Text>
+                  {section.horizontal ? (
+                    <FlatList
+                      horizontal
+                      data={section.data}
+                      renderItem={({ item }) => <ListItem item={item} />}
+                      showsHorizontalScrollIndicator={false}
+                    />
+                  ) : null}
+                </>
+              )}
+              renderItem={({ item, section }) => {
+                if (section.horizontal) {
+                  return null;
+                }
+                return <ListItem item={item} />;
+              }}
+            />
+          </SafeAreaView>
         </View>
       </ScrollView>
       <Tabbar navigation={navigation} canGoBack={false}/>
@@ -196,15 +298,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'Roboto_medium',
   },
-
   itemTitle: {
-    fontSize: 16,
-    color: '#666666',
+    fontSize: 20,
     fontFamily: 'Roboto_medium',
   },
-
   itemPrice: {
-    fontSize: 20,
+    fontSize: 16,
+    color: '#666666',
     fontFamily: 'Roboto_medium',
   },
   loading: {
@@ -222,5 +322,24 @@ const styles = StyleSheet.create({
     color: '#67A036',
     textAlign: 'center',
     marginBottom: 1000,
+  },
+  sectionHeader: {
+    fontWeight: '800',
+    fontSize: 18,
+    color: 'gray',
+    marginTop: 20,
+    marginBottom: 5,
+    marginLeft: 10,
+  },
+  item: {
+    margin: 10,
+  },
+  itemPhoto: {
+    width: 200,
+    height: 200,
+  },
+  itemText: {
+    color: 'grey',
+    marginTop: 5,
   },
 });

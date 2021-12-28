@@ -9,6 +9,9 @@ import WinnerItems from '../screens/UserWonItems';
 import Login from '../screens/Login';
 import UserInfo from '../screens/UserInfo';
 import Register from '../screens/Register';
+import Discover from '../screens/Discover';
+import LogoButton from '../screens/LogoButton';
+import Cart from '../screens/Cart';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +20,9 @@ const HomeStack = ({ token, initial }) => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initial} headerMode={null}>
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Discover" component={Discover} />
+        <Stack.Screen name="LogoButton" component={LogoButton} />
+        <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Item" component={Item} />
         <Stack.Screen name="AddItem" component={AddItem} />
         <Stack.Screen name="UserWonItems" component={WinnerItems} />

@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Image
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -15,15 +16,18 @@ export default function Tabbar({ navigation }) {
         <Icon name="shopping-bag" size={25} />
         <Text style={styles.mytext}>Shop</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.container}>
+      <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Discover')}}>
         <Icon name="explore" size={25} />
         <Text style={styles.mytext}>Discover</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.container}>
-        <Icon name="launch" size={25} />
+      <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('LogoButton')}}>
+        <Image
+          source={require('../assets/circle_icon.png')}
+          style={styles.logoPic}
+        />
         <Text style={styles.mytext}>Button</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.container}>
+      <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Cart')}}>
         <Icon name="shopping-cart" size={25} />
         <Text style={styles.mytext}>Cart</Text>
       </TouchableOpacity>
@@ -55,4 +59,9 @@ const styles = StyleSheet.create({
     paddingTop: 2,
     color: 'rgb(50,50,50)',
   },
+  logoPic: {
+    marginTop: 19,
+    width: '130%',
+    resizeMode: 'contain',
+  }
 });

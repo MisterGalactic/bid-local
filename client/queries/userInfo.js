@@ -5,6 +5,8 @@ export const GET_USER_INFO = gql`
     get_user_info {
       id
       email
+      firstName
+      lastName
       phoneNumber
       address {
         id
