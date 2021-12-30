@@ -58,13 +58,13 @@ export default function Discover({ navigation }) {
 
   function categoryTest() {
     const temp = items.data.get_items.slice();
-    temp.sort((a, b) => a.auctionEnd - b.auctionEnd);
+    temp.sort((a, b) => b.auctionEnd - a.auctionEnd);
     const output = [];
     for (const component of temp) {
       if (
         (currentCategory === 'ALL' ||
         (component.category && component.category.name === currentCategory))
-        &&component.auctionEnd>(Date.now())
+        &&component.auctionEnd
       ) {
         output.push(
           <TouchableWithoutFeedback
@@ -98,7 +98,7 @@ export default function Discover({ navigation }) {
 
   const SECTIONS = [
     {
-      title: 'Featured',
+      title: 'Made for you',
       horizontal: true,
       data: [
         {
@@ -111,7 +111,6 @@ export default function Discover({ navigation }) {
           text: 'Item text 2',
           uri: 'https://picsum.photos/id/10/200',
         },
-
         {
           key: '3',
           text: 'Item text 3',
@@ -130,7 +129,7 @@ export default function Discover({ navigation }) {
       ],
     },
     {
-      title: 'Trendy',
+      title: 'Punk and hardcore',
       horizontal: true,
       data: [
         {
@@ -162,7 +161,7 @@ export default function Discover({ navigation }) {
       ],
     },
     {
-      title: 'Beauty',
+      title: 'Based on your recent listening',
       horizontal: true,
       data: [
         {
@@ -239,6 +238,7 @@ export default function Discover({ navigation }) {
                   ) : null}
                 </>
               )}
+
               renderItem={({ item, section }) => {
                 if (section.horizontal) {
                   return null;
@@ -247,6 +247,49 @@ export default function Discover({ navigation }) {
               }}
             />
           </SafeAreaView>
+        </View>
+        <View style={styles.homeContent}>
+          <DropDownPicker
+            dropDownMaxHeight={1500}
+            items={[{ name: 'ALL' }, ...categories.data.get_categories].map(
+              (cat) => ({
+                label: cat.name.charAt(0) + cat.name.slice(1).toLowerCase(),
+                value: cat.name,
+              }),
+            )}
+            defaultValue={'ALL'}
+            containerStyle={{
+              height: 40,
+              width: 150,
+              marginBottom: 20,
+            }}
+            style={{
+              backgroundColor: null,
+              borderWidth: 1,
+              borderColor: 'black',
+              fontFamily: 'Roboto_medium',
+            }}
+            itemStyle={{
+              justifyContent: 'flex-start',
+            }}
+            arrowColor="gray"
+            arrowSize={20}
+            labelStyle={{
+              fontSize: 22,
+              color: 'gray',
+              fontFamily: 'Roboto_medium',
+            }}
+            dropDownStyle={{
+              backgroundColor: 'white',
+              borderWidth: 1,
+              borderTopWidth: 1,
+              borderColor: 'black',
+            }}
+            onChangeItem={(cat) => setCurrentCategory(cat.value)}
+          />
+          <View style={styles.homeItems}>
+            {items.data ? categoryTest() : null}
+          </View>
         </View>
       </ScrollView>
       <Tabbar navigation={navigation} canGoBack={false}/>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import BottomPopup from '../components/BottomPopup';
 import {
   StyleSheet,
   Text,
@@ -6,7 +7,8 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert
 } from 'react-native';
 import { Item, Input, Label, Button } from 'native-base';
 import { SIGN_IN } from '../queries/login';
@@ -14,10 +16,13 @@ import { useMutation } from '@apollo/client';
 
 export default function Login({ navigation, route }) {
   const [initialEmail, setInitialEmail] = useState('');
+  const [childData, setChild] = useState(0);
   const { token } = route.params;
   const [signIn, { data, error }] = useMutation(SIGN_IN);
   const [isLoading, setIsLoading] = useState(true);
-  const [password, setPassword] =useState('');
+  const [password, setPassword] = useState('');
+  const [isShow, setIsShow] = useState(false);
+  let clickedSubmit = false;
 
   useEffect(() => {
     console.log('error: ', error);
@@ -30,15 +35,34 @@ export default function Login({ navigation, route }) {
 
   useEffect(() => {
     setIsLoading(false);
+    console.log(`clickedSubmit`,clickedSubmit)
   }, []);
+
+  function handleCallback(fromChild) {
+    clickedSubmit = true
+    setChild({fromChild:fromChild+1})
+    console.log ('clickedSubmit',clickedSubmit)
+    console.log(`fromChild`, fromChild)
+    console.log(`childData`, childData)
+    if (fromChild>2) {
+      setTimeout(() => Alert.alert(`You have submitted too many requests. Please try again later. Attempts: ${fromChild}`), 600);
+    } else {
+      setTimeout(() => Alert.alert(`Please wait for 5 to 10 minutes. The password reset form will be sent directly to your email.`), 600);
+    }
+  }
 
   function login() {
     signIn({ variables: { email: initialEmail, password: password } });
   }
 
+  function close() {
+    setIsShow(false)
+  }
+
   function register() {
     navigation.navigate('Register');
   }
+
 
   if (isLoading) {
     return (
@@ -98,7 +122,22 @@ export default function Login({ navigation, route }) {
           <TouchableOpacity style={styles.register} onPress={register}>
             <Text style={styles.register}>Not signed up? Register here</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.register}
+            onPress={() => {
+              setIsShow(!isShow);
+            }}
+          >
+            <Text style={styles.register}>Forgot password?</Text>
+          </TouchableOpacity>
         </KeyboardAvoidingView>
+        <BottomPopup
+          show={isShow}
+          title={`Password Reset`}
+          animationType={"fade"}
+          closePopup={close}
+          haveOutsideTouch={true}
+          parentCallback={handleCallback}
+        />
       </ImageBackground>
     );
   }
@@ -168,3 +207,4 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto_medium',
   },
 });
+
