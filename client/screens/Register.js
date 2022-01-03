@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
+  KeyboardAvoidingView
 } from 'react-native';
 import { Item, Input, Label, Button } from 'native-base';
 import { SIGN_UP } from '../queries/register';
@@ -85,7 +86,7 @@ export default function Register({ navigation }) {
         <View style={styles.title}>
           <Text style={styles.title}>Register</Text>
         </View>
-        <View style={styles.container}>
+        <KeyboardAvoidingView behavior="padding" style={styles.container}>
           <Item floatingLabel style={styles.labelContainer}>
             <Label style={styles.label}>{'   '}Email</Label>
             <Input
@@ -114,7 +115,7 @@ export default function Register({ navigation }) {
           <TouchableOpacity style={styles.register} onPress={backToLogin}>
             <Text style={styles.register}>Back to login</Text>
           </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       </ImageBackground>
     );
   }

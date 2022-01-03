@@ -16,7 +16,7 @@ import { useMutation } from '@apollo/client';
 
 export default function Login({ navigation, route }) {
   const [initialEmail, setInitialEmail] = useState('');
-  const [childData, setChild] = useState(0);
+  const [childData, setChild] = useState(1);
   const { token } = route.params;
   const [signIn, { data, error }] = useMutation(SIGN_IN);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,12 +40,12 @@ export default function Login({ navigation, route }) {
 
   function handleCallback(fromChild) {
     clickedSubmit = true
-    setChild({fromChild:fromChild+1})
+    setChild(fromChild+1)
     console.log ('clickedSubmit',clickedSubmit)
     console.log(`fromChild`, fromChild)
     console.log(`childData`, childData)
-    if (fromChild>2) {
-      setTimeout(() => Alert.alert(`You have submitted too many requests. Please try again later. Attempts: ${fromChild}`), 600);
+    if (childData>2) {
+      setTimeout(() => Alert.alert(`You have submitted too many requests. Please try again later. Requests: ${childData}`), 600);
     } else {
       setTimeout(() => Alert.alert(`Please wait for 5 to 10 minutes. The password reset form will be sent directly to your email.`), 600);
     }
@@ -98,7 +98,7 @@ export default function Login({ navigation, route }) {
             />
           </Item>
           <Item floatingLabel style={styles.labelContainer}>
-            <Label style={styles.label}>Password</Label>
+            <Label style={styles.label}>{'   '}Password</Label>
             <Input
               secureTextEntry={true}
               autoCapitalize='none'

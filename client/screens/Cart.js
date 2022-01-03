@@ -53,47 +53,6 @@ export default function Cart({ navigation }) {
     return <Text>Error: </Text>;
   }
 
-  function categoryTest() {
-    const temp = items.data.get_items.slice();
-    temp.sort((a, b) => a.auctionEnd - b.auctionEnd);
-    const output = [];
-    for (const component of temp) {
-      if (
-        (currentCategory === 'ALL' ||
-        (component.category && component.category.name === currentCategory))
-        &&component.auctionEnd>(Date.now())
-      ) {
-        output.push(
-          <TouchableWithoutFeedback
-            key={component.id}
-            onPress={() => {
-              navigation.navigate('Item', { id: component.id });
-            }}
-          >
-            <View style={styles.itemView}>
-              <ImageBackground
-                style={styles.itemImage}
-                resizeMode="cover"
-                source={component.picUrl1 ? { uri: component.picUrl1 } : require('../assets/splash.png')}
-              >
-                <Timer
-                  style={styles.itemTime}
-                  deadline={component.auctionEnd}/>
-              </ImageBackground>
-            <Text style={styles.itemTitle}>{component.name}</Text>
-            <Text style={styles.itemPrice}>{component.minimumBid}€</Text>
-          </View>
-        </TouchableWithoutFeedback>
-        )
-      }
-    }
-    if (!output.length) {
-      return <Text style={styles.error}>No items found</Text>;
-    }
-    return output;
-  }
-
-
   return (
     <>
       <Navbar navigation={navigation} canGoBack={false} />
@@ -104,45 +63,8 @@ export default function Cart({ navigation }) {
         }
       >
         <View style={styles.homeContent}>
-          <Text style={styles.title}>Cart</Text>
-          <Text style={styles.categoryTitle}>Category:</Text>
-          <DropDownPicker
-            items={[{ name: 'ALL' }, ...categories.data.get_categories].map(
-              (cat) => ({
-                label: cat.name.charAt(0) + cat.name.slice(1).toLowerCase(),
-                value: cat.name,
-              }),
-            )}
-            defaultValue={'ALL'}
-            containerStyle={{
-              height: 40,
-              marginBottom: 20,
-            }}
-            style={{
-              backgroundColor: '#06D6A0',
-              borderWidth: 0,
-              fontFamily: 'Roboto_medium',
-            }}
-            itemStyle={{
-              justifyContent: 'flex-start',
-            }}
-            arrowColor="white"
-            arrowSize={20}
-            labelStyle={{
-              fontSize: 22,
-              color: 'white',
-              fontFamily: 'Roboto_medium',
-            }}
-            dropDownStyle={{
-              backgroundColor: '#06D6A0',
-              borderWidth: 0,
-              borderTopWidth: 1,
-              borderColor: 'white',
-            }}
-            onChangeItem={(cat) => setCurrentCategory(cat.value)}
-          />
           <View style={styles.homeItems}>
-            {items.data ? categoryTest() : null}
+
           </View>
         </View>
       </ScrollView>

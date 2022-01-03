@@ -19,7 +19,7 @@ export default class BottomPopup extends Component {
     this.state = {
       initialEmail: '',
       initialMobile: '',
-      count: 0,
+      count: 1,
     };
   }
 
@@ -37,9 +37,8 @@ export default class BottomPopup extends Component {
   }
 
   renderContent = () => {
-    const { data } = this.props;
     return (
-      <View style={styles.container}>
+      <View behavior="padding" style={styles.container}>
         <Item floatingLabel style={styles.labelContainer}>
           <Label style={styles.label}>{'   '}Email</Label>
           <Input
@@ -98,28 +97,36 @@ export default class BottomPopup extends Component {
               closePopup()
             }}
             style={{ flex: 1 }}>
-
           </Pressable>
 
-          <View style={{
-            bottom: 0,
-            position: 'absolute',
-            width: '100%',
-            backgroundColor: 'white',
-            borderTopLeftRadius: 15,
-            borderTopRightRadius: 15,
-            // height: Dimensions.get('window').height * 0.4,
-            maxHeight: Dimensions.get('window').height * 0.4
-          }}>
+          <KeyboardAvoidingView
+            behavior="padding"
+            keyboardVerticalOffset={
+              Platform.select({
+                 ios: () => 220,
+                 android: () => 220
+              })()}
+            style={{
+              bottom: 0,
+              position: 'absolute',
+              width: '100%',
+              backgroundColor: 'white',
+              borderTopLeftRadius: 15,
+              borderTopRightRadius: 15,
+              // height: Dimensions.get('window').height * 0.4,
+              maxHeight: Dimensions.get('window').height * 0.4,
+              paddingTop: 30,
+            }}>
             <Text style={{
+              position: 'absolute',
               alignSelf: 'center',
               color: '#182E44',
               fontSize: 20,
               fontWeight: '500',
-              margin: 15
+              margin: 15,
             }}>{title}</Text>
             {this.renderContent()}
-          </View>
+          </KeyboardAvoidingView>
         </View>
       </Modal>
     );
@@ -151,7 +158,6 @@ const styles = StyleSheet.create({
     padding: 16,
     alignSelf: 'center',
     width: '40%',
-    marginTop: 30,
     backgroundColor: '#118AB2',
     fontFamily: 'Roboto_medium',
     marginBottom: 20

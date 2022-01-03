@@ -18,6 +18,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Navbar from '../components/Navbar';
 import Tabbar from '../components/Tabbar';
 import Timer from '../components/Timer';
+import NativeCard from '../components/NativeCard';
 import { GET_CATEGORIES, GET_ITEMS } from '../queries/home';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import bidSubscription from '../queries/subscription';
@@ -73,7 +74,10 @@ export default function Discover({ navigation }) {
               navigation.navigate('Item', { id: component.id });
             }}
           >
-            <View style={styles.itemView}>
+            <View style={styles.compView}>
+              <NativeCard item={items} compName={component.name} compUri={component.picUrl1}/>
+            </View>
+            {/* <View style={styles.itemView}>
               <ImageBackground
                 style={styles.itemImage}
                 resizeMode="cover"
@@ -83,9 +87,9 @@ export default function Discover({ navigation }) {
                   style={styles.itemTime}
                   deadline={component.auctionEnd}/>
               </ImageBackground>
-            <Text style={styles.itemTitle}>{component.name}</Text>
-            <Text style={styles.itemPrice}>{component.minimumBid}€</Text>
-          </View>
+              <Text style={styles.itemTitle}>{component.name}</Text>
+              <Text style={styles.itemPrice}>{component.minimumBid}€</Text>
+            </View> */}
         </TouchableWithoutFeedback>
         )
       }
@@ -196,16 +200,19 @@ export default function Discover({ navigation }) {
 
   const ListItem = ({ item }) => {
     return (
-      <View style={styles.item}>
-        <Image
-          source={{
-            uri: item.uri,
-          }}
-          style={styles.itemPhoto}
-          resizeMode="cover"
-        />
-        <Text style={styles.itemText}>{item.text}</Text>
+      <View style={styles.itemView}>
+        <NativeCard item={item}/>
       </View>
+      // <View style={styles.item}>
+      //   <Image
+      //     source={{
+      //       uri: item.uri,
+      //     }}
+      //     style={styles.itemPhoto}
+      //     resizeMode="cover"
+      //   />
+      //   <Text style={styles.itemText}>{item.text}</Text>
+      // </View>
     );
   };
 
@@ -219,7 +226,7 @@ export default function Discover({ navigation }) {
         }
       >
         <View style={styles.container}>
-          <StatusBar style="light" />
+          <StatusBar style="dark " />
           <SafeAreaView style={{ flex: 1 }}>
             <SectionList
               contentContainerStyle={{ paddingHorizontal: 10 }}
@@ -323,7 +330,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto_medium',
   },
   itemView: {
-    width: (windowWidth - 45) / 2,
+    width: (windowWidth - 45) / 1.3,
+    marginBottom: 15,
+    fontFamily: 'Roboto_medium',
+  },
+  compView: {
+    width: (windowWidth - 30) / 2,
     marginBottom: 15,
     fontFamily: 'Roboto_medium',
   },
