@@ -55,13 +55,13 @@ export default function Home({ navigation }) {
 
   function categoryTest() {
     const temp = items.data.get_items.slice();
-    temp.sort((a, b) => a.auctionEnd - b.auctionEnd);
+    temp.sort((a, b) => b.auctionEnd - a.auctionEnd);
     const output = [];
     for (const component of temp) {
       if (
         (currentCategory === 'ALL' ||
         (component.category && component.category.name === currentCategory))
-        &&component.auctionEnd>(Date.now())
+        &&component.auctionEnd
       ) {
         output.push(
           <TouchableWithoutFeedback

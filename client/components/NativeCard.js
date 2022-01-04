@@ -24,7 +24,7 @@ export default class NativeCard extends Component {
               <Image source={this.props.item.uri || this.props.compUri ? {uri: `${this.props.item.uri || this.props.compUri}`} : require('../assets/splash.png')} style={{borderTopLeftRadius: 15, borderTopRightRadius: 15, height: 120, width: 200, flex: 1, resizeMode: "cover"}}/>
             </CardItem>
             <CardItem header style={{paddingTop: 5, paddingBottom: 0}}>
-              <Text ellipsizeMode='tail' numberOfLines={1} style={styles.titleText} >{this.props.item.text}{this.props.compName}</Text>
+              <Text ellipsizeMode='tail' numberOfLines={1} style={styles.titleText} >{this.props.item.category} : {this.props.item.text}</Text>
             </CardItem>
             <CardItem bordered style={{paddingBottom: 15, borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }}>
               <Text ellipsizeMode='tail' numberOfLines={2} style={styles.contentText}>
