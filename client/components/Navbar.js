@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, {useState} from 'react';
-import { Header, Button, Left, Right, Body } from "native-base";
+import { Header, Button, Left, Right, Body, Icon } from "native-base";
 import { StyleSheet, ImageBackground, StatusBar } from 'react-native';
 import SideBar from './SideBar';
 
@@ -9,13 +9,14 @@ export default function Navbar({navigation, canGoBack}) {
 
   return (
     <>
-    <Header style={{backgroundColor: '#ffffff'}}>
+    <Header style={{height: 35, backgroundColor: '#ffffff'}}>
     <StatusBar backgroundColor='#ffffff'/>
       <Left style={{flex: 1}}>
         {canGoBack
           ?
           <Button transparent onPress={()=>{navigation.goBack()}}>
-            <ImageBackground source={require('../assets/arrow.png')} style={styles.arrow} resizeMode='contain'/>
+            {/* <ImageBackground source={require('../assets/arrow.png')} style={styles.arrow} resizeMode='contain'/> */}
+            <Icon type="MaterialCommunityIcons" name="less-than" style={styles.navIcon}/>
           </Button>
           :
           null
@@ -25,9 +26,9 @@ export default function Navbar({navigation, canGoBack}) {
         <ImageBackground source={require('../assets/logo.png')} style={styles.logo} resizeMode='contain'/>
       </Body>
       <Right style={{flex: 1}}>
-        <Button transparent onPress={() => {setHideSide(hide => !hide)}}>
+        {/* <Button transparent onPress={() => {setHideSide(hide => !hide)}}>
           <ImageBackground source={require('../assets/burger.png')} style={styles.burger} resizeMode='contain'/>
-        </Button>
+        </Button> */}
       </Right>
     </Header>
     <SideBar navigation={navigation} hideSide={hideSide} setHideSide={setHideSide}/>
@@ -39,17 +40,29 @@ const styles = StyleSheet.create({
   arrow: {
     height: 40,
     width: 30,
+    backgroundColor: 'red'
   },
   logoContainer: {
     flex: 1,
     alignItems: 'center',
   },
   logo: {
-    height: 50,
+    height: 25,
     width: 170,
   },
   burger: {
     height: 40,
     width: 45,
+  },
+  navIcon: {
+    // position: "absolute",
+    height: 25,
+    width: 25,
+    color: '#383838',
+    fontSize: 20,
+    marginLeft: 10,
+    borderRadius: 25/2,
+    borderWidth: 1.5,
+    borderColor: '#383838'
   },
 });

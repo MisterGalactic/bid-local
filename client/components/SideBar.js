@@ -26,7 +26,6 @@ export default function SideBar({ navigation, hideSide, setHideSide }) {
         }
       ).start();
     }
-    
   }, [hideSide]);
 
   return (

@@ -13,26 +13,26 @@ export default function Tabbar({ navigation }) {
   return (
     <View style={styles.tabbar}>
       <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Home')}}>
-        <Icon name="shopping-bag" size={25} />
+        <Icon name="shopping-bag" size={35} />
         <Text style={styles.mytext}>Shop</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Discover')}}>
-        <Icon name="explore" size={25} />
+        <Icon name="explore" size={35} />
         <Text style={styles.mytext}>Discover</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('LogoButton')}}>
+        <Text style={styles.mytext}>Button</Text>
         <Image
           source={require('../assets/circle_icon.png')}
           style={styles.logoPic}
         />
-        <Text style={styles.mytext}>Button</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Cart')}}>
-        <Icon name="shopping-cart" size={25} />
+        <Icon name="shopping-cart" size={35} />
         <Text style={styles.mytext}>Cart</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('UserInfo')}}>
-        <Icon name="account-circle" size={25} />
+      <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Account')}}>
+        <Icon name="account-circle" size={35} />
         <Text style={styles.mytext}>Account</Text>
       </TouchableOpacity>
     </View>
@@ -43,7 +43,7 @@ export default function Tabbar({ navigation }) {
 const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#fff',
-    height: 60,
+    height: 80,
     borderTopWidth: 2,
     borderColor: '#e5e5e5',
     flexDirection: 'row',
@@ -51,7 +51,8 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    marginTop: 5
   },
   mytext: {
     fontSize: 14,
@@ -60,8 +61,10 @@ const styles = StyleSheet.create({
     color: 'rgb(50,50,50)',
   },
   logoPic: {
-    marginTop: 19,
-    width: '130%',
-    resizeMode: 'contain',
+    position: 'absolute',
+    bottom: '35%',
+    width: 70,
+    height: 70,
+    resizeMode: 'cover',
   }
 });

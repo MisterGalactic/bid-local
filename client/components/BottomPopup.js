@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     padding: 16,
     alignSelf: 'center',
     width: '40%',
-    backgroundColor: '#118AB2',
+    backgroundColor: 'gray',
     fontFamily: 'Roboto_medium',
     marginBottom: 20
   },

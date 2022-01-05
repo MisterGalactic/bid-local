@@ -141,7 +141,7 @@ export default function Item({ navigation, route }) {
         >
           <Carousel
             containerCustomStyle={{
-              backgroundColor: '#06D6A0',
+              backgroundColor: 'white',
               paddingVertical: 10,
             }}
             layout={'default'}
@@ -152,7 +152,7 @@ export default function Item({ navigation, route }) {
           />
           <View style={styles.itemInfo}>
             <Text style={styles.itemTitle}>{data.get_item_by_Id.name}</Text>
-            <Text style={styles.itemPrice}>{data.get_item_by_Id.minimumBid}€</Text>
+            <Text style={styles.itemPrice}>${data.get_item_by_Id.minimumBid}</Text>
             {
               user && highestBidder? (
                 <Text>You are the current highest bidder.</Text>
@@ -173,7 +173,7 @@ export default function Item({ navigation, route }) {
                   keyboardType="numeric"
                   placeholder={(data.get_item_by_Id.minimumBid+1).toString()}
                 />
-                <Text style={styles.bidCurrency}>€</Text>
+                <Text style={styles.bidCurrency}>$</Text>
               </View>
               <TouchableHighlight
                 style={styles.bidButton}
@@ -233,6 +233,7 @@ const styles = StyleSheet.create({
   itemInfo: {
     width: '100%',
     padding: 15,
+    backgroundColor: '#e6e6e6',
   },
   itemTitle: {
     fontSize: 25,
@@ -246,7 +247,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0C637F',
+    backgroundColor: '#A9A9A9',
     padding: 10,
     marginTop: 10,
     marginBottom: 20,
@@ -275,7 +276,7 @@ const styles = StyleSheet.create({
   },
   bidButton: {
     justifyContent: 'center',
-    backgroundColor: '#06D6A0',
+    backgroundColor: 'gray',
     padding: 10,
   },
   userInfo: {

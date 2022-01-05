@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '40%',
     marginTop: 30,
-    backgroundColor: '#118AB2',
+    backgroundColor: 'gray',
     fontFamily: 'Roboto_medium',
   },
   logo: {

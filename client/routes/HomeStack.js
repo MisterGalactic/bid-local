@@ -12,6 +12,7 @@ import Register from '../screens/Register';
 import Discover from '../screens/Discover';
 import LogoButton from '../screens/LogoButton';
 import Cart from '../screens/Cart';
+import Account from '../screens/Account';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const HomeStack = ({ token, initial }) => {
         <Stack.Screen name="Discover" component={Discover} />
         <Stack.Screen name="LogoButton" component={LogoButton} />
         <Stack.Screen name="Cart" component={Cart} />
+        <Stack.Screen name="Account" component={Account} />
         <Stack.Screen name="Item" component={Item} />
         <Stack.Screen name="AddItem" component={AddItem} />
         <Stack.Screen name="UserWonItems" component={WinnerItems} />
