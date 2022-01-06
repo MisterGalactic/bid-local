@@ -150,67 +150,69 @@ export default function Item({ navigation, route }) {
             itemWidth={windowWidth - windowWidth / 6}
             renderItem={ImageList}
           />
-          <View style={styles.itemInfo}>
-            <Text style={styles.itemTitle}>{data.get_item_by_Id.name}</Text>
-            <Text style={styles.itemPrice}>${data.get_item_by_Id.minimumBid}</Text>
-            {
-              user && highestBidder? (
-                <Text>You are the current highest bidder.</Text>
-              ) : (
-                <Text>Another user is the current highest bidder.</Text>
-              )
-            }
-            <View style={styles.time}>
-              <Text style={{ color: 'white', fontSize: 16 }}>Time Left:</Text>
-              <Timer style={{ color: 'white', fontSize: 25 }} deadline={data.get_item_by_Id.auctionEnd}/>
-            </View>
-            <View style={styles.bidView}>
-              <View style={styles.bidBorder}>
-                <TextInput
-                  style={styles.bidInput}
-                  value={offerBid}
-                  onChangeText={(text) => handleCurrency(text)}
-                  keyboardType="numeric"
-                  placeholder={(data.get_item_by_Id.minimumBid+1).toString()}
-                />
-                <Text style={styles.bidCurrency}>$</Text>
+          <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={styles.itemInfo}>
+            <View style={{padding: 15}}>
+              <Text style={styles.itemTitle}>{data.get_item_by_Id.name}</Text>
+              <Text style={styles.itemPrice}>${data.get_item_by_Id.minimumBid}</Text>
+              {
+                user && highestBidder? (
+                  <Text>You are the current highest bidder.</Text>
+                ) : (
+                  <Text>Another user is the current highest bidder.</Text>
+                )
+              }
+              <View style={styles.time}>
+                <Text style={{ color: 'white', fontSize: 16 }}>Time Left:</Text>
+                <Timer style={{ color: 'white', fontSize: 25 }} deadline={data.get_item_by_Id.auctionEnd}/>
               </View>
-              <TouchableHighlight
-                style={styles.bidButton}
-                onPress={() => {
-                  handleMakeOffer();
-                }}
-              >
-                <Text style={{ fontSize: 16, color: 'white' }}>MAKE OFFER</Text>
-              </TouchableHighlight>
-            </View>
-            {typeError ? (
-              <Text style={{ color: 'red', fontSize: 25 }}>{typeError}</Text>
-            ) : null}
+              <View style={styles.bidView}>
+                <View style={styles.bidBorder}>
+                  <TextInput
+                    style={styles.bidInput}
+                    value={offerBid}
+                    onChangeText={(text) => handleCurrency(text)}
+                    keyboardType="numeric"
+                    placeholder={(data.get_item_by_Id.minimumBid+1).toString()}
+                  />
+                  <Text style={styles.bidCurrency}>$</Text>
+                </View>
+                <TouchableHighlight
+                  style={styles.bidButton}
+                  onPress={() => {
+                    handleMakeOffer();
+                  }}
+                >
+                  <Text style={{ fontSize: 16, color: 'white' }}>MAKE OFFER</Text>
+                </TouchableHighlight>
+              </View>
+              {typeError ? (
+                <Text style={{ color: 'red', fontSize: 25 }}>{typeError}</Text>
+              ) : null}
 
-            <Text style={{ fontWeight: '700', fontSize: 18 }}>
-              Item Description:
-            </Text>
-            <Text style={{ fontSize: 16 }}>
-              {data.get_item_by_Id.description}
-            </Text>
-            <View style={styles.userInfo}>
-              <Text style={{ fontWeight: '700', fontSize: 18 }}>Seller Info</Text>
-              <Text style={{ fontSize: 16 }}>
-                <Text style={{ fontWeight: '700' }}>Name: </Text>
-                {data.get_item_by_Id.user.firstName}{' '}
-                {data.get_item_by_Id.user.lastName}
+              <Text style={{ fontWeight: '700', fontSize: 18 }}>
+                Item Description:
               </Text>
               <Text style={{ fontSize: 16 }}>
-                <Text style={{ fontWeight: '700' }}>Email: </Text>
-                {data.get_item_by_Id.user.email}
+                {data.get_item_by_Id.description}
               </Text>
-              <Text style={{ fontSize: 16 }}>
-                <Text style={{ fontWeight: '700' }}>Tel: </Text>
-                {data.get_item_by_Id.user.phoneNumber}
-              </Text>
+              <View style={styles.userInfo}>
+                <Text style={{ fontWeight: '700', fontSize: 18 }}>Seller Info</Text>
+                <Text style={{ fontSize: 16 }}>
+                  <Text style={{ fontWeight: '700' }}>Name: </Text>
+                  {data.get_item_by_Id.user.firstName}{' '}
+                  {data.get_item_by_Id.user.lastName}
+                </Text>
+                <Text style={{ fontSize: 16 }}>
+                  <Text style={{ fontWeight: '700' }}>Email: </Text>
+                  {data.get_item_by_Id.user.email}
+                </Text>
+                <Text style={{ fontSize: 16 }}>
+                  <Text style={{ fontWeight: '700' }}>Tel: </Text>
+                  {data.get_item_by_Id.user.phoneNumber}
+                </Text>
+              </View>
             </View>
-          </View>
+          </ImageBackground>
         </ScrollView>
       </>
     );
@@ -232,7 +234,6 @@ const styles = StyleSheet.create({
   },
   itemInfo: {
     width: '100%',
-    padding: 15,
     backgroundColor: '#e6e6e6',
   },
   itemTitle: {
@@ -244,7 +245,6 @@ const styles = StyleSheet.create({
     color: '#666666',
   },
   time: {
-    justifyContent: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#A9A9A9',

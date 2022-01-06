@@ -27,7 +27,7 @@ export default function Tabbar({ navigation }) {
           style={styles.logoPic}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Cart')}}>
+      <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('UserWonItems')}}>
         <Icon name="shopping-cart" size={35} />
         <Text style={styles.mytext}>Cart</Text>
       </TouchableOpacity>

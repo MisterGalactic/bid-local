@@ -45,9 +45,10 @@ const styles = StyleSheet.create({
   logoContainer: {
     flex: 1,
     alignItems: 'center',
+    marginBottom: '3%',
   },
   logo: {
-    height: 25,
+    height: 30,
     width: 170,
   },
   burger: {
@@ -63,6 +64,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     borderRadius: 25/2,
     borderWidth: 1.5,
-    borderColor: '#383838'
+    borderColor: '#383838',
+    marginBottom: '10%',
   },
 });
