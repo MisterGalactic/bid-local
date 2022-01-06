@@ -18,6 +18,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Navbar from '../components/Navbar';
 import Tabbar from '../components/Tabbar';
 import Timer from '../components/Timer';
+import FeatureCard from '../components/NativeCard';
 import NativeCard from '../components/NativeCard';
 import { GET_CATEGORIES, GET_ITEMS } from '../queries/home';
 import { useQuery, useLazyQuery } from '@apollo/client';
@@ -27,6 +28,7 @@ const windowWidth = Dimensions.get('window').width;
 
 export default function Discover({ navigation }) {
   bidSubscription();
+  const filterCat = 'FEATURED'
   const [currentCategory, setCurrentCategory] = useState('ALL');
   const [refresh, setRefresh] = useState(false);
   const categories = useQuery(GET_CATEGORIES);
@@ -160,21 +162,36 @@ export default function Discover({ navigation }) {
   //   return output;
   // }
 
-  function categoryTest() {
+  function categoryTest(customCat) {
     const temp = items.data.get_items.slice();
     const catArray = categories.data.get_categories;
     temp.sort((a, b) => b.auctionEnd - a.auctionEnd);
     const output = [];
-    for (const currCat of catArray) {
+    if (customCat) {
+      const name = customCat
+      output.push(
+        {
+          title: `${name} (${temp.filter( x => name === x.category.name).length})`,
+          horizontal: true,
+          data: dataTest(name),
+          sectionCat: name,
+          number: temp.filter( x => name === x.category.name).length
+        }
+      )
+    } else {
+      for (const currCat of catArray) {
+        const name = currCat.name
         output.push(
           {
-            title: `${currCat.name} (${temp.filter( x => currCat.name === x.category.name).length})`,
+            title: `${name} (${temp.filter( x => name === x.category.name).length})`,
             horizontal: true,
-            data: dataTest(currCat.name),
-            number: temp.filter( x => currCat.name === x.category.name).length
+            data: dataTest(name),
+            sectionCat: name,
+            number: temp.filter( x => name === x.category.name).length
           }
-          )
-        }
+        )
+      }
+    }
         //   <TouchableWithoutFeedback
         //     key={component.id}
         //     onPress={() => {
@@ -220,6 +237,24 @@ export default function Discover({ navigation }) {
     );
   };
 
+  const ListFeatureItem = ({ item }) => {
+    return (
+      <View>
+        <TouchableWithoutFeedback
+          key={item.key}
+          onPress={() => {
+            navigation.navigate('Item', { id: item.key });
+          }}
+        >
+          <ImageBackground style={styles.itemHide}/>
+          <View style={styles.featureView}>
+            <FeatureCard item={item}/>
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    );
+  };
+
   return (
     <>
       <Navbar navigation={navigation} canGoBack={false} />
@@ -232,7 +267,7 @@ export default function Discover({ navigation }) {
         <View style={styles.container}>
           <StatusBar style="dark " />
           <SafeAreaView style={{ flex: 1 }}>
-            <DropDownPicker
+            {/* <DropDownPicker
               dropDownMaxHeight={1500}
               items={[{ name: 'ALL' }, ...categories.data.get_categories].map(
                 (cat) => ({
@@ -270,17 +305,43 @@ export default function Discover({ navigation }) {
                 borderColor: 'black',
               }}
               onChangeItem={(cat) => setCurrentCategory(cat.value)}
-            />
+            /> */}
             <SectionList
               contentContainerStyle={{ paddingHorizontal: 10 }}
               stickySectionHeadersEnabled={false}
-              sections={ items.data ? categoryTest('BABY') : null }
+              sections={ items.data ? categoryTest('FEATURED') : null }
               renderSectionHeader={({ section }) => (
                 <>
                   {section.number>0 ? (
                     <Text style={styles.sectionHeader}>{section.title}</Text>
                   ) : null}
                   {section.horizontal ? (
+                    <FlatList
+                      horizontal
+                      data={section.data}
+                      renderItem={({ item }) => <ListFeatureItem item={item} />}
+                      showsHorizontalScrollIndicator={false}
+                    />
+                  ) : null}
+                </>
+              )}
+              renderItem={({ item, section }) => {
+                if (section.horizontal) {
+                  return null;
+                }
+                return <ListItem item={item} />;
+              }}
+            />
+            <SectionList
+              contentContainerStyle={{ paddingHorizontal: 10 }}
+              stickySectionHeadersEnabled={false}
+              sections={ items.data ? categoryTest() : null }
+              renderSectionHeader={({ section }) => (
+                <>
+                  {section.number>0 && section.sectionCat !== filterCat ? (
+                    <Text style={styles.sectionHeader}>{section.title}</Text>
+                  ) : null}
+                  {section.horizontal && section.sectionCat !== filterCat ? (
                     <FlatList
                       horizontal
                       data={section.data}
@@ -338,6 +399,12 @@ const styles = StyleSheet.create({
   },
   compView: {
     width: (windowWidth - 30) / 1.3,
+    // width: (windowWidth - 30) / 2,
+    // marginBottom: 15,
+    fontFamily: 'Roboto_medium',
+  },
+  featureView: {
+    width: windowWidth - 20,
     // width: (windowWidth - 30) / 2,
     // marginBottom: 15,
     fontFamily: 'Roboto_medium',

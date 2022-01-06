@@ -80,7 +80,7 @@ export default function Login({ navigation, route }) {
         <View style={styles.logo}>
           <Image
             style={styles.logoPic}
-            source={require('../assets/logo.png')}
+            source={require('../assets/logoLogin.png')}
           />
         </View>
         <View style={styles.title}>
@@ -180,8 +180,8 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   logoPic: {
-    width: '50%',
-    resizeMode: 'contain',
+    width: '100%',
+    resizeMode: 'cover',
   },
   label: {
     fontFamily: 'Roboto_medium',
