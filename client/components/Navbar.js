@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React, {useState} from 'react';
 import { Header, Button, Left, Right, Body, Icon } from "native-base";
-import { StyleSheet, ImageBackground, StatusBar } from 'react-native';
+import { StyleSheet, ImageBackground, StatusBar, TouchableOpacity, Text } from 'react-native';
 import SideBar from './SideBar';
 
 export default function Navbar({navigation, canGoBack}) {
@@ -26,6 +26,9 @@ export default function Navbar({navigation, canGoBack}) {
         <ImageBackground source={require('../assets/logo.png')} style={styles.logo} resizeMode='contain'/>
       </Body>
       <Right style={{flex: 1}}>
+        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Sandbox')}}>
+          <Icon type="MaterialCommunityIcons" name="radioactive" style={styles.navIcon}/>
+        </TouchableOpacity>
         {/* <Button transparent onPress={() => {setHideSide(hide => !hide)}}>
           <ImageBackground source={require('../assets/burger.png')} style={styles.burger} resizeMode='contain'/>
         </Button> */}

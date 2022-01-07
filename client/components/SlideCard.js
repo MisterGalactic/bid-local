@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { SliderBox } from "react-native-image-slider-box";
-import FeatureCard from './FeatureCard';
+import FeaturedCard from './FeaturedCard';
 import {
   View,
   Modal,
@@ -34,7 +34,7 @@ export default class SlideCard extends Component {
           <Card style={{flex: 0, borderRadius: 15}}>
             <CardItem header bordered style={{backgroundColor: "white", borderTopLeftRadius: 15, borderTopRightRadius: 15, borderBottomLeftRadius: 15, borderBottomRightRadius: 15, paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 0 }}>
               <SliderBox
-                ImageComponent={FeatureCard}
+                ImageComponent={FeaturedCard}
                 images={this.state.images}
                 sliderBoxHeight={200}
                 onCurrentImagePressed={index => this.props.parentCallback(this.props.data[index].key)}

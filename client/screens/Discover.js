@@ -19,6 +19,7 @@ import Navbar from '../components/Navbar';
 import Tabbar from '../components/Tabbar';
 import Timer from '../components/Timer';
 import FeatureCard from '../components/FeatureCard';
+import FeaturedCard from '../components/FeaturedCard';
 import NativeCard from '../components/NativeCard';
 import SlideCard from '../components/SlideCard';
 import { GET_CATEGORIES, GET_ITEMS } from '../queries/home';
@@ -242,23 +243,23 @@ export default function Discover({ navigation }) {
     );
   };
 
-  const ListFeatureItem = ({ item }) => {
-    return (
-      <View>
-        <TouchableWithoutFeedback
-          key={item.key}
-          onPress={() => {
-            navigation.navigate('Item', { id: item.key });
-          }}
-        >
-          <ImageBackground style={styles.itemHide}/>
-          <View style={styles.featureView}>
-            <FeatureCard item={item}/>
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
-    );
-  };
+  // const ListFeatureItem = ({ item }) => {
+  //   return (
+  //     <View>
+  //       <TouchableWithoutFeedback
+  //         key={item.key}
+  //         onPress={() => {
+  //           navigation.navigate('Item', { id: item.key });
+  //         }}
+  //       >
+  //         <ImageBackground style={styles.itemHide}/>
+  //         <View style={styles.featureView}>
+  //           <FeatureCard item={item}/>
+  //         </View>
+  //       </TouchableWithoutFeedback>
+  //     </View>
+  //   );
+  // };
 
   return (
     <>
@@ -312,7 +313,7 @@ export default function Discover({ navigation }) {
               onChangeItem={(cat) => setCurrentCategory(cat.value)}
             /> */}
             <SectionList
-              contentContainerStyle={{ paddingHorizontal: 10 }}
+              contentContainerStyle={{ paddingHorizontal: 0 }}
               stickySectionHeadersEnabled={false}
               sections={ items.data ? categoryTest('FEATURED') : null }
               renderSectionHeader={({ section }) => (
@@ -321,10 +322,14 @@ export default function Discover({ navigation }) {
                     <Text style={styles.sectionHeader}>{section.title}</Text>
                   ) : null}
                   {section.horizontal ? (
-                    <SlideCard
-                      data={section.data}
-                      parentCallback={handleCallback}
+                    <FeaturedCard
+                    data={section.data}
+                    parentCallback={handleCallback}
                     />
+                    // <SlideCard
+                    //   data={section.data}
+                    //   parentCallback={handleCallback}
+                    // />
                     // <FlatList
                     //   horizontal
                     //   data={section.data}
@@ -342,7 +347,7 @@ export default function Discover({ navigation }) {
               }}
             />
             <SectionList
-              contentContainerStyle={{ paddingHorizontal: 10 }}
+              contentContainerStyle={{ paddingHorizontal: 0 }}
               stickySectionHeadersEnabled={false}
               sections={ items.data ? categoryTest() : null }
               renderSectionHeader={({ section }) => (
