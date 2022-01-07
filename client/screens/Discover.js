@@ -18,8 +18,9 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Navbar from '../components/Navbar';
 import Tabbar from '../components/Tabbar';
 import Timer from '../components/Timer';
-import FeatureCard from '../components/NativeCard';
+import FeatureCard from '../components/FeatureCard';
 import NativeCard from '../components/NativeCard';
+import SlideCard from '../components/SlideCard';
 import { GET_CATEGORIES, GET_ITEMS } from '../queries/home';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import bidSubscription from '../queries/subscription';
@@ -60,6 +61,10 @@ export default function Discover({ navigation }) {
     return <Text>Error: </Text>;
   }
 
+  function handleCallback(fromChild) {
+    navigation.navigate('Item', { id: fromChild })
+  }
+
   // const dataTest = () => {
   //   const temp = items.data.get_items.slice();
   //   temp.sort((a, b) => b.auctionEnd - a.auctionEnd);
@@ -89,7 +94,7 @@ export default function Discover({ navigation }) {
   const dataTest = (cat) => {
     const demp = items.data.get_items.slice().filter( x => cat === x.category.name);
     demp.sort((a, b) => b.auctionEnd - a.auctionEnd);
-    console.log(`demp`,demp)
+    // console.log(`demp`,demp)
     const output = [];
     for (const component of demp) {
       if (
@@ -316,12 +321,16 @@ export default function Discover({ navigation }) {
                     <Text style={styles.sectionHeader}>{section.title}</Text>
                   ) : null}
                   {section.horizontal ? (
-                    <FlatList
-                      horizontal
+                    <SlideCard
                       data={section.data}
-                      renderItem={({ item }) => <ListFeatureItem item={item} />}
-                      showsHorizontalScrollIndicator={false}
+                      parentCallback={handleCallback}
                     />
+                    // <FlatList
+                    //   horizontal
+                    //   data={section.data}
+                    //   renderItem={({ item }) => <ListFeatureItem item={item} />}
+                    //   showsHorizontalScrollIndicator={false}
+                    // />
                   ) : null}
                 </>
               )}

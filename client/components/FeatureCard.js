@@ -13,28 +13,27 @@ import {
 } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 
-export default class NativeCard extends Component {
+export default class FeatureCard extends Component {
 
   render() {
     return (
-      <>
-        <Content padder scrollEnabled={false} style={{flex: 0, borderRadius: 15}}>
-          <Card style={{flex: 0, borderRadius: 15}}>
-            <CardItem header bordered style={{alignItems: 'flex-end', backgroundColor: "thistle", borderBottom: 20, borderTopLeftRadius: 15, borderTopRightRadius: 15, paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 5 }}>
-              <Image source={this.props.item.uri || this.props.compUri ? {uri: `${this.props.item.uri || this.props.compUri}`} : require('../assets/splash.png')} style={{borderTopLeftRadius: 15, borderTopRightRadius: 15, height: 120, width: 200, flex: 1, resizeMode: "cover"}}/>
-              <Text style={styles.catLabel}>{this.props.item.category.charAt(0) + this.props.item.category.slice(1).toLowerCase()}</Text>
-            </CardItem>
+      <View>
+        <Content scrollEnabled={false} style={{flex: 0, width: '93%', justifyItems: 'center'}}>
+          <Card noShadow style={{flex: 0, elevation: 0, borderColor: "white"}}>
+              <Image source={{uri:'http://placeimg.com/640/480/animals'}} style={{borderTopLeftRadius: 15, borderTopRightRadius: 15, height: 120, width: "100%"}}/>
+              {/* <Image source={this.props.item.uri || this.props.compUri ? {uri: `${this.props.item.uri || this.props.compUri}`} : require('../assets/splash.png')} style={{borderTopLeftRadius: 15, borderTopRightRadius: 15, height: 120, width: 200, flex: 1, resizeMode: "cover"}}/> */}
+              <Text style={styles.catLabel}>Label</Text>
             <CardItem header style={{paddingTop: 5, paddingBottom: 0}}>
-              <Text ellipsizeMode='tail' numberOfLines={1} style={styles.titleText} >{this.props.item.text}</Text>
+              <Text ellipsizeMode='tail' numberOfLines={1} style={styles.titleText} >Title</Text>
             </CardItem>
-            <CardItem bordered style={{paddingBottom: 15, borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }}>
+            <CardItem>
               <Text ellipsizeMode='tail' numberOfLines={2} style={styles.contentText}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </Text>
             </CardItem>
           </Card>
         </Content>
-      </>
+      </View>
     );
   }
 }
