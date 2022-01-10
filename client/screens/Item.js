@@ -125,7 +125,7 @@ export default function Item({ navigation, route }) {
   if (loading) return (
     <SafeAreaView style={styles.loadingContainer}>
       <Text style={styles.loading}>Loading...</Text>
-      <Image source={require('../assets/ecommerce.gif')} />
+      <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
     </SafeAreaView>
   );
   if (error) return <Text>Error: {error}</Text>;

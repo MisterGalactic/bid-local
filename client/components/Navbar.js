@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     height: 30,
-    width: 170,
+    width: 170
   },
   burger: {
     height: 40,

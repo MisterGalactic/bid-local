@@ -46,7 +46,7 @@ export default function LogoButton({ navigation }) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.loading}>Loading...</Text>
-        <Image source={require('../assets/ecommerce.gif')} />
+        <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
   if (categories.error) {

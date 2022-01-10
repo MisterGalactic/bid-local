@@ -7,11 +7,13 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
+  ImageBackground
 } from 'react-native';
 import Navbar from '../components/Navbar';
 import { Icon } from 'native-base';
 import { WON_ITEM_LIST, DELETE_ITEM } from '../queries/userWonItems';
 import { useLazyQuery, useMutation } from '@apollo/client';
+import Tabbar from '../components/Tabbar';
 
 export default function UsersItems({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -66,17 +68,21 @@ export default function UsersItems({ navigation, route }) {
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <Navbar navigation={navigation} canGoBack={true} />
-      <ScrollView
-        style={styles.container}
-        refreshControl={
-          <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
-        }
-      >
-        {itemList}
-      </ScrollView>
-    </SafeAreaView>
+    <>
+      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        <Navbar navigation={navigation} canGoBack={true} />
+        <ImageBackground
+          source={require('../assets/login-background-keyboard.jpg')}
+          style={styles.container}
+          refreshControl={
+            <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+          }
+        >
+          {itemList}
+        </ImageBackground>
+      </SafeAreaView>
+      <Tabbar navigation={navigation} canGoBack={false}/>
+    </>
   );
 }
 

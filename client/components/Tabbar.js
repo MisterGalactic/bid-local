@@ -1,41 +1,60 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Image
+  Image,
+  Dimensions
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useRoute} from '@react-navigation/native';
 
+const windowWidth = Dimensions.get('window').width;
 
 export default function Tabbar({ navigation }) {
+  const [leftMargin, setLeftMargin] = useState(0);
+  const route = useRoute();
+
+  useEffect(() => {
+    if (route.name === 'Discover') {
+      setLeftMargin(0.2)
+    } else if (route.name === 'UserWonItems') {
+      setLeftMargin(0.6)
+    } else if (route.name === 'Account') {
+      setLeftMargin(0.8)
+    }
+  });
+
   return (
-    <View style={styles.tabbar}>
-      <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Home')}}>
-        <Icon name="shopping-bag" size={35} />
-        <Text style={styles.mytext}>Shop</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Discover')}}>
-        <Icon name="explore" size={35} />
-        <Text style={styles.mytext}>Discover</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('LogoButton')}}>
-        <Text style={styles.mytext}>Button</Text>
-        <Image
-          source={require('../assets/circle_icon.png')}
-          style={styles.logoPic}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('UserWonItems')}}>
-        <Icon name="shopping-cart" size={35} />
-        <Text style={styles.mytext}>Cart</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Account')}}>
-        <Icon name="account-circle" size={35} />
-        <Text style={styles.mytext}>Account</Text>
-      </TouchableOpacity>
-    </View>
+    <>
+      <View style={{position: 'relative', backgroundColor: 'red', width: '20%', zIndex: 1, bottom: -5, height: 3, marginLeft: windowWidth*leftMargin,}}/>
+      <View style={styles.tabbar}>
+        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Home')}}>
+          <Icon color={'gray'} name="shopping-bag" size={35} />
+          <Text style={styles.mytext}>Shop</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Discover')}}>
+          <Icon color={'gray'} name="explore" size={35} />
+          <Text style={styles.mytext}>Discover</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('LogoButton')}}>
+          <Text style={styles.mytext}>Button</Text>
+          <Image
+            source={require('../assets/circle_icon.png')}
+            style={styles.logoPic}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('UserWonItems')}}>
+          <Icon color={'gray'} name="shopping-cart" size={35} />
+          <Text style={styles.mytext}>Cart</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Account')}}>
+          <Icon color={'gray'} name="account-circle" size={35} />
+          <Text style={styles.mytext}>Account</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 

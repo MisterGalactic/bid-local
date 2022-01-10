@@ -25,6 +25,7 @@ export default function LogoButton({ navigation }) {
   const [id, setID] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [exist, setExist] = useState(false);
   const user = useQuery(GET_USER_INFO);
 
   useEffect(() => {
@@ -50,6 +51,21 @@ export default function LogoButton({ navigation }) {
     setIsLoading(false);
   }, []);
 
+  useEffect(() => {
+    checkURL(`https://api.qrserver.com/v1/create-qr-code/?data=${id}`)
+      .then(() => {
+        setExist({ exist: true });
+      })
+      .catch(err => {
+        setExist({ exist: false });
+      })
+    }
+  )
+
+  async function checkURL(url) {
+    return fetch(url, { method: "HEAD" });
+  }
+
   return (
     <ImageBackground
       style={{ flex: 1 }}
@@ -60,11 +76,13 @@ export default function LogoButton({ navigation }) {
         source={require('../assets/circle_icon.png')}
       />
       <View style={styles.homeContent}>
+        <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', width: 320, height: 320}}>
           <Image
-            style={styles.qrCode}
-            source={{uri: `https://api.qrserver.com/v1/create-qr-code/?data=${id}`}}
+              style={styles.qrCode}
+              source={ exist ? {uri: `https://api.qrserver.com/v1/create-qr-code/?data=${id}`} : require('../assets/ecommerce.gif') }
           />
-          <Text style={styles.title}>{lastName} {firstName}</Text>
+        </View>
+        <Text style={styles.title}>{lastName} {firstName}</Text>
       </View>
       <Button style={{alignSelf: 'center'}} transparent onPress={()=>{navigation.goBack()}}>
         <Text style={styles.navIcon}>✕</Text>
@@ -94,6 +112,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     width: 250,
     height: 250,
+    zIndex: 1,
   },
   title: {
     alignItems: 'center',

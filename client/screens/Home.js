@@ -46,7 +46,7 @@ export default function Home({ navigation }) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.loading}>Loading...</Text>
-        <Image source={require('../assets/ecommerce.gif')} />
+        <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
   if (categories.error) {
@@ -103,7 +103,7 @@ export default function Home({ navigation }) {
           <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
         }
       >
-        <View style={styles.homeContent}>
+        <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={styles.homeContent}>
           <DropDownPicker
             dropDownMaxHeight={1500}
             items={[{ name: 'ALL' }, ...categories.data.get_categories].map(
@@ -145,7 +145,7 @@ export default function Home({ navigation }) {
           <View style={styles.homeItems}>
             {items.data ? categoryTest() : null}
           </View>
-        </View>
+        </ImageBackground>
       </ScrollView>
       <Tabbar navigation={navigation} canGoBack={false}/>
     </>
