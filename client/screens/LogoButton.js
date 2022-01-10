@@ -9,9 +9,9 @@ import {
   Image,
   SafeAreaView,
   RefreshControl,
-  Button,
-  TextInput,
+  TextInput
 } from 'react-native';
+import { Icon, Button } from "native-base";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Tabbar from '../components/Tabbar';
 import { GET_USER_INFO } from '../queries/userInfo';
@@ -55,24 +55,21 @@ export default function LogoButton({ navigation }) {
       style={{ flex: 1 }}
       source={require('../assets/login-background-keyboard.jpg')}
     >
+      <Image
+        style={styles.logoPic}
+        source={require('../assets/circle_icon.png')}
+      />
       <View style={styles.homeContent}>
-        <View style={styles.logo}>
-          <Image
-            style={styles.logoPic}
-            source={require('../assets/circle_icon.png')}
-          />
-        </View>
-        <View style={styles.logo}>
           <Image
             style={styles.qrCode}
             source={{uri: `https://api.qrserver.com/v1/create-qr-code/?data=${id}`}}
           />
-        </View>
-        <View style={styles.title}>
           <Text style={styles.title}>{lastName} {firstName}</Text>
-        </View>
       </View>
-      <Tabbar navigation={navigation} canGoBack={false}/>
+      <Button style={{alignSelf: 'center'}} transparent onPress={()=>{navigation.goBack()}}>
+        <Text style={styles.navIcon}>✕</Text>
+      </Button>
+      {/* <Tabbar navigation={navigation} canGoBack={false}/> */}
     </ImageBackground>
   );
 }
@@ -84,15 +81,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     fontFamily: 'Roboto_medium',
   },
-  logo: {
-    marginBottom: '5%',
-    resizeMode: 'contain',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   logoPic: {
-    width: '25%',
+    flex: 0,
+    width: windowWidth*0.25,
+    height: windowWidth*0.25,
     resizeMode: 'contain',
+    alignSelf: 'center',
+    marginTop: '13%',
   },
   qrCode: {
     width: '75%',
@@ -116,9 +111,10 @@ const styles = StyleSheet.create({
   },
   homeContent: {
     flex: 1,
-    padding: 15,
     flexDirection: 'column',
     fontFamily: 'Roboto_medium',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   homeItems: {
     flex: 1,
@@ -170,5 +166,18 @@ const styles = StyleSheet.create({
     color: '#67A036',
     textAlign: 'center',
     marginBottom: 1000,
-  }
+  },
+  navIcon: {
+    // position: "absolute",
+    height: 50,
+    width: 50,
+    color: '#383838',
+    fontSize: 40,
+    paddingTop: '1%',
+    textAlign: 'center',
+    borderRadius: 50/2,
+    borderWidth: 1.5,
+    borderColor: '#383838',
+    marginBottom: '20%'
+  },
 });

@@ -1,4 +1,4 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import Home from '../screens/Home';
@@ -23,7 +23,7 @@ const HomeStack = ({ token, initial }) => {
       <Stack.Navigator initialRouteName={initial} headerMode={null}>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Discover" component={Discover} />
-        <Stack.Screen name="LogoButton" component={LogoButton} />
+        <Stack.Screen name="LogoButton" options={{ cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,}} component={LogoButton} />
         <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Sandbox" component={Sandbox} />
         <Stack.Screen name="Account" component={Account} />

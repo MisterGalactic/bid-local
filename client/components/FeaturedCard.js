@@ -14,6 +14,12 @@ import {
   Button
 } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Icon, Left, Body } from 'native-base';
+import faker from 'faker-extra';
+
+const random_hex_color_code = () => {
+  let n = (Math.random() * 0xfffff * 1000000).toString(16);
+  return '#' + n.slice(0, 6);
+};
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -27,7 +33,7 @@ export default function FeaturedCard({ data, parentCallback }) {
         <Pagination
           dotsLength={carouselItems.length}
           activeDotIndex={activeIndex}
-          containerStyle={{ position: 'absolute', top: '36%'}}
+          containerStyle={{ position: 'absolute', top: '84%',}}
           dotStyle={{
               width: 7,
               height: 7,
@@ -55,7 +61,15 @@ export default function FeaturedCard({ data, parentCallback }) {
                     parallaxFactor={0.4}
                     {...parallaxProps}
             />
-            <Text style={styles.catLabel}>{item.category.charAt(0) + item.category.slice(1).toLowerCase()}</Text>
+            <Text style={{
+              position: 'absolute',
+              bottom: '4%',
+              padding: 5,
+              fontSize: 16,
+              backgroundColor: random_hex_color_code(),
+              color: 'white',
+              fontFamily: 'Roboto_medium',
+            }}>{faker.name.firstName()}</Text>
           </CardItem>
           <CardItem header style={{paddingTop: 5, paddingBottom: 0}}>
             <Text ellipsizeMode='tail' numberOfLines={1} style={styles.titleText} >{item.text}</Text>
@@ -125,15 +139,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-  catLabel: {
-    position: 'absolute',
-    bottom: '4%',
-    padding: 5,
-    fontSize: 16,
-    backgroundColor: '#c968c9',
-    color: 'white',
-    fontFamily: 'Roboto_medium',
-  }
+  // catLabel: {
+  //   position: 'absolute',
+  //   bottom: '4%',
+  //   padding: 5,
+  //   fontSize: 16,
+  //   backgroundColor: '#c968c9',
+  //   color: 'white',
+  //   fontFamily: 'Roboto_medium',
+  // }
 });
 
 
