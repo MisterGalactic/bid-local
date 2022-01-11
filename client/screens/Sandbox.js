@@ -13,8 +13,10 @@ import {
   SafeAreaView,
   Button,
   Pressable,
-  Platform
+  Platform,
+  TouchableOpacity
 } from 'react-native';
+import { Header, Left, Right, Body, Icon } from "native-base";
 import Navbar from '../components/Navbar';
 import Tabbar from '../components/Tabbar';
 import FeatureCard from '../components/FeatureCard';
@@ -35,7 +37,7 @@ export default function Sandbox({ navigation }) {
   };
 
   const showMode = (currentMode) => {
-    setShow(true);
+    setShow(!show);
     setMode(currentMode);
   };
 
@@ -47,48 +49,55 @@ export default function Sandbox({ navigation }) {
     showMode('time');
   };
 
-  useEffect(() => {
-    console.log(date)
-  });
-
   return (
     <>
       <Navbar navigation={navigation} canGoBack={true} />
       <ScrollView style={styles.container}>
         <Text>Date:{JSON.stringify(date)}</Text>
-        <Text>GetDay:{(date).getDay()}</Text>
+        <Text>GetReadable:{(date).toLocaleDateString()}</Text>
+        <Text>GetDay:{(date).getDate()}</Text>
         <Text>GetMonth:{(date).getMonth()}</Text>
-        <Text>GetYear:{(date).getYear()}</Text>
+        <Text>GetYear:{(date).getFullYear()}</Text>
         <Text>Mode:{mode}</Text>
-        <Text>Show:{show}</Text>
-        <View>
-          <View>
-            <Button onPress={showDatepicker} title="Show date picker!" />
+        <Text>Show:{String(show)}</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Button onPress={showDatepicker} title={(date).toDateString()} />
+          <TouchableOpacity onPress={showDatepicker} style={show && (mode==='date') ? styles.confirmView : styles.editView}>
+            <Icon type="MaterialCommunityIcons" name={show && (mode==='date') ? "check" : "square-edit-outline"} style={show && (mode==='date') ? styles.confirmIcon : styles.editIcon}/>
+          </TouchableOpacity>
+          {show && (mode==='date') && (
+          <View style={{position: 'absolute', marginLeft: 10, marginTop: 35, borderRadius:10, backgroundColor : "green"}}>
+            <Button onPress={showDatepicker} color='white' title='Confirm'/>
+            <DateTimePicker
+              minimumDate={Date.now()}
+              testID="dateTimePicker"
+              value={date}
+              mode="date"
+              is24Hour={true}
+              display="inline"
+              onChange={onChange}
+              style={{position: 'absolute', marginTop: 45, width: windowWidth*0.9, borderWidth: 1}}
+            />
           </View>
-          <View>
-            <Button onPress={showTimepicker} title="Show time picker!" />
+          )}
+          <Button onPress={showTimepicker} title={(date).toLocaleTimeString()} />
+          <TouchableOpacity onPress={showTimepicker} style={show && (mode==='time') ? styles.confirmView : styles.editView}>
+            <Icon type="MaterialCommunityIcons" name={show && (mode==='time') ? "check" : "square-edit-outline"} style={show && (mode==='date') ? styles.confirmIcon : styles.editIcon}/>
+          </TouchableOpacity>
+          {show && (mode==='time') && (
+          <View style={{position: 'absolute', marginLeft: 10, marginTop: 35, borderRadius:10, backgroundColor : "green"}}>
+            <Button onPress={showTimepicker} color='white' title='Confirm'/>
+            <DateTimePicker
+              minimumDate={Date.now()}
+              testID="dateTimePicker"
+              value={date}
+              mode="time"
+              is24Hour={true}
+              display="spinner"
+              onChange={onChange}
+              style={{position: 'absolute', marginTop: 45, width: windowWidth*0.5, borderWidth: 1}}
+            />
           </View>
-          {show && (
-            <>
-              <DateTimePicker
-                minimumDate={Date.now()}
-                testID="dateTimePicker"
-                value={date}
-                mode="date"
-                is24Hour={true}
-                display="default"
-                onChange={onChange}
-              />
-              <DateTimePicker
-                minimumDate={Date.now()}
-                testID="dateTimePicker"
-                value={date}
-                mode="time"
-                is24Hour={true}
-                display="default"
-                onChange={onChange}
-              />
-            </>
           )}
         </View>
       </ScrollView>
@@ -118,12 +127,6 @@ const styles = StyleSheet.create({
     color: 'gray',
     marginRight: 10,
   },
-  navIcon: {
-    position: "absolute",
-    color: '#A9A9A9',
-    left: "93%",
-    fontSize: 20,
-  },
   sidebarText: {
     fontSize: 20,
     color: 'gray',
@@ -139,4 +142,32 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     resizeMode: 'cover',
   },
+  editView: {
+    height: 25,
+    width: 25,
+    color: 'white',
+    borderRadius: 6,
+    backgroundColor: 'blue',
+    borderColor: '#383838',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  editIcon: {
+    color: 'white',
+    fontSize: 25,
+  },
+  confirmView: {
+    height: 25,
+    width: 25,
+    color: 'white',
+    borderRadius: 6,
+    backgroundColor: 'green',
+    borderColor: '#383838',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  confirmIcon: {
+    color: 'white',
+    fontSize: 25,
+  }
 });

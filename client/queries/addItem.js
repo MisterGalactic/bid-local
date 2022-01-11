@@ -6,7 +6,7 @@ export const CREATE_ITEM = gql`
       id,
       name,
       minPrice,
-      description
+      description,
     }
   }
 `;
