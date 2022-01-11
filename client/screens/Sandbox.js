@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import Carousel, { ParallaxImage, Pagination } from 'react-native-snap-carousel';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Animated } from 'react-native';
 import {
   StyleSheet,
@@ -11,7 +12,8 @@ import {
   Image,
   SafeAreaView,
   Button,
-  Pressable
+  Pressable,
+  Platform
 } from 'react-native';
 import Navbar from '../components/Navbar';
 import Tabbar from '../components/Tabbar';
@@ -22,115 +24,72 @@ const windowWidth = Dimensions.get('window').width;
 
 export default function Sandbox({ navigation }) {
 
-  const [activeIndex, setActiveIndex] = useState(0);
-  const carouselRef = useRef(null);
-  const carouselItems = [
-                          {
-                              title:"Item 1",
-                              text: "Text 1",
-                              subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-                              illustration: 'https://i.imgur.com/UYiroysl.jpg',
-                          },
-                          {
-                              title:"Item 2",
-                              text: "Text 2",
-                              subtitle: 'Lorem ipsum dolor sit amet',
-                              illustration: 'https://i.imgur.com/UPrs1EWl.jpg',
-                          },
-                          {
-                              title:"Item 3",
-                              text: "Text 3",
-                              subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
-                              illustration: 'https://i.imgur.com/MABUbpDl.jpg',
-                          },
-                          {
-                              title:"Item 4",
-                              text: "Text 4",
-                              subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-                              illustration: 'https://i.imgur.com/KZsmUi2l.jpg',
-                          },
-                          {
-                              title:"Item 5",
-                              text: "Text 5",
-                              subtitle: 'Lorem ipsum dolor sit amet',
-                              illustration: 'https://i.imgur.com/2nCt3Sbl.jpg',
-                          },
-                        ]
+  const [date, setDate] = useState(new Date(Date.now()));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
 
-  const getPagination = () => {
-      return (
-          <Pagination
-            dotsLength={carouselItems.length}
-            activeDotIndex={activeIndex}
-            containerStyle={{ position: 'relative', backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
-            dotStyle={{
-                width: 10,
-                height: 10,
-                borderRadius: 5,
-                marginHorizontal: 8,
-                backgroundColor: 'rgba(255, 255, 255, 0.92)'
-            }}
-            inactiveDotStyle={{
-                // Define styles for inactive dots here
-            }}
-            inactiveDotOpacity={0.4}
-            inactiveDotScale={0.6}
-          />
-      );
-  }
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
 
-  const _renderItem = ({item,index}, parallaxProps) => {
-    return (
-      <Pressable onPress={() => alert(item.subtitle)}>
-        <View style={{
-            backgroundColor:'floralwhite',
-            borderRadius: 5,
-            borderWidth: 1,
-            height: 250,
-            padding: 0,
-            marginLeft: 0,
-            marginRight: 0, }}>
-          <ParallaxImage
-              source={{ uri: item.illustration }}
-              containerStyle={styles.imageContainer}
-              style={styles.image}
-              parallaxFactor={0.4}
-              {...parallaxProps}
-          />
-          <Text style={{fontSize: 30}}>{item.title}</Text>
-          <Text>{item.text}</Text>
-          <Text>{item.subtitle}</Text>
-          <Button
-            onPress={() => carouselRef.current.snapToItem(0)}
-            title="Bress"
-          />
-                    <Button
-            onPress={() => console.log(activeIndex)}
-            title="whatIndex"
-          />
-        </View>
-      </Pressable>
-    )
-  }
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
+
+  useEffect(() => {
+    console.log(date)
+  });
 
   return (
     <>
       <Navbar navigation={navigation} canGoBack={true} />
       <ScrollView style={styles.container}>
-        <View style={styles.homeContent}>
-          <Carousel
-                    layout={"default"}
-                    borderWidth= {1}
-                    data={carouselItems}
-                    sliderWidth={windowWidth * 0.75}
-                    itemWidth={windowWidth * 0.75}
-                    renderItem={_renderItem}
-                    onSnapToItem = { index => setActiveIndex(index) }
-                    ref={carouselRef}
-                    hasParallaxImages={true}
-          />
-          <Text>Active Index:{activeIndex}</Text>
-          { getPagination() }
+        <Text>Date:{JSON.stringify(date)}</Text>
+        <Text>GetDay:{(date).getDay()}</Text>
+        <Text>GetMonth:{(date).getMonth()}</Text>
+        <Text>GetYear:{(date).getYear()}</Text>
+        <Text>Mode:{mode}</Text>
+        <Text>Show:{show}</Text>
+        <View>
+          <View>
+            <Button onPress={showDatepicker} title="Show date picker!" />
+          </View>
+          <View>
+            <Button onPress={showTimepicker} title="Show time picker!" />
+          </View>
+          {show && (
+            <>
+              <DateTimePicker
+                minimumDate={Date.now()}
+                testID="dateTimePicker"
+                value={date}
+                mode="date"
+                is24Hour={true}
+                display="default"
+                onChange={onChange}
+              />
+              <DateTimePicker
+                minimumDate={Date.now()}
+                testID="dateTimePicker"
+                value={date}
+                mode="time"
+                is24Hour={true}
+                display="default"
+                onChange={onChange}
+              />
+            </>
+          )}
         </View>
       </ScrollView>
       <Tabbar navigation={navigation} canGoBack={false}/>
