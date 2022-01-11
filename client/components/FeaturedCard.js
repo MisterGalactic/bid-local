@@ -69,7 +69,7 @@ export default function FeaturedCard({ data, parentCallback }) {
               backgroundColor: random_hex_color_code(),
               color: 'white',
               fontFamily: 'Roboto_medium',
-            }}>{faker.name.firstName()}</Text>
+            }}>{faker.company.companyName()}</Text>
           </CardItem>
           <CardItem header style={{paddingTop: 5, paddingBottom: 0}}>
             <Text ellipsizeMode='tail' numberOfLines={1} style={styles.titleText} >{item.text}</Text>

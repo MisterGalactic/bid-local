@@ -36,7 +36,7 @@ export default class NativeCard extends Component {
                 backgroundColor: random_hex_color_code(),
                 color: 'white',
                 fontFamily: 'Roboto_medium',
-              }}>{faker.name.firstName()}
+              }}>{faker.company.companyName()}
               </Text>
             </CardItem>
             <CardItem header style={{paddingTop: 5, paddingBottom: 0}}>
