@@ -4,7 +4,7 @@ import { Header, Button, Left, Right, Body, Icon } from "native-base";
 import { StyleSheet, ImageBackground, StatusBar, TouchableOpacity, Text } from 'react-native';
 import SideBar from './SideBar';
 
-export default function Navbar({navigation, canGoBack}) {
+export default function Navbar({navigation, canGoBack, targetScreen}) {
   const [hideSide, setHideSide] = useState(true);
 
   return (
@@ -14,7 +14,7 @@ export default function Navbar({navigation, canGoBack}) {
       <Left style={{flex: 1}}>
         {canGoBack
           ?
-          <Button transparent onPress={()=>{navigation.goBack()}}>
+          <Button transparent onPress={targetScreen ? ()=>{navigation.navigate(targetScreen)} : ()=>{navigation.goBack()} }>
             {/* <ImageBackground source={require('../assets/arrow.png')} style={styles.arrow} resizeMode='contain'/> */}
             <Icon type="MaterialCommunityIcons" name="less-than" style={styles.navIcon}/>
           </Button>

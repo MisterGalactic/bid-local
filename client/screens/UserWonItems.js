@@ -70,7 +70,7 @@ export default function UsersItems({ navigation, route }) {
   return (
     <>
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-        <Navbar navigation={navigation} canGoBack={true} />
+        <Navbar navigation={navigation} canGoBack={true}/>
         <ImageBackground
           source={require('../assets/login-background-keyboard.jpg')}
           style={styles.container}

@@ -132,7 +132,7 @@ export default function Item({ navigation, route }) {
   if (data) {
     return (
       <>
-        <Navbar navigation={navigation} canGoBack={true} />
+        <Navbar navigation={navigation} canGoBack={true} targetScreen={'Home'}/>
         <ScrollView
           style={styles.container}
           refreshControl={

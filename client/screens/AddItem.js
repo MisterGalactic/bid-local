@@ -39,8 +39,7 @@ export default function AddItem({ navigation, route }) {
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
     setTime(currentDate);
-    // handleTime(event);
-    console.log(`changing`, event )
+    // selectedDate ? null : handleTime(event);
   };
 
   const showMode = (currentMode) => {
@@ -56,23 +55,26 @@ export default function AddItem({ navigation, route }) {
     showMode('time');
   };
 
-  function secondsToHms(d) {
-    d = Number(d);
-    var h = Math.floor(d / 3600);
-    var m = Math.floor(d % 3600 / 60);
-    var s = Math.floor(d % 3600 % 60);
+  function secondsToHms(t) {
+    t = Number(t);
 
+    var d = Math.floor(t /(3600 * 24));
+    var h = Math.floor(t / 3600 % 24);
+    var m = Math.floor(t % 3600 / 60);
+    var s = Math.floor(t % 3600 % 60);
+
+    var dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
     var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-    var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+    var mDisplay = m > 0 ? m + (m == 1 ? " minute" : " minutes") : "";
     var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-    return hDisplay + mDisplay + sDisplay;
+    return t>0 ? `(${dDisplay}${hDisplay}${mDisplay})` : null;
 }
 
   useEffect(() => {
     if ((mode === 'date') && show) {
-      setBottomMargin('120%')
+      setBottomMargin('115%')
     } else if ((mode === 'time') && show) {
-      setBottomMargin('75%')
+      setBottomMargin('70%')
     } else {
       setBottomMargin('0%')
     }
@@ -80,6 +82,7 @@ export default function AddItem({ navigation, route }) {
 
   const [title, setTitle] = React.useState('');
   const [price, setPrice] = React.useState('');
+  const [clock, setClock] = React.useState('');
   const [time, setTime] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [createItem, { data, error }] = useMutation(CREATE_ITEM);
@@ -139,16 +142,16 @@ export default function AddItem({ navigation, route }) {
           input = input.slice(0, input.indexOf(',') + 3);
           if (input.search(/(,).*\1/g) === -1) {
             // if string doesn't contain multiple commas
-            setTime(input);
+            setClock(input);
           }
         } else {
-          setTime(input);
+          setClock(input);
         }
       } else {
         setTypeError('Invalid Character');
       }
     } else {
-      setTime(input);
+      setClock(input);
     }
   }
 
@@ -163,7 +166,7 @@ export default function AddItem({ navigation, route }) {
           picUrl2: imageUrls[1] ? imageUrls[1] : '',
           picUrl3: imageUrls[2] ? imageUrls[2] : '',
           // auctionEnd: new Date(Date.now()+60000*parseInt(time)),
-          auctionEnd: time,
+          auctionEnd: time ? time : new Date(Date.now()+60000*parseInt(clock)),
           CategoryId: selectedCategories[0].id,
         },
       };
@@ -269,68 +272,78 @@ export default function AddItem({ navigation, route }) {
           {typeError ? (
             <Text style={{ color: 'purple', fontSize: 18 }}>{typeError}</Text>
           ) : null}
-          {/* <Text style={{ marginTop: 15 }}>Duration (Minutes):</Text>
-          <TextInput
-            style={styles.textBoxes}
-            value={time}
-            onChangeText={(text) => onChange(text)}
-            keyboardType="numeric"
-            placeholder={secondsToHms((time - now)/1000)}
-          />
-          {typeError ? (
-            <Text style={{ color: 'purple', fontSize: 18 }}>{typeError}</Text>
-          ) : null} */}
-          <Text style={{ marginTop: 15 }}>End Date & Time:</Text>
-          { (secondsToHms((time - now)/1000)) ? <Text style={{ marginTop: 0 }}>{secondsToHms((time - now)/1000)}</Text> : null }
-          <View style={{
-            borderWidth: 1,
-            borderColor: '#EF476F',
-            width: '90%',
-            padding: 5,
-            flexDirection: 'row',
-            marginBottom: bottomMargin
-          }}>
-            <View style={{flex: 1, flexDirection: 'row', marginLeft: -windowWidth*0.02}}>
-              <Button onPress={showDatepicker} title={(date).toDateString()} />
-              <TouchableOpacity onPress={showDatepicker} style={show && (mode==='date') ? styles.confirmView : styles.editView}>
-                <Icon type="MaterialCommunityIcons" name={show && (mode==='date') ? "check" : "square-edit-outline"} style={show && (mode==='date') ? styles.confirmIcon : styles.editIcon}/>
-              </TouchableOpacity>
-              {show && (mode==='date') && (
-              <View style={{position: 'absolute', marginTop: 50, borderRadius:10, backgroundColor : "green"}}>
-                <Button onPress={showDatepicker} color='white' title='Confirm'/>
-                <DateTimePicker
-                  minimumDate={Date.now()}
-                  testID="dateTimePicker"
-                  value={date}
-                  mode="date"
-                  is24Hour={true}
-                  display="inline"
-                  onChange={onChange}
-                  style={{position: 'absolute', marginTop: 45, width: windowWidth*0.85, borderWidth: 1}}
-                />
+          {
+            time ? null :
+          <>
+            <Text style={{ marginTop: 15 }}>Duration (Minutes):</Text>
+            <TextInput
+              style={styles.textBoxes}
+              value={clock}
+              onChangeText={(text) => handleTime(text)}
+              keyboardType="numeric"
+              placeholder={secondsToHms((time - now)/1000)}
+            />
+            {typeError ? (
+              <Text style={{ color: 'purple', fontSize: 18 }}>{typeError}</Text>
+            ) : null}
+          </>
+          }
+          {
+            clock ? null :
+          <>
+            <Text style={{ marginTop: 15 }}>End Date & Time:</Text>
+            { (secondsToHms((time - now)/1000)) ? <Text style={{ marginTop: 0 }}>{secondsToHms((time - now)/1000)}</Text> : null }
+            <View style={{
+              borderWidth: 1,
+              borderColor: '#EF476F',
+              width: '90%',
+              padding: 5,
+              flexDirection: 'row',
+              marginBottom: bottomMargin
+            }}>
+              <View style={{flex: 1, flexDirection: 'row', marginLeft: -windowWidth*0.02}}>
+                <Button onPress={showDatepicker} title={(date).toDateString()} />
+                <TouchableOpacity onPress={showDatepicker} style={show && (mode==='date') ? styles.confirmView : styles.editView}>
+                  <Icon type="MaterialCommunityIcons" name={show && (mode==='date') ? "check" : "square-edit-outline"} style={show && (mode==='date') ? styles.confirmIcon : styles.editIcon}/>
+                </TouchableOpacity>
+                {show && (mode==='date') && (
+                <View style={{position: 'absolute', marginTop: 20, borderRadius:10, backgroundColor : "green",}}>
+                  {/* <Button onPress={showDatepicker} color='white' title='Confirm'/> */}
+                  <DateTimePicker
+                    minimumDate={Date.now()}
+                    testID="dateTimePicker"
+                    value={date}
+                    mode="date"
+                    is24Hour={true}
+                    display="inline"
+                    onChange={onChange}
+                    style={{position: 'absolute', marginTop: 45, width: windowWidth*0.85, borderWidth: 1}}
+                  />
+                </View>
+                )}
+                <Button onPress={showTimepicker} title={(date).toLocaleTimeString()} />
+                <TouchableOpacity onPress={showTimepicker} style={show && (mode==='time') ? styles.confirmView : styles.editView}>
+                  <Icon type="MaterialCommunityIcons" name={show && (mode==='time') ? "check" : "square-edit-outline"} style={show && (mode==='date') ? styles.confirmIcon : styles.editIcon}/>
+                </TouchableOpacity>
+                {show && (mode==='time') && (
+                <View style={{position: 'absolute', marginTop: 20, borderRadius:10, backgroundColor : "green", marginLeft: "40%"}}>
+                  {/* <Button onPress={showTimepicker} color='white' title='Confirm'/> */}
+                  <DateTimePicker
+                    minimumDate={Date.now()}
+                    testID="dateTimePicker"
+                    value={date}
+                    mode="time"
+                    is24Hour={true}
+                    display="spinner"
+                    onChange={onChange}
+                    style={{position: 'absolute', marginTop: 45, width: windowWidth*0.5, borderWidth: 1, alignSelf: 'center'}}
+                  />
+                </View>
+                )}
               </View>
-              )}
-              <Button onPress={showTimepicker} title={(date).toLocaleTimeString()} />
-              <TouchableOpacity onPress={showTimepicker} style={show && (mode==='time') ? styles.confirmView : styles.editView}>
-                <Icon type="MaterialCommunityIcons" name={show && (mode==='time') ? "check" : "square-edit-outline"} style={show && (mode==='date') ? styles.confirmIcon : styles.editIcon}/>
-              </TouchableOpacity>
-              {show && (mode==='time') && (
-              <View style={{position: 'absolute', marginTop: 50, borderRadius:10, backgroundColor : "green"}}>
-                <Button onPress={showTimepicker} color='white' title='Confirm'/>
-                <DateTimePicker
-                  minimumDate={Date.now()}
-                  testID="dateTimePicker"
-                  value={date}
-                  mode="time"
-                  is24Hour={true}
-                  display="spinner"
-                  onChange={onChange}
-                  style={{position: 'absolute', marginTop: 45, width: windowWidth*0.5, borderWidth: 1}}
-                />
-              </View>
-              )}
             </View>
-          </View>
+          </>
+          }
           <Text style={{ marginTop: 15 }}>Description:</Text>
           <TextInput
             style={styles.textBoxes}
@@ -568,7 +581,7 @@ const styles = StyleSheet.create({
     width: 25,
     color: 'white',
     borderRadius: 6,
-    backgroundColor: 'green',
+    backgroundColor: '#32CD32',
     borderColor: '#383838',
     alignItems: 'center',
     justifyContent: 'center',
