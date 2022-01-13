@@ -26,33 +26,50 @@ const windowWidth = Dimensions.get('window').width;
 
 export default function AddItem({ navigation, route }) {
 
+  const [duration, setDuration] = useState('');
 
+  const [now, setNow] = useState(new Date(Date.now()));
+  const [start, setStart] = useState(new Date(Date.now()));
+  const [end, setEnd] = useState('');
 
   const [bottomMargin, setBottomMargin] = useState('');
-  const [now, setNow] = useState(new Date(Date.now()));
-  const [date, setDate] = useState(new Date(Date.now()));
   const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-    setTime(currentDate);
-    // selectedDate ? null : handleTime(event);
+  const [showStart, setShowStart] = useState(false);
+  const [showEnd, setShowEnd] = useState(false);
+
+  const onChangeStart = (event, selectedDate) => {
+    const currentDate = selectedDate || now;
+    setStart(currentDate);
   };
 
-  const showMode = (currentMode) => {
-    setShow(!show);
-    setMode(currentMode);
+  const onChangeEnd = (event, selectedDate) => {
+    const currentDate = selectedDate || now;
+    setEnd(currentDate);
   };
 
-  const showDatepicker = () => {
-    showMode('date');
+  const showStartDatepicker = (data) => {
+    setMode('date');
+    setShowStart(data);
+    setShowEnd(false);
   };
 
-  const showTimepicker = () => {
-    showMode('time');
+  const showStartTimepicker = (data) => {
+    setMode('time');
+    setShowStart(data);
+    setShowEnd(false);
+  };
+
+  const showEndDatepicker = (data) => {
+    setMode('date');
+    setShowEnd(data);
+    setShowStart(false);
+  };
+
+  const showEndTimepicker = (data) => {
+    setMode('time');
+    setShowEnd(data);
+    setShowStart(false);
   };
 
   function secondsToHms(t) {
@@ -63,17 +80,17 @@ export default function AddItem({ navigation, route }) {
     var m = Math.floor(t % 3600 / 60);
     var s = Math.floor(t % 3600 % 60);
 
-    var dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
-    var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+    var dDisplay = d > 0 ? d + (d == 1 ? " day" : " days") : "";
+    var hDisplay = h > 0 ? h + (h == 1 ? " hour" : " hours") : "";
     var mDisplay = m > 0 ? m + (m == 1 ? " minute" : " minutes") : "";
     var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-    return t>0 ? `(${dDisplay}${hDisplay}${mDisplay})` : null;
+    return t>0 ? `${dDisplay} ${hDisplay} ${mDisplay}` : null;
 }
 
   useEffect(() => {
-    if ((mode === 'date') && show) {
+    if ((mode === 'date')) {
       setBottomMargin('115%')
-    } else if ((mode === 'time') && show) {
+    } else if ((mode === 'time')) {
       setBottomMargin('70%')
     } else {
       setBottomMargin('0%')
@@ -82,8 +99,6 @@ export default function AddItem({ navigation, route }) {
 
   const [title, setTitle] = React.useState('');
   const [price, setPrice] = React.useState('');
-  const [clock, setClock] = React.useState('');
-  const [time, setTime] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [createItem, { data, error }] = useMutation(CREATE_ITEM);
   const categories = useQuery(GET_CATEGORIES);
@@ -142,16 +157,16 @@ export default function AddItem({ navigation, route }) {
           input = input.slice(0, input.indexOf(',') + 3);
           if (input.search(/(,).*\1/g) === -1) {
             // if string doesn't contain multiple commas
-            setClock(input);
+            setDuration(input);
           }
         } else {
-          setClock(input);
+          setDuration(input);
         }
       } else {
         setTypeError('Invalid Character');
       }
     } else {
-      setClock(input);
+      setDuration(input);
     }
   }
 
@@ -165,8 +180,9 @@ export default function AddItem({ navigation, route }) {
           picUrl1: imageUrls[0] ? imageUrls[0] : '',
           picUrl2: imageUrls[1] ? imageUrls[1] : '',
           picUrl3: imageUrls[2] ? imageUrls[2] : '',
-          // auctionEnd: new Date(Date.now()+60000*parseInt(time)),
-          auctionEnd: time ? time : new Date(Date.now()+60000*parseInt(clock)),
+          // auctionEnd: new Date(Date.now()+60000*parseInt(end)),
+          auctionStart: start,
+          auctionEnd: end ? end : new Date(Date.now()+60000*parseInt(duration)),
           CategoryId: selectedCategories[0].id,
         },
       };
@@ -273,15 +289,15 @@ export default function AddItem({ navigation, route }) {
             <Text style={{ color: 'purple', fontSize: 18 }}>{typeError}</Text>
           ) : null}
           {
-            time ? null :
+            end ? null :
           <>
             <Text style={{ marginTop: 15 }}>Duration (Minutes):</Text>
             <TextInput
               style={styles.textBoxes}
-              value={clock}
+              value={duration}
               onChangeText={(text) => handleTime(text)}
               keyboardType="numeric"
-              placeholder={secondsToHms((time - now)/1000)}
+              placeholder={secondsToHms((end - start)/1000)}
             />
             {typeError ? (
               <Text style={{ color: 'purple', fontSize: 18 }}>{typeError}</Text>
@@ -289,56 +305,127 @@ export default function AddItem({ navigation, route }) {
           </>
           }
           {
-            clock ? null :
+            duration ? null :
           <>
-            <Text style={{ marginTop: 15 }}>End Date & Time:</Text>
-            { (secondsToHms((time - now)/1000)) ? <Text style={{ marginTop: 0 }}>{secondsToHms((time - now)/1000)}</Text> : null }
+            <Text style={{ marginTop: 15 }}>Start Date & Time:</Text>
+            {/* {showStart ? <Text>showStart true</Text> : <Text>showStart false</Text> } */}
             <View style={{
               borderWidth: 1,
               borderColor: '#EF476F',
               width: '90%',
               padding: 5,
               flexDirection: 'row',
-              marginBottom: bottomMargin
+              marginBottom: showStart ? bottomMargin : null
             }}>
               <View style={{flex: 1, flexDirection: 'row', marginLeft: -windowWidth*0.02}}>
-                <Button onPress={showDatepicker} title={(date).toDateString()} />
-                <TouchableOpacity onPress={showDatepicker} style={show && (mode==='date') ? styles.confirmView : styles.editView}>
-                  <Icon type="MaterialCommunityIcons" name={show && (mode==='date') ? "check" : "square-edit-outline"} style={show && (mode==='date') ? styles.confirmIcon : styles.editIcon}/>
+                <Button onPress={() => {showStartDatepicker(!showStart)}} title={(start).toDateString()}/>
+                <TouchableOpacity onPress={() => {showStartDatepicker(!showStart)}} style={(mode==='date') && showStart ? styles.confirmView : styles.editView}>
+                  <Icon type="MaterialCommunityIcons" name={(mode==='date') && showStart ? "check" : "square-edit-outline"} style={(mode==='date') ? styles.confirmIcon : styles.editIcon}/>
                 </TouchableOpacity>
-                {show && (mode==='date') && (
-                <View style={{position: 'absolute', marginTop: 20, borderRadius:10, backgroundColor : "green",}}>
-                  {/* <Button onPress={showDatepicker} color='white' title='Confirm'/> */}
-                  <DateTimePicker
-                    minimumDate={Date.now()}
-                    testID="dateTimePicker"
-                    value={date}
-                    mode="date"
-                    is24Hour={true}
-                    display="inline"
-                    onChange={onChange}
-                    style={{position: 'absolute', marginTop: 45, width: windowWidth*0.85, borderWidth: 1}}
-                  />
-                </View>
+                {(mode==='date') && (
+                <>
+                  {showStart ?
+                  <View style={{position: 'absolute', marginTop: 20, borderRadius:10, backgroundColor : "green",}}>
+                    {/* <Button onPress={showStartDatepicker} color='white' title='Confirm'/> */}
+                    <DateTimePicker
+                      minimumDate={Date.now()}
+                      testID="dateTimePicker"
+                      value={start}
+                      mode="date"
+                      is24Hour={true}
+                      display="inline"
+                      onChange={onChangeStart}
+                      style={{position: 'absolute', marginTop: 45, width: windowWidth*0.85, borderWidth: 1}}
+                    />
+                  </View> : null
+                  }
+                </>
                 )}
-                <Button onPress={showTimepicker} title={(date).toLocaleTimeString()} />
-                <TouchableOpacity onPress={showTimepicker} style={show && (mode==='time') ? styles.confirmView : styles.editView}>
-                  <Icon type="MaterialCommunityIcons" name={show && (mode==='time') ? "check" : "square-edit-outline"} style={show && (mode==='date') ? styles.confirmIcon : styles.editIcon}/>
+                <Button onPress={() => {showStartTimepicker(!showStart)}} title={start ? (start).toLocaleTimeString() : (new Date(Date.now())).toLocaleTimeString()} />
+                <TouchableOpacity onPress={() => {showStartTimepicker(!showStart)}} style={(mode==='time') && showStart ? styles.confirmView : styles.editView}>
+                  <Icon type="MaterialCommunityIcons" name={(mode==='time') && showStart ? "check" : "square-edit-outline"} style={(mode==='date') ? styles.confirmIcon : styles.editIcon}/>
                 </TouchableOpacity>
-                {show && (mode==='time') && (
+                {(mode==='time') && (
+                <>
+                  {
+                  showStart ?
+                  <View style={{position: 'absolute', marginTop: 20, borderRadius:10, backgroundColor : "green", marginLeft: "40%"}}>
+                    {/* <Button onPress={showTimepicker} color='white' title='Confirm'/> */}
+                    <DateTimePicker
+                      minimumDate={Date.now()}
+                      testID="dateTimePicker"
+                      value={start}
+                      mode="time"
+                      is24Hour={true}
+                      display="spinner"
+                      onChange={onChangeStart}
+                      style={{position: 'absolute', marginTop: 45, width: windowWidth*0.5, borderWidth: 1, alignSelf: 'center'}}
+                    />
+                  </View> : null
+                  }
+                </>
+                )}
+              </View>
+            </View>
+            <Text style={{ marginTop: 15 }}>End Date & Time:</Text>
+            {/* {showEnd ? <Text>showEnd true</Text> : <Text>showEnd false</Text> } */}
+            { (secondsToHms((end - start)/1000)) ? <Text style={{ marginTop: 0 }}>{secondsToHms((end - start)/1000)}</Text> : null }
+            <View style={{
+              borderWidth: 1,
+              borderColor: '#EF476F',
+              width: '90%',
+              padding: 5,
+              flexDirection: 'row',
+              marginBottom: showEnd ? bottomMargin : null
+            }}>
+              <View style={{flex: 1, flexDirection: 'row', marginLeft: -windowWidth*0.02}}>
+                <Button onPress={()=>{showEndDatepicker(!showEnd)}} title={end>start ? (end).toDateString() : (start).toDateString()} />
+                <TouchableOpacity onPress={()=>{showEndDatepicker(!showEnd)}} style={(mode==='date') && showEnd ? styles.confirmView : styles.editView}>
+                  <Icon type="MaterialCommunityIcons" name={(mode==='date') && showEnd ? "check" : "square-edit-outline"} style={(mode==='date') ? styles.confirmIcon : styles.editIcon}/>
+                </TouchableOpacity>
+                {(mode==='date') && (
+                <>
+                  {
+                  showEnd ?
+                  <View style={{position: 'absolute', marginTop: 20, borderRadius:10, backgroundColor : "green",}}>
+                    {/* <Button onPress={showEndDatepicker} color='white' title='Confirm'/> */}
+                    <DateTimePicker
+                      minimumDate={start}
+                      testID="dateTimePicker"
+                      value={end>start ? end : start}
+                      mode="date"
+                      is24Hour={true}
+                      display="inline"
+                      onChange={onChangeEnd}
+                      style={{position: 'absolute', marginTop: 45, width: windowWidth*0.85, borderWidth: 1}}
+                    />
+                  </View> : null
+                  }
+                </>
+                )}
+                <Button onPress={()=>{showEndTimepicker(!showEnd)}} title={end>start ? (end).toLocaleTimeString() : (start).toLocaleTimeString()}/>
+                <TouchableOpacity onPress={()=>{showEndTimepicker(!showEnd)}} style={(mode==='time') && showEnd ? styles.confirmView : styles.editView}>
+                  <Icon type="MaterialCommunityIcons" name={(mode==='time') && showEnd ? "check" : "square-edit-outline"} style={(mode==='date') ? styles.confirmIcon : styles.editIcon}/>
+                </TouchableOpacity>
+                {(mode==='time') && (
+                <>
+                  {
+                  showEnd ?
                 <View style={{position: 'absolute', marginTop: 20, borderRadius:10, backgroundColor : "green", marginLeft: "40%"}}>
                   {/* <Button onPress={showTimepicker} color='white' title='Confirm'/> */}
                   <DateTimePicker
-                    minimumDate={Date.now()}
+                    minimumDate={start}
                     testID="dateTimePicker"
-                    value={date}
+                    value={end>start ? end : start}
                     mode="time"
                     is24Hour={true}
                     display="spinner"
-                    onChange={onChange}
+                    onChange={onChangeEnd}
                     style={{position: 'absolute', marginTop: 45, width: windowWidth*0.5, borderWidth: 1, alignSelf: 'center'}}
                   />
-                </View>
+                </View> : null
+                  }
+                </>
                 )}
               </View>
             </View>

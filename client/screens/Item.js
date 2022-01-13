@@ -162,8 +162,8 @@ export default function Item({ navigation, route }) {
                 )
               }
               <View style={styles.time}>
-                <Text style={{ color: 'white', fontSize: 16 }}>Time Left:</Text>
-                <Timer style={{ color: 'white', fontSize: 25 }} deadline={data.get_item_by_Id.auctionEnd}/>
+                <Text style={{ color: 'white', fontSize: 16 }}>{data.get_item_by_Id.auctionStart > new Date(Date.now()) ? `Starts in:` : `Time Left:`}</Text>
+                <Timer style={{ color: 'white', fontSize: 25 }} start={data.get_item_by_Id.auctionStart} deadline={data.get_item_by_Id.auctionEnd}/>
               </View>
               <View style={styles.bidView}>
                 <View style={styles.bidBorder}>

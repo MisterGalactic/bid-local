@@ -76,9 +76,16 @@ export default function Home({ navigation }) {
                 resizeMode="cover"
                 source={component.picUrl1 ? { uri: component.picUrl1 } : require('../assets/splash.png')}
               >
-                <Timer
-                  style={styles.itemTime}
-                  deadline={component.auctionEnd}/>
+                {
+                  component.auctionStart > new Date(Date.now()) ?
+                  <Text style={styles.itemNotStart}>Pending</Text>
+                  :
+                  <Timer
+                    style={component.auctionStart > new Date(Date.now()) ? styles.itemNotStart : (component.auctionEnd < new Date(Date.now()) ? styles.itemFinished : styles.itemStarted)}
+                    start={component.auctionStart}
+                    deadline={component.auctionEnd}
+                  />
+                }
               </ImageBackground>
             <Text style={styles.itemPrice}>${component.minimumBid}</Text>
             <Text style={styles.itemTitle}>{component.name}</Text>
@@ -189,14 +196,27 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     fontFamily: 'Roboto_medium',
   },
-  itemTime: {
+  itemStarted: {
+    padding: 5,
+    fontSize: 16,
+    backgroundColor: '#57D657',
+    color: 'white',
+    fontFamily: 'Roboto_medium',
+  },
+  itemNotStart: {
     padding: 5,
     fontSize: 16,
     backgroundColor: '#0C637F88',
     color: 'white',
     fontFamily: 'Roboto_medium',
   },
-
+  itemFinished: {
+    padding: 5,
+    fontSize: 16,
+    backgroundColor: '#BB50EF',
+    color: 'white',
+    fontFamily: 'Roboto_medium',
+  },
   itemTitle: {
     fontSize: 16,
     color: '#666666',

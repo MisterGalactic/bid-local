@@ -13,6 +13,7 @@ query  get_item_by_Id ( $id: ID! ){
   get_item_by_Id(id: $id){
     id
     name
+    auctionStart
     auctionEnd
     minimumBid
     description

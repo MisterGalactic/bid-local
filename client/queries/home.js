@@ -16,6 +16,7 @@ query get_items {
     name
     minimumBid
     picUrl1
+    auctionStart
     auctionEnd
     category {
       name
