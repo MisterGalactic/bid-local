@@ -55,13 +55,12 @@ export default function Home({ navigation }) {
 
   function categoryTest() {
     const temp = items.data.get_items.slice();
-    temp.sort((a, b) => b.auctionEnd - a.auctionEnd);
+    temp.sort((a, b) => b.auctionStart - a.auctionStart );
     const output = [];
     for (const component of temp) {
       if (
         (currentCategory === 'ALL' ||
         (component.category && component.category.name === currentCategory))
-        &&component.auctionEnd
       ) {
         output.push(
           <TouchableWithoutFeedback
@@ -88,6 +87,7 @@ export default function Home({ navigation }) {
                 }
               </ImageBackground>
             <Text style={styles.itemPrice}>${component.minimumBid}</Text>
+            <Text style={styles.itemTitle}>{component.subname}</Text>
             <Text style={styles.itemTitle}>{component.name}</Text>
           </View>
         </TouchableWithoutFeedback>
@@ -199,27 +199,28 @@ const styles = StyleSheet.create({
   itemStarted: {
     padding: 5,
     fontSize: 16,
-    backgroundColor: '#57D657',
+    backgroundColor: '#28A745',
     color: 'white',
     fontFamily: 'Roboto_medium',
   },
   itemNotStart: {
     padding: 5,
     fontSize: 16,
-    backgroundColor: '#0C637F88',
+    backgroundColor: '#17A2B8',
     color: 'white',
     fontFamily: 'Roboto_medium',
   },
   itemFinished: {
     padding: 5,
     fontSize: 16,
-    backgroundColor: '#BB50EF',
+    backgroundColor: '#DC3545',
     color: 'white',
     fontFamily: 'Roboto_medium',
   },
   itemTitle: {
     fontSize: 16,
     color: '#666666',
+    fontWeight: '100',
     fontFamily: 'Roboto_medium',
   },
 

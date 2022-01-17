@@ -35,7 +35,7 @@ export default function Item({ navigation, route }) {
   const windowWidth = Dimensions.get('window').width;
   const [offerBid, setOfferBid] = useState('');
   const [images, setImages] = useState([]);
-  const [typeError, setTypeError] =useState('');
+  const [typeError, setTypeError] = useState('');
   const [highestBidder, setHighestBidder] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
@@ -153,9 +153,9 @@ export default function Item({ navigation, route }) {
           <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={styles.itemInfo}>
             <View style={{padding: 15}}>
               <Text style={styles.itemTitle}>{data.get_item_by_Id.name}</Text>
-              <Text style={styles.itemPrice}>${data.get_item_by_Id.minimumBid}</Text>
+              <Text style={styles.itemPrice}>${offerBid>data.get_item_by_Id.minimumBid ? offerBid : data.get_item_by_Id.minimumBid}</Text>
               {
-                user && highestBidder? (
+                user && highestBidder || offerBid>data.get_item_by_Id.minimumBid ? (
                   <Text>You are the current highest bidder.</Text>
                 ) : (
                   <Text>Another user is the current highest bidder.</Text>
@@ -180,6 +180,9 @@ export default function Item({ navigation, route }) {
                   style={styles.bidButton}
                   onPress={() => {
                     handleMakeOffer();
+                    console.log(`new amount`, offerBid);
+                    console.log(`user id`, user?.data?.get_user_info?.id);
+                    console.log(`bidder id`, data?.get_item_by_Id?.bidder);
                   }}
                 >
                   <Text style={{ fontSize: 16, color: 'white' }}>MAKE OFFER</Text>

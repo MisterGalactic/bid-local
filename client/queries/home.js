@@ -14,6 +14,9 @@ query get_items {
   get_items {
     id
     name
+    subname
+    color
+    description
     minimumBid
     picUrl1
     auctionStart

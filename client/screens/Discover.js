@@ -107,7 +107,10 @@ export default function Discover({ navigation }) {
           {
             key: `${component.id}`,
             text: `${component.name}`,
+            subtext: `${component.subname}`,
+            desc: `${component.description}`,
             category: `${component.category.name}`,
+            color: `${component.color}`,
             uri: `${component.picUrl1}`,
           }
         )

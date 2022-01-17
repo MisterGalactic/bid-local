@@ -16,10 +16,6 @@ import {
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Icon, Left, Body } from 'native-base';
 import faker from 'faker-extra';
 
-const random_hex_color_code = () => {
-  let n = (Math.random() * 0xfffff * 1000000).toString(16);
-  return '#' + n.slice(0, 6);
-};
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -66,18 +62,16 @@ export default function FeaturedCard({ data, parentCallback }) {
               bottom: '4%',
               padding: 5,
               fontSize: 16,
-              backgroundColor: random_hex_color_code(),
+              backgroundColor: item.color,
               color: 'white',
               fontFamily: 'Roboto_medium',
-            }}>{faker.company.companyName()}</Text>
+            }}>{item.subtext}</Text>
           </CardItem>
           <CardItem header style={{paddingTop: 5, paddingBottom: 0}}>
             <Text ellipsizeMode='tail' numberOfLines={1} style={styles.titleText} >{item.text}</Text>
           </CardItem>
           <CardItem style={{borderBottomLeftRadius: 15, borderBottomRightRadius: 15}}>
-            <Text ellipsizeMode='tail' numberOfLines={2} style={styles.contentText}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </Text>
+            <Text ellipsizeMode='tail' numberOfLines={2} style={styles.contentText}>{item.desc}</Text>
           </CardItem>
         </Card>
       </Pressable>

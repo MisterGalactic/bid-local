@@ -13,6 +13,9 @@ query  get_item_by_Id ( $id: ID! ){
   get_item_by_Id(id: $id){
     id
     name
+    subname
+    color
+    description
     auctionStart
     auctionEnd
     minimumBid

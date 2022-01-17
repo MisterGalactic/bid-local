@@ -30,6 +30,8 @@ mutation update_user (
     id
     phoneNumber
     email
+    firstName
+    lastName
   }
 }
 `;

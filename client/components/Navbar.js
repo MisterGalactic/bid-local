@@ -26,9 +26,9 @@ export default function Navbar({navigation, canGoBack, targetScreen}) {
         <ImageBackground source={require('../assets/logo.png')} style={styles.logo} resizeMode='contain'/>
       </Body>
       <Right style={{flex: 1}}>
-        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Sandbox')}}>
+        {/* <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Sandbox')}}>
           <Icon type="MaterialCommunityIcons" name="radioactive" style={styles.navIcon}/>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         {/* <Button transparent onPress={() => {setHideSide(hide => !hide)}}>
           <ImageBackground source={require('../assets/burger.png')} style={styles.burger} resizeMode='contain'/>
         </Button> */}
