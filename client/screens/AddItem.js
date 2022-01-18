@@ -102,7 +102,11 @@ export default function AddItem({ navigation, route }) {
   const [description, setDescription] = React.useState('');
   const [createItem, { data, error }] = useMutation(CREATE_ITEM);
   const categories = useQuery(GET_CATEGORIES);
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([{
+    "__typename": "Category",
+    "id": "d02ffae0-61aa-4478-ae68-450ff4de9af1",
+    "name": "UNSORTED",
+  }]);
   const [showModal, setModal] = useState();
   const [images, setImages] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
@@ -448,6 +452,7 @@ export default function AddItem({ navigation, route }) {
             onPress={() => {
               setModal(true);
               setSelectedCategories([]);
+              console.log(selectedCategories)
             }}
           >
             <Text
