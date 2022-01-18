@@ -14,7 +14,7 @@ export default function Navbar({navigation, canGoBack, targetScreen}) {
       <Left style={{flex: 1}}>
         {canGoBack
           ?
-          <Button transparent onPress={targetScreen ? ()=>{navigation.navigate(targetScreen)} : ()=>{navigation.goBack()} }>
+          <Button transparent onPress={targetScreen ? ()=>{navigation.navigate('Discover'),setTimeout(() => navigation.navigate(targetScreen), 300)} : ()=>{navigation.goBack()} }>
             {/* <ImageBackground source={require('../assets/arrow.png')} style={styles.arrow} resizeMode='contain'/> */}
             <Icon type="MaterialCommunityIcons" name="less-than" style={styles.navIcon}/>
           </Button>

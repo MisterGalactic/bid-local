@@ -42,6 +42,7 @@ export default function Item({ navigation, route }) {
   const [changeItem] = useMutation(PLACE_A_BID);
   const user = useQuery(GET_USER_INFO);
   const [getItem, { loading, error, data }] = useLazyQuery(GET_ITEM_BY_ID, {
+    fetchPolicy: 'cache-and-network',
     variables: {
       id: route.params.id,
     }
@@ -107,19 +108,23 @@ export default function Item({ navigation, route }) {
   }
 
   const handleMakeOffer = () => {
-    console.log('make offer')
-    if (offerBid<=data.get_item_by_Id.minimumBid) {
-      setTypeError('Bid is lower than current highest bid.');
-      return;
-    }
-
-    console.log('offer maded!')
-    changeItem({
-      variables: {
-        ItemId: route.params.id,
-        biddingPrice: parseInt(offerBid),
+    if ( data.get_item_by_Id.auctionEnd > new Date(Date.now()) ) {
+      console.log(`making offer of ${offerBid} for ${data.get_item_by_Id.name}`)
+      if (offerBid<=data.get_item_by_Id.minimumBid) {
+        setTypeError('Bid is lower than current highest bid.');
+        return;
       }
-    });
+      console.log(`successfully made offer of ${offerBid} for ${data.get_item_by_Id.name}!`)
+      changeItem({
+        variables: {
+          ItemId: route.params.id,
+          biddingPrice: parseInt(offerBid),
+        }
+      });
+      setTimeout(() => handleRefresh(), 100)
+    } else {
+      setTypeError('Bidding time is over!');
+    }
   }
 
   if (loading) return (
@@ -153,9 +158,9 @@ export default function Item({ navigation, route }) {
           <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={styles.itemInfo}>
             <View style={{padding: 15}}>
               <Text style={styles.itemTitle}>{data.get_item_by_Id.name}</Text>
-              <Text style={styles.itemPrice}>${offerBid>data.get_item_by_Id.minimumBid ? offerBid : data.get_item_by_Id.minimumBid}</Text>
+              <Text style={styles.itemPrice}>${data.get_item_by_Id.minimumBid}</Text>
               {
-                user && highestBidder || offerBid>data.get_item_by_Id.minimumBid ? (
+                user && highestBidder ? (
                   <Text>You are the current highest bidder.</Text>
                 ) : (
                   <Text>Another user is the current highest bidder.</Text>
@@ -180,9 +185,6 @@ export default function Item({ navigation, route }) {
                   style={styles.bidButton}
                   onPress={() => {
                     handleMakeOffer();
-                    console.log(`new amount`, offerBid);
-                    console.log(`user id`, user?.data?.get_user_info?.id);
-                    console.log(`bidder id`, data?.get_item_by_Id?.bidder);
                   }}
                 >
                   <Text style={{ fontSize: 16, color: 'white' }}>MAKE OFFER</Text>

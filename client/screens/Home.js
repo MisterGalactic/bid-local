@@ -33,6 +33,8 @@ export default function Home({ navigation }) {
   const onRefresh = useCallback(() => {
     setRefresh(true);
     getItems();
+    navigation.navigate('Discover')
+    setTimeout(() => navigation.navigate('Home'), 106)
     setRefresh(false);
   }, []);
 
