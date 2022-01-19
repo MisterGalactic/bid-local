@@ -126,7 +126,7 @@ export default function AddItem({ navigation, route }) {
   useEffect(() => {
     console.log('error: ', error);
     if (data) {
-      navigation.navigate('Item', { id: data.create_item.id });
+      navigation.navigate('FinalizeItem', { id: data.create_item.id });
     }
   }, [data]);
 
@@ -237,7 +237,7 @@ export default function AddItem({ navigation, route }) {
       };
 
       // fetch(CLOUDINARY_URL, {
-      fetch('https://api.cloudinary.com/v1_1/dtuqopc5y/image/upload', {
+      fetch('https://api.cloudinary.com/v1_1/dm89vlndy/image/upload', {
         body: JSON.stringify(data),
         headers: {
           'content-type': 'application/json',

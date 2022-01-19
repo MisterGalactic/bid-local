@@ -4,6 +4,7 @@ import React from 'react';
 import Home from '../screens/Home';
 import Item from '../screens/Item';
 import AddItem from '../screens/AddItem';
+import FinalizeItem from '../screens/FinalizeItem';
 import UsersItems from '../screens/UsersListedItems';
 import WinnerItems from '../screens/UserWonItems';
 import Login from '../screens/Login';
@@ -14,6 +15,7 @@ import LogoButton from '../screens/LogoButton';
 import Cart from '../screens/Cart';
 import Account from '../screens/Account';
 import Sandbox from '../screens/Sandbox';
+import ViewAll from '../screens/ViewAll';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +29,8 @@ const HomeStack = ({ token, initial }) => {
         <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Sandbox" component={Sandbox} />
         <Stack.Screen name="Account" component={Account} />
+        <Stack.Screen name="ViewAll" component={ViewAll} />
+        <Stack.Screen name="FinalizeItem" component={FinalizeItem} />
         <Stack.Screen name="Item" component={Item} />
         <Stack.Screen name="AddItem" component={AddItem} />
         <Stack.Screen name="UserWonItems" component={WinnerItems} />

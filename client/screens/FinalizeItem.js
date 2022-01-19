@@ -12,6 +12,7 @@ import {
   TextInput,
   TouchableHighlight,
   RefreshControl,
+  KeyboardAvoidingView
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import Navbar from '../components/Navbar';
@@ -30,7 +31,7 @@ const ImageList = ({ item, index }) => {
   );
 };
 
-export default function Item({ navigation, route }) {
+export default function FinalizeItem({ navigation, route }) {
   const { data: subData } = bidSubscription();
   const windowWidth = Dimensions.get('window').width;
   const [offerBid, setOfferBid] = useState('');
@@ -137,7 +138,7 @@ export default function Item({ navigation, route }) {
   if (data) {
     return (
       <>
-        <Navbar navigation={navigation} canGoBack={true} targetScreen={''} style={{zIndex: 1}}/>
+        <Navbar navigation={navigation} canGoBack={true} targetScreen={'Home'}/>
         <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={{zIndex: -1, height: '100%', width: '100%', position: 'absolute', top:0, left:0}}/>
         <ScrollView
           style={styles.container}
@@ -254,7 +255,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   itemInfo: {
-    flex: 1,
     width: '100%',
     backgroundColor: 'transparent',
   },

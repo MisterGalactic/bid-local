@@ -51,7 +51,8 @@ export default class NativeCard extends Component {
 
 const styles = StyleSheet.create({
   contentText: {
-    fontFamily: "Cochin"
+    fontFamily: "Cochin",
+    height: 37
   },
   titleText: {
     fontFamily: "Cochin",

@@ -13,7 +13,6 @@ import {
 import DropDownPicker from 'react-native-dropdown-picker';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Navbar from '../components/Navbar';
-import Tabbar from '../components/Tabbar';
 import Timer from '../components/Timer';
 import { GET_CATEGORIES, GET_ITEMS } from '../queries/home';
 import { useQuery, useLazyQuery } from '@apollo/client';
@@ -21,7 +20,7 @@ import bidSubscription from '../queries/subscription';
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function Home({ navigation }) {
+export default function ViewAll({ navigation, route }) {
   bidSubscription();
   const categories = useQuery(GET_CATEGORIES);
   const [currentCategory, setCurrentCategory] = useState('ALL');
@@ -41,6 +40,8 @@ export default function Home({ navigation }) {
   useEffect(() => {
     if (categories.data) {
       getItems();
+      setCurrentCategory(`${route.params.name}`),
+      console.log(route)
     }
   }, [categories]);
 
@@ -105,7 +106,7 @@ export default function Home({ navigation }) {
 
   return (
     <>
-      <Navbar navigation={navigation} canGoBack={false} />
+      <Navbar navigation={navigation} canGoBack={true} />
       <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={{zIndex: -1, height: '100%', width: '100%', position: 'absolute', top:0, left:0}}/>
       <ScrollView
         style={styles.container}
@@ -114,7 +115,7 @@ export default function Home({ navigation }) {
         }
       >
         <View style={styles.homeContent}>
-          <DropDownPicker
+          {/* <DropDownPicker
             dropDownMaxHeight={1500}
             items={[{ name: 'ALL' }, ...categories.data.get_categories].map(
               (cat) => ({
@@ -122,7 +123,7 @@ export default function Home({ navigation }) {
                 value: cat.name,
               }),
             )}
-            defaultValue={'ALL'}
+            defaultValue={`${route.params.name}`}
             containerStyle={{
               height: 40,
               width: 150,
@@ -151,13 +152,13 @@ export default function Home({ navigation }) {
               // borderColor: 'black',
             }}
             onChangeItem={(cat) => setCurrentCategory(cat.value)}
-          />
+          /> */}
+          <Text style={styles.sectionHeader}>{route.params.name} ({route.params.count})</Text>
           <View style={styles.homeItems}>
             {items.data ? categoryTest() : null}
           </View>
         </View>
       </ScrollView>
-      <Tabbar navigation={navigation} canGoBack={false}/>
     </>
   );
 }
@@ -173,6 +174,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     marginBottom: 5,
     fontFamily: 'Roboto_medium',
+  },
+  sectionHeader: {
+    fontWeight: '800',
+    fontSize: 18,
+    color: 'gray',
+    marginBottom: 20,
   },
   homeContent: {
     flex: 1,

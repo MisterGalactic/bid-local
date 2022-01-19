@@ -13,6 +13,7 @@ import {
   SafeAreaView,
   RefreshControl,
 } from 'react-native';
+import { Left, Right, Body, Title, Header } from "native-base";
 import DropDownPicker from 'react-native-dropdown-picker';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Navbar from '../components/Navbar';
@@ -180,10 +181,11 @@ export default function Discover({ navigation }) {
       const name = customCat
       output.push(
         {
-          title: `${name} (${temp.filter( x => name === x.category.name).length})`,
+          title: `${name}`,
           horizontal: true,
           data: dataTest(name),
           sectionCat: name,
+          count: temp.filter( x => name === x.category.name).length,
           number: temp.filter( x => name === x.category.name).length
         }
       )
@@ -192,10 +194,11 @@ export default function Discover({ navigation }) {
         const name = currCat.name
         output.push(
           {
-            title: `${name} (${temp.filter( x => name === x.category.name).length})`,
+            title: `${name}`,
             horizontal: true,
             data: dataTest(name),
             sectionCat: name,
+            count: temp.filter( x => name === x.category.name).length,
             number: temp.filter( x => name === x.category.name).length
           }
         )
@@ -267,13 +270,14 @@ export default function Discover({ navigation }) {
   return (
     <>
       <Navbar navigation={navigation} canGoBack={false} />
+      <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={{zIndex: -1, height: '100%', width: '100%', position: 'absolute', top:0, left:0}}/>
       <ScrollView
         style={styles.container}
         refreshControl={
           <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
         }
       >
-        <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={styles.container}>
+        <View style={styles.container}>
           <StatusBar style="dark " />
           <SafeAreaView style={{ flex: 1 }}>
             {/* <DropDownPicker
@@ -322,7 +326,22 @@ export default function Discover({ navigation }) {
               renderSectionHeader={({ section }) => (
                 <>
                   {section.number>0 ? (
-                    <Text style={styles.sectionHeader}>{section.title}</Text>
+                    <Header style={{backgroundColor: 'transparent'}}>
+                      <Left style={{flex: 1}}>
+                        <Text style={styles.sectionHeader}>{section.title}</Text>
+                      </Left>
+                      <Right style={{flex: 1}}>
+                        <TouchableWithoutFeedback
+                          key={section.sectionCat}
+                          onPress={() => {
+                            navigation.navigate('ViewAll', { name: section.sectionCat, count: section.count } );
+                            // console.log(section.sectionCat);
+                          }}
+                        >
+                          <Text style={styles.viewHeader}>View All ({section.count}){'   '}</Text>
+                        </TouchableWithoutFeedback>
+                      </Right>
+                    </Header>
                   ) : null}
                   {section.horizontal ? (
                     <FeaturedCard
@@ -356,7 +375,22 @@ export default function Discover({ navigation }) {
               renderSectionHeader={({ section }) => (
                 <>
                   {section.number>0 && section.sectionCat !== filterCat ? (
-                    <Text style={styles.sectionHeader}>{section.title}</Text>
+                    <Header style={{backgroundColor: 'transparent'}}>
+                      <Left style={{flex: 1}}>
+                        <Text style={styles.sectionHeader}>{section.title}</Text>
+                      </Left>
+                      <Right style={{flex: 1}}>
+                        <TouchableWithoutFeedback
+                          key={section.sectionCat}
+                          onPress={() => {
+                            navigation.navigate('ViewAll', { name: section.sectionCat, count: section.count } );
+                            // console.log(section.sectionCat);
+                          }}
+                        >
+                          <Text style={styles.viewHeader}>View All ({section.count}){'   '}</Text>
+                        </TouchableWithoutFeedback>
+                      </Right>
+                    </Header>
                   ) : null}
                   {section.horizontal && section.sectionCat !== filterCat ? (
                     <FlatList
@@ -377,7 +411,7 @@ export default function Discover({ navigation }) {
               }}
             />
           </SafeAreaView>
-        </ImageBackground>
+        </View>
       </ScrollView>
       <Tabbar navigation={navigation} canGoBack={false}/>
     </>
@@ -388,7 +422,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     fontFamily: 'Roboto_medium',
   },
   categoryTitle: {
@@ -478,6 +512,14 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     fontWeight: '800',
+    fontSize: 18,
+    color: 'gray',
+    marginTop: 20,
+    marginBottom: 5,
+    marginLeft: 10,
+  },
+  viewHeader: {
+    fontWeight: '400',
     fontSize: 18,
     color: 'gray',
     marginTop: 20,
