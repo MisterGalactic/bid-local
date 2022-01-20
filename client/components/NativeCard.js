@@ -23,6 +23,7 @@ export default class NativeCard extends Component {
         <Content padder scrollEnabled={false} style={{flex: 0, borderRadius: 15}}>
           <Card style={{flex: 0, borderRadius: 15}}>
             <CardItem header bordered style={{alignItems: 'flex-end', backgroundColor: "thistle", borderBottom: 20, borderTopLeftRadius: 15, borderTopRightRadius: 15, paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 5 }}>
+              <Image source={require('../assets/ecommerce.gif')} style={{backgroundColor: 'white', position: 'absolute', borderTopLeftRadius: 15, borderTopRightRadius: 15, height: '100%', width: '100%', top: 0,flex: 1, resizeMode: "cover"}}/>
               <Image source={this.props.item.uri ? {uri: `${this.props.item.uri}`} : require('../assets/splash.png')} style={{borderTopLeftRadius: 15, borderTopRightRadius: 15, height: 120, width: 200, flex: 1, resizeMode: "cover"}}/>
               <Text style={{
                 position: 'absolute',
@@ -52,7 +53,7 @@ export default class NativeCard extends Component {
 const styles = StyleSheet.create({
   contentText: {
     fontFamily: "Cochin",
-    height: 37
+    height: 40
   },
   titleText: {
     fontFamily: "Cochin",

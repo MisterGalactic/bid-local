@@ -12,7 +12,10 @@ import {
   FlatList,
   SafeAreaView,
   RefreshControl,
+  LogBox
 } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 import { Left, Right, Body, Title, Header } from "native-base";
 import DropDownPicker from 'react-native-dropdown-picker';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';

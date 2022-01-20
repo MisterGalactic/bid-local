@@ -32,8 +32,6 @@ export default function ViewAll({ navigation, route }) {
   const onRefresh = useCallback(() => {
     setRefresh(true);
     getItems();
-    navigation.navigate('Discover')
-    setTimeout(() => navigation.navigate('Home'), 106)
     setRefresh(false);
   }, []);
 
@@ -73,6 +71,10 @@ export default function ViewAll({ navigation, route }) {
             }}
           >
             <View style={styles.itemView}>
+              <Image
+                source={require('../assets/ecommerce.gif')}
+                style={{position: 'absolute', height: (windowWidth - 45) / 2, width: '100%', top: 0,flex: 1, resizeMode: "cover"}}
+              />
               <ImageBackground
                 style={styles.itemImage}
                 resizeMode="cover"

@@ -12,7 +12,9 @@ import {
   TextInput,
   TouchableHighlight,
   RefreshControl,
+  KeyboardAvoidingView
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Carousel from 'react-native-snap-carousel';
 import Navbar from '../components/Navbar';
 import Timer from '../components/Timer';
@@ -127,19 +129,28 @@ export default function Item({ navigation, route }) {
     }
   }
 
-  if (loading) return (
+  if (loading && !offerBid) return (
     <SafeAreaView style={styles.loadingContainer}>
       <Text style={styles.loading}>Loading...</Text>
-      <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
+      <Image style={{top: '12%', alignSelf: 'center', height: '35%', width: '35%'}} source={require('../assets/ecommerce.gif')} />
     </SafeAreaView>
   );
   if (error) return <Text>Error: {error}</Text>;
   if (data) {
     return (
       <>
+        { loading && offerBid ?
+          <>
+            <SafeAreaView style={{position: 'absolute', zIndex: 1, height: '100%', width: '100%', top:0, left:0, backgroundColor: 'white', opacity: 0.75}}/>
+            <Image style={{position: 'absolute', zIndex: 9, top: '29.5%', alignSelf: 'center', height: '35%', width: '35%'}} source={require('../assets/ecommerce.gif')} />
+          </>
+          : null
+        }
         <Navbar navigation={navigation} canGoBack={true} targetScreen={''} style={{zIndex: 1}}/>
         <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={{zIndex: -1, height: '100%', width: '100%', position: 'absolute', top:0, left:0}}/>
-        <ScrollView
+        <KeyboardAwareScrollView
+          extraScrollHeight={20}
+          keyboardOpeningTime={0}
           style={styles.container}
           refreshControl={
             <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
@@ -234,7 +245,7 @@ export default function Item({ navigation, route }) {
               </View>
             </View>
           </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </>
     );
   }
@@ -267,12 +278,13 @@ const styles = StyleSheet.create({
     color: '#666666',
   },
   time: {
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#A9A9A9',
     padding: 10,
     marginTop: 10,
     marginBottom: 20,
+    minHeight: 70,
   },
   bidView: {
     flex: 1,
@@ -307,13 +319,13 @@ const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     fontFamily: 'Roboto_medium',
   },
   loading: {
     fontFamily: 'Roboto_medium',
     fontSize: 50,
-    color: '#67A036',
+    color: 'gray',
     marginTop: '60%',
     textAlign: 'center',
     marginBottom: '-40%',

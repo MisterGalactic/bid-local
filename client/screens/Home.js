@@ -48,7 +48,7 @@ export default function Home({ navigation }) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.loading}>Loading...</Text>
-        <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
+        <Image style={{top: '12%', alignSelf: 'center', height: '35%', width: '35%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
   if (categories.error) {
@@ -72,6 +72,10 @@ export default function Home({ navigation }) {
             }}
           >
             <View style={styles.itemView}>
+              <Image
+                source={require('../assets/ecommerce.gif')}
+                style={{position: 'absolute', height: (windowWidth - 45) / 2, width: '100%', top: 0,flex: 1, resizeMode: "cover"}}
+              />
               <ImageBackground
                 style={styles.itemImage}
                 resizeMode="cover"
@@ -243,7 +247,7 @@ const styles = StyleSheet.create({
   loading: {
     fontFamily: 'Roboto_medium',
     fontSize: 50,
-    color: '#67A036',
+    color: 'gray',
     marginTop: '60%',
     textAlign: 'center',
     marginBottom: '-40%',
