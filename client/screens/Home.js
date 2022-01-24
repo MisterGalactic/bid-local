@@ -68,6 +68,7 @@ export default function Home({ navigation }) {
           <TouchableWithoutFeedback
             key={component.id}
             onPress={() => {
+              console.log('Item', { id: component.id });
               navigation.navigate('Item', { id: component.id });
             }}
           >

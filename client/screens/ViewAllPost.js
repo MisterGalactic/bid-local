@@ -13,111 +13,118 @@ import {
 import DropDownPicker from 'react-native-dropdown-picker';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Navbar from '../components/Navbar';
-import Tabbar from '../components/Tabbar';
 import Timer from '../components/Timer';
-import { GET_CATEGORIES, GET_ITEMS } from '../queries/home';
+import { GET_POSTCATEGORIES, GET_POSTS } from '../queries/home';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import bidSubscription from '../queries/subscription';
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function LogoButton({ navigation }) {
+export default function ViewAllPost({ navigation, route }) {
   bidSubscription();
+  const postcategories = useQuery(GET_POSTCATEGORIES);
   const [currentCategory, setCurrentCategory] = useState('ALL');
   const [refresh, setRefresh] = useState(false);
-  const categories = useQuery(GET_CATEGORIES);
-  const [getItems, items] = useLazyQuery(GET_ITEMS, {
+  const [getPosts, posts] = useLazyQuery(GET_POSTS, {
     fetchPolicy: 'cache-and-network',
   });
 
   const onRefresh = useCallback(() => {
     setRefresh(true);
-    getItems();
+    getPosts();
     setRefresh(false);
   }, []);
 
   useEffect(() => {
-    if (categories.data) {
-      getItems();
+    if (postcategories.data) {
+      getPosts();
+      setCurrentCategory(`${route.params.name}`)
     }
-  }, [categories]);
+  }, [postcategories]);
 
-  if (categories.loading)
+  if (postcategories.loading)
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.loading}>Loading...</Text>
         <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
-  if (categories.error) {
+  if (postcategories.error) {
     return <Text>Error: </Text>;
   }
 
   function categoryTest() {
-    const temp = items.data.get_items.slice();
-    temp.sort((a, b) => a.auctionEnd - b.auctionEnd);
+    const temp = posts.data.get_posts.slice();
+    temp.sort((a, b) => b.auctionStart - a.auctionStart );
     const output = [];
     for (const component of temp) {
       if (
         (currentCategory === 'ALL' ||
-        (component.category && component.category.name === currentCategory))
-        &&component.auctionEnd>(Date.now())
+        (component.postcategory && component.postcategory.name === currentCategory))
       ) {
         output.push(
           <TouchableWithoutFeedback
             key={component.id}
             onPress={() => {
-              navigation.navigate('Item', { id: component.id });
+              navigation.navigate('FinalizePost', { id: component.id });
+              console.log('FinalizePost', { id: component.id });
+              // setTimeout(()=>{navigation.goBack()}, 1200)
             }}
           >
             <View style={styles.itemView}>
+              <Image
+                source={require('../assets/ecommerce.gif')}
+                style={{position: 'absolute', height: (windowWidth - 45) / 2, width: '100%', top: 0,flex: 1, resizeMode: "cover"}}
+              />
               <ImageBackground
                 style={styles.itemImage}
                 resizeMode="cover"
                 source={component.picUrl1 ? { uri: component.picUrl1 } : require('../assets/splash.png')}
               >
-                <Timer
-                  style={styles.itemTime}
-                  deadline={component.auctionEnd}/>
+                {
+                  component.auctionStart > new Date(Date.now()) ?
+                  <Text style={styles.itemNotStart}>Scheduled</Text>
+                  :
+                  <Timer
+                    style={component.auctionStart > new Date(Date.now()) ? styles.itemNotStart : (component.auctionEnd < new Date(Date.now()) ? styles.itemFinished : styles.itemStarted)}
+                    start={component.auctionStart}
+                    deadline={component.auctionEnd}
+                  />
+                }
               </ImageBackground>
+            <Text style={styles.itemPrice}>${component.minimumBid}</Text>
+            {component.subname ? <Text style={styles.itemTitle}>{component.subname}</Text> : null}
             <Text style={styles.itemTitle}>{component.name}</Text>
-            <Text style={styles.itemPrice}>{component.minimumBid}€</Text>
           </View>
         </TouchableWithoutFeedback>
         )
       }
     }
     if (!output.length) {
-      return <Text style={styles.error}>No items found</Text>;
+      return <Text style={styles.error}>No posts found</Text>;
     }
     return output;
   }
 
 
   return (
-    <ImageBackground
-      style={{ flex: 1 }}
-      source={require('../assets/login-background-keyboard.jpg')}
-    >
-      <View style={styles.homeContent}>
-        <View style={styles.logo}>
-          <Image
-            style={styles.logoPic}
-            source={require('../assets/circle_icon.png')}
-          />
+    <>
+      <Navbar navigation={navigation} canGoBack={true} />
+      <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={{zIndex: -1, height: '100%', width: '100%', position: 'absolute', top:0, left:0}}/>
+      <ScrollView
+        style={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+        }
+      >
+        <View style={styles.homeContent}>
+          <Text style={styles.sectionHeader}>{route.params.name} ({route.params.count})</Text>
+          <View style={styles.homeItems}>
+            {posts.data ? categoryTest() : null}
+          </View>
         </View>
-        <View style={styles.logo}>
-          <Image
-            style={styles.qrCode}
-            source={require('../assets/qr_code.png')}
-          />
-        </View>
-        <View style={styles.title}>
-          <Text style={styles.title}>Wong Tai Fung</Text>
-        </View>
-      </View>
-      <Tabbar navigation={navigation} canGoBack={false}/>
-    </ImageBackground>
+      </ScrollView>
+    </>
   );
 }
 
@@ -125,42 +132,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     fontFamily: 'Roboto_medium',
-  },
-  logo: {
-    marginBottom: '5%',
-    resizeMode: 'contain',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logoPic: {
-    width: '25%',
-    resizeMode: 'contain',
-  },
-  qrCode: {
-    width: '75%',
-    resizeMode: 'contain',
-  },
-  title: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontFamily: 'Roboto_medium',
-    fontSize: 30,
-    color: 'orange',
-    marginTop: '5%',
-    marginBottom: '5%',
   },
   categoryTitle: {
     fontSize: 22,
     marginBottom: 5,
     fontFamily: 'Roboto_medium',
   },
+  sectionHeader: {
+    fontWeight: '800',
+    fontSize: 18,
+    color: 'gray',
+    marginBottom: 20,
+  },
   homeContent: {
     flex: 1,
     padding: 15,
     flexDirection: 'column',
     fontFamily: 'Roboto_medium',
+    backgroundColor: 'transparent'
   },
   homeItems: {
     flex: 1,
@@ -171,7 +162,7 @@ const styles = StyleSheet.create({
   },
   itemView: {
     width: (windowWidth - 45) / 2,
-    marginBottom: 15,
+    marginBottom: 25,
     fontFamily: 'Roboto_medium',
   },
   itemImage: {
@@ -180,21 +171,45 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
     fontFamily: 'Roboto_medium',
+
+    marginBottom: '5%',
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5
   },
-  itemTime: {
+  itemStarted: {
     padding: 5,
     fontSize: 16,
-    backgroundColor: '#0C637F88',
+    backgroundColor: '#28A745',
+    color: 'white',
+    fontFamily: 'Roboto_medium',
+  },
+  itemNotStart: {
+    padding: 5,
+    fontSize: 16,
+    backgroundColor: '#17A2B8',
+    color: 'white',
+    fontFamily: 'Roboto_medium',
+  },
+  itemFinished: {
+    padding: 5,
+    fontSize: 16,
+    backgroundColor: '#DC3545',
     color: 'white',
     fontFamily: 'Roboto_medium',
   },
   itemTitle: {
-    fontSize: 20,
-    fontFamily: 'Roboto_medium',
-  },
-  itemPrice: {
     fontSize: 16,
     color: '#666666',
+    fontWeight: '100',
+    fontFamily: 'Roboto_medium',
+  },
+
+  itemPrice: {
+    fontSize: 20,
     fontFamily: 'Roboto_medium',
   },
   loading: {

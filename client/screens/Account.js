@@ -73,6 +73,11 @@ export default function Cart({ navigation, hideSide }) {
               <Text style={styles.sidebarText}>Add Item</Text>
               <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
             </ListItem>
+            <ListItem onPress={()=>{navigation.navigate('AddPost')}}>
+              <Icon type="MaterialCommunityIcons" name="plus" style={styles.sidebarIcon}/>
+              <Text style={styles.sidebarText}>Add Blog</Text>
+              <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
+            </ListItem>
             <ListItem onPress={()=>{navigation.navigate('Login')}}>
               <Icon type="MaterialCommunityIcons" name="logout" style={styles.sidebarIcon}/>
               <Text style={styles.sidebarText}>Logout</Text>

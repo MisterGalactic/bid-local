@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React, {useState} from 'react';
 import { Header, Button, Left, Right, Body, Icon } from "native-base";
-import { StyleSheet, ImageBackground, StatusBar, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, ImageBackground, StatusBar, TouchableOpacity, Text, Dimensions} from 'react-native';
 import SideBar from './SideBar';
 
 export default function Navbar({navigation, canGoBack, targetScreen}) {
@@ -14,7 +14,7 @@ export default function Navbar({navigation, canGoBack, targetScreen}) {
       <Left style={{flex: 1}}>
         {canGoBack
           ?
-          <Button transparent onPress={targetScreen ? ()=>{navigation.navigate('Discover'),setTimeout(() => navigation.navigate(targetScreen), 300)} : ()=>{navigation.goBack()} }>
+          <Button transparent onPress={targetScreen==='Discover' ? ()=>{navigation.navigate('Discover'),setTimeout(() => navigation.navigate(targetScreen), 300)} : ()=>{navigation.goBack()} }>
             {/* <ImageBackground source={require('../assets/arrow.png')} style={styles.arrow} resizeMode='contain'/> */}
             <Icon type="MaterialCommunityIcons" name="less-than" style={styles.navIcon}/>
           </Button>
@@ -26,9 +26,9 @@ export default function Navbar({navigation, canGoBack, targetScreen}) {
         <ImageBackground source={require('../assets/logo.png')} style={styles.logo} resizeMode='contain'/>
       </Body>
       <Right style={{flex: 1}}>
-        {/* <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Sandbox')}}>
+        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('DiscoverPost')}}>
           <Icon type="MaterialCommunityIcons" name="radioactive" style={styles.navIcon}/>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         {/* <Button transparent onPress={() => {setHideSide(hide => !hide)}}>
           <ImageBackground source={require('../assets/burger.png')} style={styles.burger} resizeMode='contain'/>
         </Button> */}

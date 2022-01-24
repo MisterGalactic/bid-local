@@ -16,69 +16,67 @@ import {
 } from 'react-native';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
-import { Left, Right, Body, Title, Header } from "native-base";
-import DropDownPicker from 'react-native-dropdown-picker';
+import { Left, Right, Header } from "native-base";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Navbar from '../components/Navbar';
 import Tabbar from '../components/Tabbar';
-import Timer from '../components/Timer';
-import FeatureCard from '../components/FeatureCard';
 import FeaturedCard from '../components/FeaturedCard';
 import NativeCard from '../components/NativeCard';
-import SlideCard from '../components/SlideCard';
-import { GET_CATEGORIES, GET_ITEMS } from '../queries/home';
+import { GET_POSTCATEGORIES, GET_POSTS } from '../queries/home';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import bidSubscription from '../queries/subscription';
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function Discover({ navigation }) {
+export default function DiscoverPost({ navigation }) {
   bidSubscription();
   const filterCat = 'FEATURED'
   const [currentCategory, setCurrentCategory] = useState('ALL');
   const [refresh, setRefresh] = useState(false);
-  const categories = useQuery(GET_CATEGORIES);
-  const [getItems, items] = useLazyQuery(GET_ITEMS, {
+  const postcategories = useQuery(GET_POSTCATEGORIES);
+  const [getPosts, posts] = useLazyQuery(GET_POSTS, {
     fetchPolicy: 'cache-and-network',
   });
 
   const onRefresh = useCallback(() => {
     setRefresh(true);
-    getItems();
+    getPosts();
     setRefresh(false);
   }, []);
 
   useEffect(() => {
-    if (categories.data) {
-      getItems();
-      console.log(`number of categories`,categories.data.get_categories.length);
+    if (postcategories.data) {
+      getPosts();
+      console.log(`number of postcategories`,postcategories.data.get_postcategories.length);
     }
-  }, [categories]);
+  }, [postcategories]);
 
-  if (categories.loading)
+  if (postcategories.loading)
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.loading}>Loading...</Text>
         <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
-  if (categories.error) {
+  if (postcategories.error) {
     return <Text>Error: </Text>;
   }
 
   function handleCallback(fromChild) {
-    navigation.navigate('Item', { id: fromChild })
+    navigation.navigate('FinalizePost', { id: fromChild })
+    console.log('FinalizePost', { id: fromChild })
+    // setTimeout(() => navigation.navigate('DiscoverPost'), 1200)
   }
 
   const dataTest = (cat) => {
-    const demp = items.data.get_items.slice().filter( x => cat === x.category.name);
+    const demp = posts.data.get_posts.slice().filter( x => cat === x.postcategory.name);
     demp.sort((a, b) => b.auctionEnd - a.auctionEnd);
     // console.log(`demp`,demp)
     const output = [];
     for (const component of demp) {
       if (
         (currentCategory === 'ALL' ||
-        (component.category && component.category.name === currentCategory))
+        (component.postcategory && component.postcategory.name === currentCategory))
         &&component.auctionEnd
       ) {
         output.push(
@@ -87,9 +85,9 @@ export default function Discover({ navigation }) {
             text: `${component.name}`,
             subtext: `${component.subname}`,
             desc: `${component.description}`,
-            category: `${component.category.name}`,
+            postcategory: `${component.postcategory.name}`,
             color: `${component.color}`,
-            uri: `${component.picUrl1}`,
+            uri: `${component.picUrl1}` || 'http://placeimg.com/640/480/any',
           }
         )
       }
@@ -99,8 +97,8 @@ export default function Discover({ navigation }) {
   }
 
   function categoryTest(customCat) {
-    const temp = items.data.get_items.slice();
-    const catArray = categories.data.get_categories;
+    const temp = posts.data.get_posts.slice();
+    const catArray = postcategories.data.get_postcategories;
     temp.sort((a, b) => b.auctionEnd - a.auctionEnd);
     const output = [];
     if (customCat) {
@@ -111,26 +109,27 @@ export default function Discover({ navigation }) {
           horizontal: true,
           data: dataTest(name),
           sectionCat: name,
-          count: temp.filter( x => name === x.category.name).length,
-          number: temp.filter( x => name === x.category.name).length
+          count: temp.filter( x => name === x.postcategory.name).length,
+          number: temp.filter( x => name === x.postcategory.name).length
         }
       )
     } else {
       for (const currCat of catArray) {
         const name = currCat.name
-        output.push(
-          {
-            title: `${name}`,
-            horizontal: true,
-            data: dataTest(name),
-            sectionCat: name,
-            count: temp.filter( x => name === x.category.name).length,
-            number: temp.filter( x => name === x.category.name).length
-          }
-        )
+        if (name.length>0 && name !== filterCat ){
+          output.push(
+            {
+              title: `${name}`,
+              horizontal: true,
+              data: dataTest(name),
+              sectionCat: name,
+              count: temp.filter( x => name === x.postcategory.name).length,
+              number: temp.filter( x => name === x.postcategory.name).length
+            }
+          )
+        }
       }
     }
-
     return output;
   }
 
@@ -140,11 +139,11 @@ export default function Discover({ navigation }) {
         <TouchableWithoutFeedback
           key={item.key}
           onPress={() => {
-            navigation.navigate('Item', { id: item.key });
-            console.log('Item', { id: item.key });
+            navigation.navigate('FinalizePost', { id: item.key });
+            // setTimeout(() => navigation.navigate('DiscoverPost'), 1200)
           }}
         >
-          <ImageBackground style={styles.itemHide}/>
+          <ImageBackground style={styles.postHide}/>
           <View style={styles.compView}>
             <NativeCard item={item}/>
           </View>
@@ -169,33 +168,30 @@ export default function Discover({ navigation }) {
             <SectionList
               contentContainerStyle={{ paddingHorizontal: 0 }}
               stickySectionHeadersEnabled={false}
-              sections={ items.data ? categoryTest('FEATURED') : null }
+              sections={ posts.data ? categoryTest('FEATURED') : null }
               renderSectionHeader={({ section }) => (
                 <>
-                  {section.number>0 ? (
-                    <Header style={{backgroundColor: 'transparent'}}>
-                      <Left style={{flex: 1}}>
-                        <Text style={styles.sectionHeader}>{section.title}</Text>
-                      </Left>
-                      <Right style={{flex: 1}}>
-                        <TouchableWithoutFeedback
-                          key={section.sectionCat}
-                          onPress={() => {
-                            navigation.navigate('ViewAll', { name: section.sectionCat, count: section.count } );
-                            // console.log(section.sectionCat);
-                          }}
-                        >
-                          <Text style={styles.viewHeader}>View All ({section.count}){'   '}</Text>
-                        </TouchableWithoutFeedback>
-                      </Right>
-                    </Header>
-                  ) : null}
-                  {section.horizontal ? (
-                    <FeaturedCard
-                    data={section.data}
-                    parentCallback={handleCallback}
-                    />
-                  ) : null}
+                  <Header style={{backgroundColor: 'transparent'}}>
+                    <Left style={{flex: 1}}>
+                      <Text style={styles.sectionHeader}>{section.title}</Text>
+                    </Left>
+                    <Right style={{flex: 1}}>
+                      <TouchableWithoutFeedback
+                        key={section.sectionCat}
+                        onPress={() => {
+                          navigation.navigate('ViewAllPost', { name: section.sectionCat, count: section.count } );
+                          // setTimeout(() => navigation.navigate('DiscoverPost'), 1200)
+                          // console.log(section.sectionCat);
+                        }}
+                      >
+                        <Text style={styles.viewHeader}>View All ({section.count}){'   '}</Text>
+                      </TouchableWithoutFeedback>
+                    </Right>
+                  </Header>
+                  <FeaturedCard
+                  data={section.data}
+                  parentCallback={handleCallback}
+                  />
                 </>
               )}
               renderItem={({ item, section }) => {
@@ -208,10 +204,10 @@ export default function Discover({ navigation }) {
             <SectionList
               contentContainerStyle={{ paddingHorizontal: 0 }}
               stickySectionHeadersEnabled={false}
-              sections={ items.data ? categoryTest() : null }
+              sections={ posts.data ? categoryTest() : null }
               renderSectionHeader={({ section }) => (
                 <>
-                  {section.number>0 && section.sectionCat !== filterCat ? (
+                  {section.number>0  ? (
                     <Header style={{backgroundColor: 'transparent'}}>
                       <Left style={{flex: 1}}>
                         <Text style={styles.sectionHeader}>{section.title}</Text>
@@ -220,8 +216,9 @@ export default function Discover({ navigation }) {
                         <TouchableWithoutFeedback
                           key={section.sectionCat}
                           onPress={() => {
-                            navigation.navigate('ViewAll', { name: section.sectionCat, count: section.count } );
-                            // console.log(section.sectionCat);
+                            navigation.navigate('ViewAllPost', { name: section.sectionCat, count: section.count } );
+                            // setTimeout(() => navigation.navigate('DiscoverPost'), 1200)
+                            console.log(section.sectionCat);
                           }}
                         >
                           <Text style={styles.viewHeader}>View All ({section.count}){'   '}</Text>
@@ -229,7 +226,7 @@ export default function Discover({ navigation }) {
                       </Right>
                     </Header>
                   ) : null}
-                  {section.horizontal && section.sectionCat !== filterCat ? (
+                  {section.horizontal  ? (
                     <FlatList
                       horizontal
                       data={section.data}
@@ -273,14 +270,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     fontFamily: 'Roboto_medium',
   },
-  homeItems: {
+  homePosts: {
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     fontFamily: 'Roboto_medium',
   },
-  itemView: {
+  postView: {
     width: (windowWidth - 45) / 1.3,
     marginBottom: 15,
     fontFamily: 'Roboto_medium',
@@ -297,14 +294,14 @@ const styles = StyleSheet.create({
     // marginBottom: 15,
     fontFamily: 'Roboto_medium',
   },
-  itemImage: {
+  postImage: {
     width: '100%',
     height: (windowWidth - 45) / 2,
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
     fontFamily: 'Roboto_medium',
   },
-  itemHide: {
+  postHide: {
     width: '100%',
     // borderWidth: 1,
     // backgroundColor: 'rgba(255, 0, 0, 0.2)',
@@ -315,18 +312,18 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     fontFamily: 'Roboto_medium',
   },
-  itemTime: {
+  postTime: {
     padding: 5,
     fontSize: 16,
     backgroundColor: '#0C637F88',
     color: 'white',
     fontFamily: 'Roboto_medium',
   },
-  itemTitle: {
+  postTitle: {
     fontSize: 20,
     fontFamily: 'Roboto_medium',
   },
-  itemPrice: {
+  postPrice: {
     fontSize: 16,
     color: '#666666',
     fontFamily: 'Roboto_medium',
@@ -363,14 +360,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginLeft: 10,
   },
-  item: {
+  post: {
     margin: 10,
   },
-  itemPhoto: {
+  postPhoto: {
     width: 200,
     height: 200,
   },
-  itemText: {
+  postText: {
     color: 'grey',
     marginTop: 5,
   },
