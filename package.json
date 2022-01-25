@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/SnuglyWugly/bid-local/issues"
   },
-  "homepage": "https://github.com/SnuglyWugly/bid-local#readme"
+  "homepage": "https://github.com/SnuglyWugly/bid-local#readme",
+  "resolutions": {
+    "@react-native-community/datetimepicker": "5.1.0"
+  }
 }

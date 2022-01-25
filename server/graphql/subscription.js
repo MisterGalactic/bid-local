@@ -1,3 +1,0 @@
-type Subscription {
-    bidPlaced: Item
-  }
