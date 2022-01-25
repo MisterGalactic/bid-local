@@ -116,7 +116,7 @@ export default function DiscoverPost({ navigation }) {
     } else {
       for (const currCat of catArray) {
         const name = currCat.name
-        if (name.length>0 && name !== filterCat ){
+        if (name.length>0 && name !== 'FEATURED' ){
           output.push(
             {
               title: `${name}`,
