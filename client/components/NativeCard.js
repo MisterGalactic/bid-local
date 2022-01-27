@@ -14,6 +14,8 @@ import {
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 import faker from 'faker-extra';
 
+import HTMLView from "react-native-htmlview";
+
 export default class NativeCard extends Component {
 
 
@@ -39,8 +41,9 @@ export default class NativeCard extends Component {
             <CardItem header style={{paddingTop: 5, paddingBottom: 0}}>
               <Text ellipsizeMode='tail' numberOfLines={1} style={styles.titleText} >{this.props.item.text}</Text>
             </CardItem>
-            <CardItem bordered style={{paddingBottom: 15, borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }}>
-              <Text ellipsizeMode='tail' numberOfLines={2} style={styles.contentText}>{this.props.item.desc}</Text>
+            <CardItem bordered style={{overflow: 'hidden', paddingBottom: 15, borderBottomLeftRadius: 15, borderBottomRightRadius: 15, height: 95  }}>
+              <HTMLView value={this.props.item.desc} stylesheet={styles} />
+              {/* <Text ellipsizeMode='tail' numberOfLines={2} style={styles.contentText}>{this.props.item.desc}</Text> */}
             </CardItem>
           </Card>
         </Content>
@@ -51,6 +54,20 @@ export default class NativeCard extends Component {
 
 
 const styles = StyleSheet.create({
+  /********************************/
+  /* styles for html tags */
+  a: {
+    fontWeight: "bold",
+    color: "purple",
+  },
+  div: {
+    fontFamily: "Cochin",
+    fontSize: 20
+  },
+  p: {
+    fontSize: 15,
+  },
+  /*******************************/
   contentText: {
     fontFamily: "Cochin",
     height: 40

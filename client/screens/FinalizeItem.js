@@ -149,12 +149,14 @@ export default function FinalizeItem({ navigation, route }) {
           <Carousel
             containerCustomStyle={{
               backgroundColor: 'white',
-              paddingVertical: 10,
+              // paddingVertical: 10,
+              paddingVertical: 0
             }}
             layout={'default'}
             data={images}
             sliderWidth={windowWidth}
-            itemWidth={windowWidth - windowWidth / 6}
+            // itemWidth={windowWidth - windowWidth / 6}
+            itemWidth={windowWidth}
             renderItem={ImageList}
           />
           <View style={styles.itemInfo}>

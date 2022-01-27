@@ -19,6 +19,8 @@ import Navbar from '../components/Navbar';
 import Timer from '../components/Timer';
 import { GET_POST_BY_ID, GET_USER_INFO } from '../queries/post';
 
+import HTMLView from "react-native-htmlview";
+
 const ImageList = ({ item, index }) => {
   return (
     <ImageBackground
@@ -35,6 +37,8 @@ export default function FinalizePost({ navigation, route }) {
   const [images, setImages] = useState([]);
   const [typeError, setTypeError] = useState('');
   const [refresh, setRefresh] = useState(false);
+
+  const [start, setStart] = useState(new Date(Date.now()));
 
   const user = useQuery(GET_USER_INFO);
 
@@ -97,33 +101,36 @@ export default function FinalizePost({ navigation, route }) {
           <Carousel
             containerCustomStyle={{
               backgroundColor: 'white',
-              paddingVertical: 10,
+              // paddingVertical: 10,
+              paddingVertical: 0
             }}
             layout={'default'}
             data={images}
             sliderWidth={windowWidth}
-            itemWidth={windowWidth - windowWidth / 6}
+            // itemWidth={windowWidth - windowWidth / 6}
+            itemWidth={windowWidth}
             renderItem={ImageList}
           />
           <View style={styles.postInfo}>
             <View style={{padding: 15}}>
               <Text style={styles.postTitle}>{data.get_post_by_Id.name}</Text>
-              <Text style={styles.postPrice}>${data.get_post_by_Id.minimumBid}</Text>
+              {/* <Text style={styles.postPrice}>${data.get_post_by_Id.minimumBid}</Text>
               <View style={styles.time}>
                 <Text style={{ color: 'white', fontSize: 16 }}>{data.get_post_by_Id.auctionStart > new Date(Date.now()) ? `Starts in:` : `Time Left:`}</Text>
                 <Timer style={{ color: 'white', fontSize: 25 }} start={data.get_post_by_Id.auctionStart} deadline={data.get_post_by_Id.auctionEnd}/>
               </View>
               {typeError ? (
                 <Text style={{ color: 'red', fontSize: 25 }}>{typeError}</Text>
-              ) : null}
+              ) : null} */}
 
-              <Text style={{ fontWeight: '700', fontSize: 18 }}>
-                Post Description:
+              <Text style={{ fontSize: 18, fontWeight: '350', paddingBottom: 10 }}>
+               Published: {new Date( Number(data.get_post_by_Id.auctionStart) ).toDateString()}
               </Text>
-              <Text style={{ fontSize: 16 }}>
+              <HTMLView value={data.get_post_by_Id.description} stylesheet={styles} />
+              {/* <Text style={{ fontSize: 16 }}>
                 {data.get_post_by_Id.description}
-              </Text>
-              <View style={styles.userInfo}>
+              </Text> */}
+              {/* <View style={styles.userInfo}>
                 <Text style={{ fontWeight: '700', fontSize: 18 }}>Seller Info</Text>
                 <Text style={{ fontSize: 16 }}>
                   <Text style={{ fontWeight: '700' }}>Name: </Text>
@@ -138,7 +145,7 @@ export default function FinalizePost({ navigation, route }) {
                   <Text style={{ fontWeight: '700' }}>Tel: </Text>
                   {data.get_post_by_Id.user.phoneNumber}
                 </Text>
-              </View>
+              </View> */}
             </View>
           </View>
         </ScrollView>
@@ -150,6 +157,20 @@ export default function FinalizePost({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+  /********************************/
+  /* styles for html tags */
+  a: {
+    fontWeight: "bold",
+    color: "purple",
+  },
+  div: {
+    fontFamily: "Cochin",
+    fontSize: 20
+  },
+  p: {
+    fontSize: 20,
+  },
+  /*******************************/
   container: {
     flex: 1,
     flexDirection: 'column',

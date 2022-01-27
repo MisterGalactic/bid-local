@@ -17,7 +17,9 @@ export default function Tabbar({ navigation }) {
   const route = useRoute();
 
   useEffect(() => {
-    if (route.name === 'Discover') {
+    if (route.name === 'Home') {
+      setLeftMargin(0)
+    } else if (route.name === 'DiscoverPost') {
       setLeftMargin(0.2)
     } else if (route.name === 'UserWonItems') {
       setLeftMargin(0.6)
@@ -34,7 +36,7 @@ export default function Tabbar({ navigation }) {
           <Icon color={'gray'} name="shopping-bag" size={35} />
           <Text style={styles.mytext}>Shop</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Discover')}}>
+        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('DiscoverPost')}}>
           <Icon color={'gray'} name="explore" size={35} />
           <Text style={styles.mytext}>Discover</Text>
         </TouchableOpacity>

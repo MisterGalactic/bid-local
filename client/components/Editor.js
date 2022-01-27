@@ -1,91 +1,154 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Text, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView,  Dimensions, StyleSheet} from "react-native";
-import {actions, RichEditor, RichToolbar} from "react-native-pell-rich-editor";
+import {
+  actions,
+  RichEditor,
+  RichToolbar
+} from "react-native-pell-rich-editor";
+
+import HTMLView from "react-native-htmlview";
+
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function Editor() {
-	const richText = React.useRef();
-	return (
-        <SafeAreaView>
-            <ScrollView>
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}	style={{ flex: 1 }}>
-                    <Text>Description:</Text>
-                    <RichEditor
-                        ref={richText}
-                        onChange={ descriptionText => {
-                            console.log("descriptionText:", descriptionText);
-                        }}
-                    />
-                </KeyboardAvoidingView>
-            </ScrollView>
+export default function Editor({parentCallback}) {
+  const [article, setArticle] = useState("");
+	const RichText = useRef();
 
-            <RichToolbar
-                editor={richText}
-                actions=
-                {[
-                  actions.setBold,
-                  actions.setItalic,
-                  actions.setUnderline,
-                  actions.heading1,
-                  actions.insertBulletsList,
-                  actions.insertOrderedList,
-                  actions.insertImage,
-                  'customAction',
-                ]}
-                iconMap=
-                {{
-                  [actions.heading1]: ({tintColor}) => (<Text style={[{color: tintColor}]}>H1</Text>),
-                  // customAction: customIcon,
-                  // customAction={this.handleCustomAction}
-                }}
-            />
-        </SafeAreaView>
+  function editorInitializedCallback() {
+    RichText.current?.registerToolbar(function (items) {
+      // items contain all the actions that are currently active
+      console.log(
+        "Toolbar click, selected items (insert end callback):",
+        items
+      );
+    });
+  }
+
+  // Callback after height change
+  function handleHeightChange(height) {
+    // console.log("editor height change:", height);
+  }
+
+  function onPressAddImage() {
+    // you can easily add images from your gallery
+    RichText.current?.insertImage(
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/100px-React-icon.svg.png"
+    );
+  }
+
+  function insertVideo() {
+    // you can easily add videos from your gallery
+    RichText.current?.insertVideo(
+      "https://mdn.github.io/learning-area/html/multimedia-and-embedding/video-and-audio-content/rabbit320.mp4"
+    );
+  }
+
+
+	return (
+    <ScrollView style={styles.container}>
+      {/* <Text style={styles.text}>Description:</Text> */}
+      <RichEditor
+          disabled={false}
+          containerStyle={styles.editor}
+          ref={RichText}
+          style={styles.rich}
+          placeholder={"Start Writing Here"}
+          // onChange={(text) => setArticle(text)}
+          onChange={(text) => parentCallback(text)}
+          // editorInitializedCallback={editorInitializedCallback}
+          // onHeightChange={handleHeightChange}
+      />
+      <RichToolbar
+          style={[styles.richBar]}
+          editor={RichText}
+          disabled={false}
+          iconTint={"black"}
+          selectedIconTint={"gray"}
+          disabledIconTint={"black"}
+          onPressAddImage={onPressAddImage}
+          iconSize={20}
+          actions=
+          {[
+            actions.undo,
+            // actions.insertVideo,
+            // actions.insertImage,
+            actions.insertLink,
+            actions.heading1,
+            actions.setBold,
+            actions.setItalic,
+            actions.setUnderline,
+            actions.setStrikethrough,
+            actions.removeFormat,
+            actions.insertBulletsList,
+            actions.insertOrderedList,
+            // actions.alignLeft,
+            // actions.alignCenter,
+            // actions.alignRight,
+            'customAction',
+          ]}
+          iconMap=
+          {{
+            [actions.heading1]: ({tintColor}) => (<Text style={[{color: tintColor}]}>H1</Text>),
+            // customAction: customIcon,
+            // customAction={this.handleCustomAction}
+          }}
+          insertVideo={insertVideo}
+      />
+      {/* <Text style={styles.text}>Result</Text>
+      <HTMLView value={article} stylesheet={styles} /> */}
+    </ScrollView>
     );
 }
 
-  // return (
-  //   <View>
-  //     <Content scrollEnabled={false} style={{flex: 0, width: '100%', justifyItems: 'center'}}>
-  //       <Card style={{flex: 0, borderRadius: 15}}>
-  //         <CardItem header bordered style={{alignItems: 'flex-end', backgroundColor: "thistle", borderBottom: 20, borderTopLeftRadius: 15, borderTopRightRadius: 15, paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 5 }}>
-  //           <Image source={{uri:'http://placeimg.com/640/480/animals'}} style={{borderTopLeftRadius: 15, borderTopRightRadius: 15, height: 120, width: "100%"}}/>
-  //           {/* <Image source={this.props.item.uri || this.props.compUri ? {uri: `${this.props.item.uri || this.props.compUri}`} : require('../assets/splash.png')} style={{borderTopLeftRadius: 15, borderTopRightRadius: 15, height: 120, width: 200, flex: 1, resizeMode: "cover"}}/> */}
-  //           <Text style={styles.catLabel}>Label</Text>
-  //         </CardItem>
-  //         <CardItem header style={{paddingTop: 5, paddingBottom: 0}}>
-  //           <Text ellipsizeMode='tail' numberOfLines={1} style={styles.titleText} >Featured Card</Text>
-  //         </CardItem>
-  //         <CardItem style={{borderBottomLeftRadius: 15, borderBottomRightRadius: 15}}>
-  //           <Text ellipsizeMode='tail' numberOfLines={2} style={styles.contentText}>
-  //           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-  //           </Text>
-  //         </CardItem>
-  //       </Card>
-  //     </Content>
-  //   </View>
-  // );
 
-
-
-const styles = StyleSheet.create({
-  contentText: {
-    fontFamily: "Cochin"
-  },
-  titleText: {
-    fontFamily: "Cochin",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  // catLabel: {
-  //   position: 'absolute',
-  //   bottom: '4%',
-  //   padding: 5,
-  //   fontSize: 16,
-  //   backgroundColor: '#c968c9',
-  //   color: 'white',
-  //   fontFamily: 'Roboto_medium',
-  // }
-});
+  const styles = StyleSheet.create({
+    /********************************/
+    /* styles for html tags */
+    a: {
+      fontWeight: "bold",
+      color: "purple",
+    },
+    div: {
+      fontFamily: "Cochin",
+    },
+    p: {
+      fontSize: 30,
+    },
+    /*******************************/
+    container: {
+      flex: 1,
+      // marginTop: 40,
+      // backgroundColor: "#F5FCFF",
+      backgroundColor: "transparent",
+      minHeight: 300,
+      marginLeft: 20,
+      marginRight: 20
+    },
+    editor: {
+      backgroundColor: "transparent",
+      borderColor: "black",
+      borderWidth: 1,
+      height: 300
+    },
+    rich: {
+      minHeight: 300,
+      flex: 1
+    },
+    richBar: {
+      height: 50,
+      backgroundColor: "transparent",
+      // backgroundColor: "white",
+      // backgroundColor: "#F5FCFF",
+    },
+    text: {
+      fontWeight: "bold",
+      fontSize: 20,
+    },
+    tib: {
+      textAlign: "center",
+      color: "#515156",
+    },
+  });
 
 

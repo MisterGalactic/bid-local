@@ -146,7 +146,7 @@ export default function Item({ navigation, route }) {
           </>
           : null
         }
-        <Navbar navigation={navigation} canGoBack={true} targetScreen={''} style={{zIndex: 1}}/>
+        <Navbar navigation={navigation} canGoBack={true} targetScreen={''} info={data} style={{zIndex: 1}}/>
         <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={{zIndex: -1, height: '100%', width: '100%', position: 'absolute', top:0, left:0}}/>
         <KeyboardAwareScrollView
           extraScrollHeight={20}
@@ -159,12 +159,14 @@ export default function Item({ navigation, route }) {
           <Carousel
             containerCustomStyle={{
               backgroundColor: 'white',
-              paddingVertical: 10,
+              // paddingVertical: 10,
+              paddingVertical: 0
             }}
             layout={'default'}
             data={images}
             sliderWidth={windowWidth}
-            itemWidth={windowWidth - windowWidth / 6}
+            // itemWidth={windowWidth - windowWidth / 6}
+            itemWidth={windowWidth}
             renderItem={ImageList}
           />
           <View style={styles.itemInfo}>

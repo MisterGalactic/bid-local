@@ -16,6 +16,7 @@ import {
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Icon, Left, Body } from 'native-base';
 import faker from 'faker-extra';
 
+import HTMLView from "react-native-htmlview";
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -70,8 +71,9 @@ export default function FeaturedCard({ data, parentCallback }) {
           <CardItem header style={{paddingTop: 5, paddingBottom: 0}}>
             <Text ellipsizeMode='tail' numberOfLines={1} style={styles.titleText} >{item.text}</Text>
           </CardItem>
-          <CardItem style={{borderBottomLeftRadius: 15, borderBottomRightRadius: 15}}>
-            <Text ellipsizeMode='tail' numberOfLines={2} style={styles.contentText}>{item.desc}</Text>
+          <CardItem style={{alignItems: 'flex-end', overflow: 'hidden', height: 80, borderBottomLeftRadius: 15, borderBottomRightRadius: 15}}>
+            <HTMLView value={item.desc} stylesheet={styles} />
+            {/* <Text ellipsizeMode='tail' numberOfLines={2} style={styles.contentText}>{item.desc}</Text> */}
           </CardItem>
         </Card>
       </Pressable>
@@ -125,6 +127,20 @@ export default function FeaturedCard({ data, parentCallback }) {
 
 
 const styles = StyleSheet.create({
+  /********************************/
+  /* styles for html tags */
+  a: {
+    fontWeight: "bold",
+    color: "purple",
+  },
+  div: {
+    fontFamily: "Cochin",
+    fontSize: 20
+  },
+  p: {
+    fontSize: 30,
+  },
+  /*******************************/
   contentText: {
     fontFamily: "Cochin"
   },

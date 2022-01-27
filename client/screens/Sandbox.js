@@ -14,6 +14,7 @@ import {
   Button,
   Pressable,
   Platform,
+  TextInput,
   TouchableOpacity
 } from 'react-native';
 import { Header, Left, Right, Body, Icon } from "native-base";
@@ -22,33 +23,18 @@ import Tabbar from '../components/Tabbar';
 import FeatureCard from '../components/FeatureCard';
 import Editor from '../components/Editor';
 
+import HTMLView from "react-native-htmlview";
+
 const windowWidth = Dimensions.get('window').width;
 
 
 export default function Sandbox({ navigation }) {
+  const [description, setDescription] = React.useState('');
+  // const [childData, setChild] = useState(1);
 
-  const [date, setDate] = useState(new Date(Date.now()));
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-  };
-
-  const showMode = (currentMode) => {
-    setShow(!show);
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode('date');
-  };
-
-  const showTimepicker = () => {
-    showMode('time');
-  };
+  function handleCallback(text) {
+    setDescription(text)
+  }
 
 
   return (
@@ -56,7 +42,13 @@ export default function Sandbox({ navigation }) {
       <Navbar navigation={navigation} canGoBack={true} />
       <ScrollView style={styles.container}>
 
-        <Editor/>
+        <HTMLView value={description} stylesheet={styles} />
+        <Text style={{ marginTop: 15 }}>Description:{description}</Text>
+        <TextInput
+          style={styles.textBoxes}
+          onChangeText={(text) => setDescription(text)}
+        />
+        <Editor parentCallback={handleCallback} />
 
 
       </ScrollView>
@@ -66,6 +58,19 @@ export default function Sandbox({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  /********************************/
+  /* styles for html tags */
+  a: {
+    fontWeight: "bold",
+    color: "purple",
+  },
+  div: {
+    fontFamily: "Cochin",
+  },
+  p: {
+    fontSize: 30,
+  },
+  /*******************************/
   container: {
     flex: 1,
     flexDirection: 'column',

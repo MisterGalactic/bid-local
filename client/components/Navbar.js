@@ -4,7 +4,7 @@ import { Header, Button, Left, Right, Body, Icon } from "native-base";
 import { StyleSheet, ImageBackground, StatusBar, TouchableOpacity, Text, Dimensions} from 'react-native';
 import SideBar from './SideBar';
 
-export default function Navbar({navigation, canGoBack, targetScreen}) {
+export default function Navbar({navigation, canGoBack, targetScreen, info}) {
   const [hideSide, setHideSide] = useState(true);
 
   return (
@@ -26,9 +26,12 @@ export default function Navbar({navigation, canGoBack, targetScreen}) {
         <ImageBackground source={require('../assets/logo.png')} style={styles.logo} resizeMode='contain'/>
       </Body>
       <Right style={{flex: 1}}>
-        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('DiscoverPost')}}>
-          <Icon type="MaterialCommunityIcons" name="radioactive" style={styles.navIcon}/>
+        <TouchableOpacity style={styles.container} onPress={()=>{console.log(info)}}>
+          <Icon type="MaterialCommunityIcons" name="share-variant" style={styles.shareIcon}/>
         </TouchableOpacity>
+        {/* <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Sandbox')}}>
+          <Icon type="MaterialCommunityIcons" name="radioactive" style={styles.navIcon}/>
+        </TouchableOpacity> */}
         {/* <Button transparent onPress={() => {setHideSide(hide => !hide)}}>
           <ImageBackground source={require('../assets/burger.png')} style={styles.burger} resizeMode='contain'/>
         </Button> */}
@@ -70,4 +73,16 @@ const styles = StyleSheet.create({
     borderColor: '#383838',
     marginBottom: '10%',
   },
+  shareIcon: {
+    // position: "absolute",
+    height: 30,
+    width: 30,
+    color: '#383838',
+    fontSize: 24,
+    marginLeft: 10,
+    borderRadius: 30/2,
+    borderWidth: 1.5,
+    borderColor: '#383838',
+    marginBottom: '10%',
+  }
 });

@@ -21,6 +21,7 @@ import {
 import { Header, Left, Right, Body, Icon } from "native-base";
 import Navbar from '../components/Navbar';
 import { CREATE_POST, GET_POSTCATEGORIES } from '../queries/addPost';
+import Editor from '../components/Editor';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -173,6 +174,10 @@ export default function AddPost({ navigation, route }) {
     } else {
       setDuration(input);
     }
+  }
+
+  function handleCallback(text) {
+    setDescription(text)
   }
 
   function handleSubmit() {
@@ -437,10 +442,11 @@ export default function AddPost({ navigation, route }) {
           </>
           }
           <Text style={{ marginTop: 15 }}>Description:</Text>
-          <TextInput
+          <Editor parentCallback={handleCallback} />
+          {/* <TextInput
             style={styles.textBoxes}
             onChangeText={(text) => setDescription(text)}
-          />
+          /> */}
           <Text style={{ marginTop: 15 }}>PostCategories:</Text>
           <View style={styles.selectedPostCategories}>
             {selectedPostCategories.map((cat, index) => (
