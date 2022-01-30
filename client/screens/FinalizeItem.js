@@ -131,14 +131,14 @@ export default function FinalizeItem({ navigation, route }) {
   if (loading) return (
     <SafeAreaView style={styles.loadingContainer}>
       <Text style={styles.loading}>Loading...</Text>
-      <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
+      <Image style={{top: '12%', alignSelf: 'center', height: '35%', width: '35%'}} source={require('../assets/ecommerce.gif')} />
     </SafeAreaView>
   );
   if (error) return <Text>Error: {error}</Text>;
   if (data) {
     return (
       <>
-        <Navbar navigation={navigation} canGoBack={true} targetScreen={'Home'}/>
+        <Navbar navigation={navigation} canGoBack={true} targetScreen={'Home'} item={data}/>
         <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={{zIndex: -1, height: '100%', width: '100%', position: 'absolute', top:0, left:0}}/>
         <ScrollView
           style={styles.container}
@@ -269,12 +269,13 @@ const styles = StyleSheet.create({
     color: '#666666',
   },
   time: {
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#A9A9A9',
     padding: 10,
     marginTop: 10,
     marginBottom: 20,
+    minHeight: 70
   },
   bidView: {
     flex: 1,
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
   loading: {
     fontFamily: 'Roboto_medium',
     fontSize: 50,
-    color: '#67A036',
+    color: 'gray',
     marginTop: '60%',
     textAlign: 'center',
     marginBottom: '-40%',

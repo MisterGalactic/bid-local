@@ -146,7 +146,7 @@ export default function Item({ navigation, route }) {
           </>
           : null
         }
-        <Navbar navigation={navigation} canGoBack={true} targetScreen={''} info={data} style={{zIndex: 1}}/>
+        <Navbar navigation={navigation} canGoBack={true} targetScreen={''} item={data} style={{zIndex: 1}}/>
         <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={{zIndex: -1, height: '100%', width: '100%', position: 'absolute', top:0, left:0}}/>
         <KeyboardAwareScrollView
           extraScrollHeight={20}

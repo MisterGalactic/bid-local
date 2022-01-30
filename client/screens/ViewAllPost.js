@@ -81,7 +81,7 @@ export default function ViewAllPost({ navigation, route }) {
                 resizeMode="cover"
                 source={component.picUrl1 ? { uri: component.picUrl1 } : require('../assets/splash.png')}
               >
-                {
+                {/* {
                   component.auctionStart > new Date(Date.now()) ?
                   <Text style={styles.itemNotStart}>Scheduled</Text>
                   :
@@ -90,9 +90,9 @@ export default function ViewAllPost({ navigation, route }) {
                     start={component.auctionStart}
                     deadline={component.auctionEnd}
                   />
-                }
+                } */}
               </ImageBackground>
-            <Text style={styles.itemPrice}>${component.minimumBid}</Text>
+            {/* <Text style={styles.itemPrice}>${component.minimumBid}</Text> */}
             {component.subname ? <Text style={styles.itemTitle}>{component.subname}</Text> : null}
             <Text style={styles.itemTitle}>{component.name}</Text>
           </View>
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     fontSize: 16,
-    color: '#666666',
+    color: 'black',
     fontWeight: '100',
     fontFamily: 'Roboto_medium',
   },

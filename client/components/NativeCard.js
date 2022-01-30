@@ -41,8 +41,10 @@ export default class NativeCard extends Component {
             <CardItem header style={{paddingTop: 5, paddingBottom: 0}}>
               <Text ellipsizeMode='tail' numberOfLines={1} style={styles.titleText} >{this.props.item.text}</Text>
             </CardItem>
-            <CardItem bordered style={{overflow: 'hidden', paddingBottom: 15, borderBottomLeftRadius: 15, borderBottomRightRadius: 15, height: 95  }}>
-              <HTMLView value={this.props.item.desc} stylesheet={styles} />
+            <CardItem bordered style={{alignItems: 'flex-start', overflow: 'hidden', borderBottomLeftRadius: 15, borderBottomRightRadius: 15, height: 95  }}>
+              <View style={{overflow: 'hidden',height:70}}>
+                <HTMLView value={this.props.item.desc} stylesheet={styles} />
+              </View>
               {/* <Text ellipsizeMode='tail' numberOfLines={2} style={styles.contentText}>{this.props.item.desc}</Text> */}
             </CardItem>
           </Card>

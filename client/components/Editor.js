@@ -3,7 +3,8 @@ import { Text, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView,  Dimens
 import {
   actions,
   RichEditor,
-  RichToolbar
+  RichToolbar,
+  defaultActions
 } from "react-native-pell-rich-editor";
 
 import HTMLView from "react-native-htmlview";
@@ -71,17 +72,21 @@ export default function Editor({parentCallback}) {
           actions=
           {[
             actions.undo,
+            ...defaultActions,
+            
             // actions.insertVideo,
             // actions.insertImage,
-            actions.insertLink,
-            actions.heading1,
-            actions.setBold,
-            actions.setItalic,
-            actions.setUnderline,
-            actions.setStrikethrough,
-            actions.removeFormat,
-            actions.insertBulletsList,
-            actions.insertOrderedList,
+
+            // actions.insertLink,
+            // actions.heading1,
+            // actions.setBold,
+            // actions.setItalic,
+            // actions.setUnderline,
+            // actions.setStrikethrough,
+            // actions.removeFormat,
+            // actions.insertBulletsList,
+            // actions.insertOrderedList,
+
             // actions.alignLeft,
             // actions.alignCenter,
             // actions.alignRight,

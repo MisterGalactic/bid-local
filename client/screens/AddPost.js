@@ -42,6 +42,7 @@ export default function AddPost({ navigation, route }) {
   const onChangeStart = (event, selectedDate) => {
     const currentDate = selectedDate || now;
     setStart(currentDate);
+    setEnd(currentDate);
   };
 
   const onChangeEnd = (event, selectedDate) => {
@@ -99,14 +100,14 @@ export default function AddPost({ navigation, route }) {
   });
 
   const [title, setTitle] = React.useState('');
-  const [price, setPrice] = React.useState('');
+  const [price, setPrice] = React.useState('0');
   const [description, setDescription] = React.useState('');
   const [createPost, { data, error }] = useMutation(CREATE_POST);
   const postcategories = useQuery(GET_POSTCATEGORIES);
   const [selectedPostCategories, setSelectedPostCategories] = useState([{
     "__typename": "PostCategory",
-    "id": "4d398884-88fc-4f2d-8f5d-071dbd5f70bb",
-    "name": "FEATURED",
+    "id": "0ec7e90f-238d-4da1-b6cc-f266fc0df9cc",
+    "name": "UNSORTED",
   }]);
   const [showModal, setModal] = useState();
   const [images, setImages] = useState([]);
@@ -122,6 +123,8 @@ export default function AddPost({ navigation, route }) {
 
   useEffect(() => {
     setIsLoading(false);
+    setStart(now)
+    setEnd(now)
   }, []);
 
   useEffect(() => {
@@ -282,23 +285,12 @@ export default function AddPost({ navigation, route }) {
           style={styles.container}
           contentContainerStyle={{ alignItems: 'center' }}
         >
-          <Text style={{ marginTop: 15 }}>Title:</Text>
+          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Title:</Text>
           <TextInput
             style={styles.textBoxes}
             onChangeText={(text) => setTitle(text)}
           />
-          <Text style={{ marginTop: 15 }}>Starting Price:</Text>
-          <TextInput
-            style={styles.textBoxes}
-            value={price}
-            onChangeText={(text) => handleCurrency(text)}
-            keyboardType="numeric"
-            placeholder="0,00"
-          />
-          {typeError ? (
-            <Text style={{ color: 'purple', fontSize: 18 }}>{typeError}</Text>
-          ) : null}
-          {
+          {/* {
             end ? null :
           <>
             <Text style={{ marginTop: 15 }}>Duration (Minutes):</Text>
@@ -313,15 +305,17 @@ export default function AddPost({ navigation, route }) {
               <Text style={{ color: 'purple', fontSize: 18 }}>{typeError}</Text>
             ) : null}
           </>
-          }
+          } */}
           {
             duration ? null :
           <>
-            <Text style={{ marginTop: 15 }}>Start Date & Time:</Text>
+            <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Publish Date & Time:</Text>
             {/* {showStart ? <Text>showStart true</Text> : <Text>showStart false</Text> } */}
             <View style={{
               borderWidth: 1,
-              borderColor: '#EF476F',
+              // borderColor: '#EF476F',
+              backgroundColor: 'white',
+              borderColor: 'black',
               width: '90%',
               padding: 5,
               flexDirection: 'row',
@@ -377,77 +371,15 @@ export default function AddPost({ navigation, route }) {
                 )}
               </View>
             </View>
-            <Text style={{ marginTop: 15 }}>End Date & Time:</Text>
-            {/* {showEnd ? <Text>showEnd true</Text> : <Text>showEnd false</Text> } */}
-            { (secondsToHms((end - start)/1000)) ? <Text style={{ marginTop: 0 }}>{secondsToHms((end - start)/1000)}</Text> : null }
-            <View style={{
-              borderWidth: 1,
-              borderColor: '#EF476F',
-              width: '90%',
-              padding: 5,
-              flexDirection: 'row',
-              marginBottom: showEnd ? bottomMargin : null
-            }}>
-              <View style={{flex: 1, flexDirection: 'row', marginLeft: -windowWidth*0.02}}>
-                <Button onPress={()=>{showEndDatepicker(!showEnd)}} title={end>start ? (end).toDateString() : (start).toDateString()} />
-                <TouchableOpacity onPress={()=>{showEndDatepicker(!showEnd)}} style={(mode==='date') && showEnd ? styles.confirmView : styles.editView}>
-                  <Icon type="MaterialCommunityIcons" name={(mode==='date') && showEnd ? "check" : "square-edit-outline"} style={(mode==='date') ? styles.confirmIcon : styles.editIcon}/>
-                </TouchableOpacity>
-                {(mode==='date') && (
-                <>
-                  {
-                  showEnd ?
-                  <View style={{position: 'absolute', marginTop: 20, borderRadius:10, backgroundColor : "green",}}>
-                    {/* <Button onPress={showEndDatepicker} color='white' title='Confirm'/> */}
-                    <DateTimePicker
-                      minimumDate={start}
-                      testID="dateTimePicker"
-                      value={end>start ? end : start}
-                      mode="date"
-                      is24Hour={true}
-                      display="inline"
-                      onChange={onChangeEnd}
-                      style={{position: 'absolute', marginTop: 45, width: windowWidth*0.85, borderWidth: 1}}
-                    />
-                  </View> : null
-                  }
-                </>
-                )}
-                <Button onPress={()=>{showEndTimepicker(!showEnd)}} title={end>start ? (end).toLocaleTimeString() : (start).toLocaleTimeString()}/>
-                <TouchableOpacity onPress={()=>{showEndTimepicker(!showEnd)}} style={(mode==='time') && showEnd ? styles.confirmView : styles.editView}>
-                  <Icon type="MaterialCommunityIcons" name={(mode==='time') && showEnd ? "check" : "square-edit-outline"} style={(mode==='date') ? styles.confirmIcon : styles.editIcon}/>
-                </TouchableOpacity>
-                {(mode==='time') && (
-                <>
-                  {
-                  showEnd ?
-                <View style={{position: 'absolute', marginTop: 20, borderRadius:10, backgroundColor : "green", marginLeft: "40%"}}>
-                  {/* <Button onPress={showTimepicker} color='white' title='Confirm'/> */}
-                  <DateTimePicker
-                    minimumDate={start}
-                    testID="dateTimePicker"
-                    value={end>start ? end : start}
-                    mode="time"
-                    is24Hour={true}
-                    display="spinner"
-                    onChange={onChangeEnd}
-                    style={{position: 'absolute', marginTop: 45, width: windowWidth*0.5, borderWidth: 1, alignSelf: 'center'}}
-                  />
-                </View> : null
-                  }
-                </>
-                )}
-              </View>
-            </View>
           </>
           }
-          <Text style={{ marginTop: 15 }}>Description:</Text>
+          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 20 }}>Description:</Text>
           <Editor parentCallback={handleCallback} />
           {/* <TextInput
             style={styles.textBoxes}
             onChangeText={(text) => setDescription(text)}
           /> */}
-          <Text style={{ marginTop: 15 }}>PostCategories:</Text>
+          <Text style={{ marginTop: 15 }}>Categories:</Text>
           <View style={styles.selectedPostCategories}>
             {selectedPostCategories.map((cat, index) => (
               <Text key={index} style={styles.selectedPostCategory}>
@@ -470,10 +402,10 @@ export default function AddPost({ navigation, route }) {
                 marginTop: 5,
               }}
             >
-              Pick PostCategories
+              Select Categories
             </Text>
           </TouchableWithoutFeedback>
-          <Text style={{ marginTop: 15 }}>Title:</Text>
+          <Text style={{ marginTop: 15 }}>Images:</Text>
           <View style={styles.itemView}>
             {images.length > 0
               ? images.map((img, index) => (
@@ -519,12 +451,12 @@ export default function AddPost({ navigation, route }) {
                   fontFamily: 'Roboto_medium',
                 }}
               >
-                POSTCATEGORIES
+                CATEGORIES
               </Text>
               {postcategories.data
                 ? postcategories.data.get_postcategories.map((cat) => {
                     return (
-                      <PostCategoryModalField
+                      <CategoryModalField
                         key={cat.id}
                         postcategory={cat}
                         handlePostCategories={handlePostCategories}
@@ -552,7 +484,7 @@ export default function AddPost({ navigation, route }) {
   }
 }
 
-function PostCategoryModalField({ postcategory, handlePostCategories }) {
+function CategoryModalField({ postcategory, handlePostCategories }) {
   const [active, setActive] = useState(false);
 
   return (
@@ -564,7 +496,7 @@ function PostCategoryModalField({ postcategory, handlePostCategories }) {
         handlePostCategories(postcategory);
       }}
     >
-      <View style={styles.postcategoryField}>
+      <View style={styles.categoryField}>
         <Text style={[{ fontSize: 16 }, styles.text]}>{postcategory.name}</Text>
         {/* <Text style={[{ fontSize: 16 }, styles.text]}>something should be here</Text> */}
         <View
@@ -597,13 +529,16 @@ const styles = StyleSheet.create({
   },
   textBoxes: {
     borderWidth: 1,
-    borderColor: '#EF476F',
+    // borderColor: '#EF476F',
+    backgroundColor: 'white',
+    borderColor: 'black',
     width: '90%',
     padding: 10,
   },
   addItemButton: {
     justifyContent: 'center',
-    margin: 10,
+    margin: 30,
+    marginBottom: 100
   },
   categoryModal: {
     position: 'absolute',

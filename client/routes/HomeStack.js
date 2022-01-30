@@ -2,6 +2,7 @@ import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import Home from '../screens/Home';
+import Post from '../screens/Post';
 import Item from '../screens/Item';
 import AddItem from '../screens/AddItem';
 import AddPost from '../screens/AddPost';
@@ -38,6 +39,7 @@ const HomeStack = ({ token, initial }) => {
         <Stack.Screen name="ViewAllPost" component={ViewAllPost} />
         <Stack.Screen name="FinalizeItem" component={FinalizeItem} />
         <Stack.Screen name="FinalizePost" component={FinalizePost} />
+        <Stack.Screen name="Post" component={Post} />
         <Stack.Screen name="Item" component={Item} />
         <Stack.Screen name="AddItem" component={AddItem} />
         <Stack.Screen name="AddPost" component={AddPost} />

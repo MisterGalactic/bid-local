@@ -71,7 +71,7 @@ export default function FeaturedCard({ data, parentCallback }) {
           <CardItem header style={{paddingTop: 5, paddingBottom: 0}}>
             <Text ellipsizeMode='tail' numberOfLines={1} style={styles.titleText} >{item.text}</Text>
           </CardItem>
-          <CardItem style={{alignItems: 'flex-end', overflow: 'hidden', height: 80, borderBottomLeftRadius: 15, borderBottomRightRadius: 15}}>
+          <CardItem style={{alignItems: 'flex-start', overflow: 'hidden', height: 80, borderBottomLeftRadius: 15, borderBottomRightRadius: 15}}>
             <HTMLView value={item.desc} stylesheet={styles} />
             {/* <Text ellipsizeMode='tail' numberOfLines={2} style={styles.contentText}>{item.desc}</Text> */}
           </CardItem>

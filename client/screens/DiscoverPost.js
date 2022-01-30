@@ -63,8 +63,8 @@ export default function DiscoverPost({ navigation }) {
   }
 
   function handleCallback(fromChild) {
-    navigation.navigate('FinalizePost', { id: fromChild })
-    console.log('FinalizePost', { id: fromChild })
+    navigation.navigate('Post', { id: fromChild })
+    console.log('Post', { id: fromChild })
     // setTimeout(() => navigation.navigate('DiscoverPost'), 1200)
   }
 
@@ -139,7 +139,7 @@ export default function DiscoverPost({ navigation }) {
         <TouchableWithoutFeedback
           key={item.key}
           onPress={() => {
-            navigation.navigate('FinalizePost', { id: item.key });
+            navigation.navigate('Post', { id: item.key });
             // setTimeout(() => navigation.navigate('DiscoverPost'), 1200)
           }}
         >
@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
   loading: {
     fontFamily: 'Roboto_medium',
     fontSize: 50,
-    color: '#67A036',
+    color: 'gray',
     marginTop: '60%',
     textAlign: 'center',
     marginBottom: '-40%',

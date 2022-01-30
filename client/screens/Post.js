@@ -32,13 +32,14 @@ const ImageList = ({ item, index }) => {
   );
 };
 
-export default function FinalizePost({ navigation, route }) {
+export default function Post({ navigation, route }) {
   const windowWidth = Dimensions.get('window').width;
   const [images, setImages] = useState([]);
   const [typeError, setTypeError] = useState('');
   const [refresh, setRefresh] = useState(false);
 
   const [start, setStart] = useState(new Date(Date.now()));
+
   const user = useQuery(GET_USER_INFO);
 
   const [getPost, { loading, error, data }] = useLazyQuery(GET_POST_BY_ID, {
@@ -89,7 +90,7 @@ export default function FinalizePost({ navigation, route }) {
   if (data) {
     return (
       <>
-        <Navbar navigation={navigation} canGoBack={true} targetScreen={'DiscoverPost'} post={data}/>
+        <Navbar navigation={navigation} canGoBack={true} targetScreen={''} post={data}/>
         <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={{zIndex: -1, height: '100%', width: '100%', position: 'absolute', top:0, left:0}}/>
         <ScrollView
           style={styles.container}
@@ -246,5 +247,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: '-40%',
     zIndex: 1,
-  }
+  },
 });

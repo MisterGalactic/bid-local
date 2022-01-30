@@ -18,6 +18,7 @@ import {
   Button,
   Platform
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Header, Left, Right, Body, Icon } from "native-base";
 import Navbar from '../components/Navbar';
 import { CREATE_ITEM, GET_CATEGORIES } from '../queries/addItem';
@@ -104,7 +105,7 @@ export default function AddItem({ navigation, route }) {
   const categories = useQuery(GET_CATEGORIES);
   const [selectedCategories, setSelectedCategories] = useState([{
     "__typename": "Category",
-    "id": "d02ffae0-61aa-4478-ae68-450ff4de9af1",
+    "id": "0ec7e90f-238d-4da1-b6cc-f266fc0df9cc",
     "name": "UNSORTED",
   }]);
   const [showModal, setModal] = useState();
@@ -272,16 +273,18 @@ export default function AddItem({ navigation, route }) {
     return (
       <>
         <Navbar navigation={navigation} canGoBack={true} />
-        <ScrollView
+        <KeyboardAwareScrollView
+          extraScrollHeight={20}
+          keyboardOpeningTime={0}
           style={styles.container}
           contentContainerStyle={{ alignItems: 'center' }}
         >
-          <Text style={{ marginTop: 15 }}>Title:</Text>
+          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Title:</Text>
           <TextInput
             style={styles.textBoxes}
             onChangeText={(text) => setTitle(text)}
           />
-          <Text style={{ marginTop: 15 }}>Starting Price:</Text>
+          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Starting Price:</Text>
           <TextInput
             style={styles.textBoxes}
             value={price}
@@ -295,7 +298,7 @@ export default function AddItem({ navigation, route }) {
           {
             end ? null :
           <>
-            <Text style={{ marginTop: 15 }}>Duration (Minutes):</Text>
+            <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Duration (Minutes):</Text>
             <TextInput
               style={styles.textBoxes}
               value={duration}
@@ -311,11 +314,13 @@ export default function AddItem({ navigation, route }) {
           {
             duration ? null :
           <>
-            <Text style={{ marginTop: 15 }}>Start Date & Time:</Text>
+            <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Start Date & Time:</Text>
             {/* {showStart ? <Text>showStart true</Text> : <Text>showStart false</Text> } */}
             <View style={{
               borderWidth: 1,
-              borderColor: '#EF476F',
+              // borderColor: '#EF476F',
+              backgroundColor: 'white',
+              borderColor: 'black',
               width: '90%',
               padding: 5,
               flexDirection: 'row',
@@ -371,12 +376,14 @@ export default function AddItem({ navigation, route }) {
                 )}
               </View>
             </View>
-            <Text style={{ marginTop: 15 }}>End Date & Time:</Text>
+            <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>End Date & Time:</Text>
             {/* {showEnd ? <Text>showEnd true</Text> : <Text>showEnd false</Text> } */}
             { (secondsToHms((end - start)/1000)) ? <Text style={{ marginTop: 0 }}>{secondsToHms((end - start)/1000)}</Text> : null }
             <View style={{
               borderWidth: 1,
-              borderColor: '#EF476F',
+              // borderColor: '#EF476F',
+              backgroundColor: 'white',
+              borderColor: 'black',
               width: '90%',
               padding: 5,
               flexDirection: 'row',
@@ -435,7 +442,7 @@ export default function AddItem({ navigation, route }) {
             </View>
           </>
           }
-          <Text style={{ marginTop: 15 }}>Description:</Text>
+          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Description:</Text>
           <TextInput
             style={styles.textBoxes}
             onChangeText={(text) => setDescription(text)}
@@ -463,10 +470,10 @@ export default function AddItem({ navigation, route }) {
                 marginTop: 5,
               }}
             >
-              Pick Categories
+              Select Categories
             </Text>
           </TouchableWithoutFeedback>
-          <Text style={{ marginTop: 15 }}>Title:</Text>
+          <Text style={{ marginTop: 15 }}>Images:</Text>
           <View style={styles.itemView}>
             {images.length > 0
               ? images.map((img, index) => (
@@ -499,7 +506,7 @@ export default function AddItem({ navigation, route }) {
               { isImageUploading ? 'Uploading Image' : 'ADD ITEM' }
             </Text>
           </TouchableHighlight>
-        </ScrollView>
+        </KeyboardAwareScrollView>
 
         {showModal ? (
           <View style={styles.categoryModal}>
@@ -589,7 +596,9 @@ const styles = StyleSheet.create({
   },
   textBoxes: {
     borderWidth: 1,
-    borderColor: '#EF476F',
+    // borderColor: '#EF476F',
+    backgroundColor: 'white',
+    borderColor: 'black',
     width: '90%',
     padding: 10,
   },
