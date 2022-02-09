@@ -20,6 +20,7 @@
     "apollo-boost": "^0.4.9",
     "apollo-link-http": "^1.5.17",
     "apollo-link-ws": "^1.0.20",
+    "axios": "^0.25.0",
     "expo": "^40.0.0",
     "expo-app-loading": "^1.2.1",
     "expo-font": "~8.4.0",
@@ -44,7 +45,9 @@
     "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "~2.15.2",
     "react-native-snap-carousel": "^3.9.1",
+    "react-native-stripe-checkout-webview": "^0.0.13",
     "react-native-web": "~0.13.12",
+    "react-native-webview": "^11.17.1",
     "subscriptions-transport-ws": "^0.9.18"
   },
   "devDependencies": {

@@ -68,6 +68,11 @@ export default function Cart({ navigation, hideSide }) {
               <Text style={styles.sidebarText}>User Items</Text>
               <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
             </ListItem>
+            <ListItem onPress={()=>{navigation.navigate('PaymentScreen')}}>
+              <Icon type="MaterialCommunityIcons" name="credit-card-plus-outline" style={styles.sidebarIcon}/>
+              <Text style={styles.sidebarText}>Buy Credits</Text>
+              <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
+            </ListItem>
             <ListItem onPress={()=>{navigation.navigate('AddItem')}}>
               <Icon type="MaterialCommunityIcons" name="plus" style={styles.sidebarIcon}/>
               <Text style={styles.sidebarText}>Add Item</Text>

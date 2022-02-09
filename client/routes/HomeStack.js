@@ -21,6 +21,8 @@ import Account from '../screens/Account';
 import Sandbox from '../screens/Sandbox';
 import ViewAll from '../screens/ViewAll';
 import ViewAllPost from '../screens/ViewAllPost';
+import BuyCredits from '../screens/BuyCredits';
+import PaymentScreen from '../screens/PaymentScreen';
 
 const Stack = createStackNavigator();
 
@@ -33,6 +35,8 @@ const HomeStack = ({ token, initial }) => {
         <Stack.Screen name="DiscoverPost" component={DiscoverPost} />
         <Stack.Screen name="LogoButton" options={{ cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,}} component={LogoButton} />
         <Stack.Screen name="Cart" component={Cart} />
+        <Stack.Screen name="BuyCredits" component={BuyCredits} />
+        <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
         <Stack.Screen name="Sandbox" component={Sandbox} />
         <Stack.Screen name="Account" component={Account} />
         <Stack.Screen name="ViewAll" component={ViewAll} />
