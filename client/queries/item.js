@@ -1,12 +1,31 @@
 import { gql } from '@apollo/client';
 
 export const PLACE_A_BID = gql`
-  mutation place_a_bid ($ItemId: ID!, $biddingPrice: Int) {
-    place_a_bid (ItemId: $ItemId, biddingPrice: $biddingPrice) {
+  mutation place_a_bid (
+    $ItemId: ID!,
+    $biddingPrice: Int,
+    $lastName: String,
+    $history: JSON
+    ) {
+    place_a_bid (
+      ItemId: $ItemId,
+      biddingPrice: $biddingPrice,
+      lastName: $lastName,
+      history: $history
+      ) {
       id
     }
   }
 `;
+
+export const BUY_CREDIT = gql`
+  mutation buy_credit ($UserId: ID!, $credit: Int) {
+    buy_credit (UserId: $UserId, credit: $credit) {
+      id
+    }
+  }
+`;
+
 
 export const GET_ITEM_BY_ID = gql`
 query  get_item_by_Id ( $id: ID! ){
@@ -23,6 +42,7 @@ query  get_item_by_Id ( $id: ID! ){
     picUrl1
     picUrl2
     picUrl3
+    history
     bidder
     user {
       firstName
@@ -38,6 +58,9 @@ export const GET_USER_INFO = gql`
   query get_user_info {
     get_user_info {
       id
+      credit
+      firstName
+      lastName
     }
   }
 `;

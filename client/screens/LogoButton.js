@@ -23,6 +23,7 @@ export default function LogoButton({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState('');
   const [id, setID] = useState('');
+  const [credit, setCredit] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [exist, setExist] = useState(false);
@@ -31,6 +32,7 @@ export default function LogoButton({ navigation }) {
   useEffect(() => {
     if (user.data) {
       setEmail(user.data.get_user_info.email);
+      setCredit(user.data.get_user_info.credit);
       setFirstName(
         user.data.get_user_info.firstName
           ? user.data.get_user_info.firstName
@@ -83,6 +85,7 @@ export default function LogoButton({ navigation }) {
           />
         </View>
         <Text style={styles.title}>{lastName} {firstName}</Text>
+        <Text style={styles.title}>Credit: {credit} HKD</Text>
       </View>
       <Button style={{alignSelf: 'center'}} transparent onPress={()=>{navigation.goBack()}}>
         <Text style={styles.navIcon}>✕</Text>

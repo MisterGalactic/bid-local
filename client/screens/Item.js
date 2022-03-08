@@ -12,13 +12,14 @@ import {
   TextInput,
   TouchableHighlight,
   RefreshControl,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  FlatList
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Carousel from 'react-native-snap-carousel';
 import Navbar from '../components/Navbar';
 import Timer from '../components/Timer';
-import { GET_ITEM_BY_ID, PLACE_A_BID, GET_USER_INFO } from '../queries/item';
+import { GET_ITEM_BY_ID, PLACE_A_BID, GET_USER_INFO, BUY_CREDIT } from '../queries/item';
 import bidSubscription from '../queries/subscription';
 
 const ImageList = ({ item, index }) => {
@@ -32,17 +33,39 @@ const ImageList = ({ item, index }) => {
   );
 };
 
+const FlatListBasics = ({inputData}) => {
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={inputData}
+        renderItem={({item}) => <Text style={styles.item}>{item.name} {item.amount}</Text>}
+      />
+    </View>
+  );
+}
+
 export default function Item({ navigation, route }) {
+
   const { data: subData } = bidSubscription();
   const windowWidth = Dimensions.get('window').width;
   const [offerBid, setOfferBid] = useState('');
   const [images, setImages] = useState([]);
+  const [history, setHistory] = useState([]);
+  const [successBid, setSuccessBid] = useState('');
   const [typeError, setTypeError] = useState('');
   const [highestBidder, setHighestBidder] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
   const [changeItem] = useMutation(PLACE_A_BID);
+  const [changeUser] = useMutation(BUY_CREDIT);
+
   const user = useQuery(GET_USER_INFO);
+  const [getCredit] = useLazyQuery(GET_USER_INFO, {
+    fetchPolicy: 'cache-and-network',
+    variables: {
+      id: route.params.id,
+    }
+  });
   const [getItem, { loading, error, data }] = useLazyQuery(GET_ITEM_BY_ID, {
     fetchPolicy: 'cache-and-network',
     variables: {
@@ -58,6 +81,12 @@ export default function Item({ navigation, route }) {
 
   useEffect(() => {
     if (data) {
+      // if (data.get_item_by_Id.history !== [] && successBid === '') {
+      //   setHistory(data.get_item_by_Id.history)
+      // }
+      if (data.get_item_by_Id.history !== []) {
+        setHistory(data.get_item_by_Id.history)
+      }
       if (data.get_item_by_Id.picUrl3 !== '') {
         setImages([
           { uri: data.get_item_by_Id.picUrl1 },
@@ -84,6 +113,7 @@ export default function Item({ navigation, route }) {
   const handleRefresh = useCallback(() => {
     setRefresh(true);
     getItem();
+    getCredit();
     setRefresh(false);
   }, []);
 
@@ -117,10 +147,20 @@ export default function Item({ navigation, route }) {
         return;
       }
       console.log(`successfully made offer of ${offerBid} for ${data.get_item_by_Id.name}!`)
+      setSuccessBid({"name":`${user.data.get_user_info.lastName}`,"amount":`${offerBid}`})
+      setHistory([...history,{"name":`${user.data.get_user_info.lastName}`,"amount":`${offerBid}`}])
       changeItem({
         variables: {
           ItemId: route.params.id,
           biddingPrice: parseInt(offerBid),
+          lastName: user.data.get_user_info.lastName,
+          history: [...history,{"name":`${user.data.get_user_info.lastName}`,"amount":`${offerBid}`}]
+        }
+      });
+      changeUser({
+        variables: {
+          UserId: user.data.get_user_info.id,
+          credit: parseInt(offerBid),
         }
       });
       setTimeout(() => handleRefresh(), 100)
@@ -137,6 +177,12 @@ export default function Item({ navigation, route }) {
   );
   if (error) return <Text>Error: {error}</Text>;
   if (data) {
+    let userArray = []
+    Object.keys(data.get_item_by_Id.history).forEach( key => { userArray.push( Object.keys(data.get_item_by_Id.history[key]) ) } )
+    let bidArray = []
+    Object.keys(data.get_item_by_Id.history).forEach( key => { bidArray.push(Object.values(data.get_item_by_Id.history[key])) } )
+    const Show = () => userArray.map(item => (<Text>{item}</Text>))
+
     return (
       <>
         { loading && offerBid ?
@@ -173,6 +219,7 @@ export default function Item({ navigation, route }) {
             <View style={{padding: 15}}>
               <Text style={styles.itemTitle}>{data.get_item_by_Id.name}</Text>
               <Text style={styles.itemPrice}>${data.get_item_by_Id.minimumBid}</Text>
+              <Text style={styles.itemPrice}>Your Credit: {user.data.get_user_info.credit} HKD</Text>
               {
                 user && highestBidder ? (
                   <>
@@ -222,6 +269,13 @@ export default function Item({ navigation, route }) {
               {typeError ? (
                 <Text style={{ color: 'red', fontSize: 25 }}>{typeError}</Text>
               ) : null}
+
+              <Text style={{ fontSize: 16 }}>
+                <FlatListBasics inputData={history}/>
+                {/* <Show/>
+                { JSON.stringify(userArray) }
+                { JSON.stringify(bidArray) } */}
+              </Text>
 
               <Text style={{ fontWeight: '700', fontSize: 18 }}>
                 Item Description:

@@ -5,6 +5,7 @@ export const GET_USER_INFO = gql`
     get_user_info {
       id
       email
+      credit
       firstName
       lastName
       phoneNumber
@@ -16,6 +17,14 @@ export const GET_USER_INFO = gql`
         postcode
         country
       }
+    }
+  }
+`;
+
+export const BUY_CREDIT = gql`
+  mutation buy_credit ($UserId: ID!, $credit: Int) {
+    buy_credit (UserId: $UserId, credit: $credit) {
+      id
     }
   }
 `;

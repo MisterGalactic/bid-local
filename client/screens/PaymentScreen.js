@@ -1,16 +1,22 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect, useCallback} from 'react'
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { PaymentView } from '../components/PaymentView'
 import axios  from 'axios';
 import Navbar from '../components/Navbar';
 
-import { GET_USER_INFO } from '../queries/userInfo';
-import { useQuery, useMutation } from '@apollo/client';
+import { GET_USER_INFO, BUY_CREDIT } from '../queries/userInfo';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 
 export default function PaymentScreen({ navigation, route }) {
+  const [refresh, setRefresh] = useState(false);
+
   const user = useQuery(GET_USER_INFO);
+  const [getCredit] = useLazyQuery(GET_USER_INFO, {
+    fetchPolicy: 'cache-and-network',
+  });
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
+  const [credit, setCredit] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [id, setID] = useState('');
@@ -28,9 +34,12 @@ export default function PaymentScreen({ navigation, route }) {
   const [ makePayment, setMakePayment ] = useState(false)
   const [paymentStatus, setPaymentStatus] = useState('')
 
+  const [changeUser] = useMutation(BUY_CREDIT);
+
   useEffect(() => {
     if (user.data) {
       setEmail(user.data.get_user_info.email);
+      setCredit(user.data.get_user_info.credit);
       setPhoneNumber(
         user.data.get_user_info.phoneNumber
           ? user.data.get_user_info.phoneNumber
@@ -71,6 +80,13 @@ export default function PaymentScreen({ navigation, route }) {
     }
   }, [user]);
 
+  const handleRefresh = useCallback(() => {
+    setRefresh(true);
+    getCredit();
+    setRefresh(false);
+  }, []);
+
+
   const cartInfo = {
       id: '5eruyt35eggr76476236523t3',
       description: 'Credit',
@@ -101,6 +117,13 @@ export default function PaymentScreen({ navigation, route }) {
               setReceipt(stripeResponse.data.receipt_url)
               if(paid === true){
                   setPaymentStatus('Payment Success')
+                  changeUser({
+                    variables: {
+                      UserId: user.data.get_user_info.id,
+                      credit: parseInt(cartInfo.amount),
+                    }
+                  });
+                  setTimeout(() => handleRefresh(), 100)
               }else{
                   setPaymentStatus('Payment failed due to some issue')
               }
@@ -169,6 +192,7 @@ return (
         <>
           <Navbar navigation={navigation} canGoBack={true}/>
           <View style={styles.container}>
+            <Text>Credit: {credit} HKD</Text>
             {paymentUI()}
           </View>
         </>
