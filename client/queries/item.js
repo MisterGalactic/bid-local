@@ -64,3 +64,35 @@ export const GET_USER_INFO = gql`
     }
   }
 `;
+
+export const CREATE_RECORD = gql`
+  mutation create_record(
+    $ItemId: ID!,
+    $biddingPrice: Int,
+    $record: RecordUpdate!
+    ) {
+    create_record(
+      ItemId: $ItemId,
+      biddingPrice: $biddingPrice,
+      record: $record
+      ) {
+      id
+    }
+  }
+`;
+
+export const UPDATE_RECORD = gql`
+  mutation update_record (
+    $ItemId: ID!,
+    $biddingPrice: Int,
+    $record: RecordUpdate!
+  ) {
+    update_item (
+      ItemId: $ItemId,
+      biddingPrice: $biddingPrice,
+      record: $record
+    ) {
+      id
+    }
+  }
+`;

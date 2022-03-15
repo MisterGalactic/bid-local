@@ -19,7 +19,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Carousel from 'react-native-snap-carousel';
 import Navbar from '../components/Navbar';
 import Timer from '../components/Timer';
-import { GET_ITEM_BY_ID, PLACE_A_BID, GET_USER_INFO, BUY_CREDIT } from '../queries/item';
+import { GET_ITEM_BY_ID, PLACE_A_BID, GET_USER_INFO, BUY_CREDIT, CREATE_RECORD, UPDATE_RECORD } from '../queries/item';
 import bidSubscription from '../queries/subscription';
 
 const ImageList = ({ item, index }) => {
@@ -58,6 +58,8 @@ export default function Item({ navigation, route }) {
 
   const [changeItem] = useMutation(PLACE_A_BID);
   const [changeUser] = useMutation(BUY_CREDIT);
+  const [createRecord, { data: createRecordData, error: createRecordError }] = useMutation(CREATE_RECORD);
+  const [updateRecord, { data: createUpdateData, error: createUpdateError }] = useMutation(UPDATE_RECORD);
 
   const user = useQuery(GET_USER_INFO);
   const [getCredit] = useLazyQuery(GET_USER_INFO, {
@@ -157,6 +159,15 @@ export default function Item({ navigation, route }) {
           history: [...history,{"name":`${user.data.get_user_info.lastName}`,"amount":`${offerBid}`}]
         }
       });
+      createRecord({
+        variables: {
+          record: {
+            ItemId: route.params.id,
+            biddingPrice: parseInt(offerBid)
+          }
+        }
+      });
+      console.log('createRecorrd: ', createRecordError);
       changeUser({
         variables: {
           UserId: user.data.get_user_info.id,

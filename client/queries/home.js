@@ -28,6 +28,15 @@ query get_items {
 }
 `;
 
+export const GET_RECORDS = gql`
+query get_records {
+  get_records {
+    user
+  }
+}
+`;
+
+
 export const GET_POSTCATEGORIES = gql`
 query get_postcategories {
   get_postcategories {

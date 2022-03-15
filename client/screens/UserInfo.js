@@ -14,39 +14,61 @@ import { useQuery, useMutation } from '@apollo/client';
 
 export default function UserInfo({ navigation, route }) {
   const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState({
+    id: '',
     firstLineAddress: '',
     secondLineAddress: '',
     city: '',
     postcode: '',
-    country: '',
+    country: ''
   });
   const [editMode, setEditMode] = useState(false);
-  const [id, setID] = useState('');
+  const [id, setId] = useState('');
   const [changeUser, changed] = useMutation(UPDATE_USER);
   const [changeUserAddress, changedAddress] = useMutation(UPDATE_ADDRESS);
   const user = useQuery(GET_USER_INFO);
 
   useEffect(()=>{
     console.log('address: ', address);
+    console.log('user: ', user?.data?.get_user_info);
   }, [address]);
 
   useEffect(() => {
     if (user.data) {
-      setEmail(user.data.get_user_info.email);
+      setEmail(
+        user.data.get_user_info.email
+          ? user.data.get_user_info.email
+          : '',
+      );
       setPhoneNumber(
         user.data.get_user_info.phoneNumber
           ? user.data.get_user_info.phoneNumber
           : '',
       );
-      setID(user.data.get_user_info.id);
+      setFirstName(
+        user.data.get_user_info.firstName
+          ? user.data.get_user_info.firstName
+          : 'not set',
+      );
+      setLastName(
+        user.data.get_user_info.lastName
+          ? user.data.get_user_info.lastName
+          : 'name',
+      );
+      setId(
+        user.data.get_user_info.id
+          ? user.data.get_user_info.id
+          : '',
+      );
       setAddress(
         user.data.get_user_info.address
           ? {
-              firstLineAddress:
-                user.data.get_user_info.address.firstLineAddress,
+              id: user.data.get_user_info.address.id,
+              firstLineAddress: user.data.get_user_info.address.firstLineAddress,
               secondLineAddress:
                 user.data.get_user_info.address.secondLineAddress,
               city: user.data.get_user_info.address.city,
@@ -59,6 +81,7 @@ export default function UserInfo({ navigation, route }) {
               city: '',
               postcode: '',
               country: '',
+              id: ''
             },
       );
       return;
@@ -68,7 +91,10 @@ export default function UserInfo({ navigation, route }) {
   useEffect(() => {
     if (changed.data) {
       setPhoneNumber(changed.data.update_user.phoneNumber);
-      setID(changed.data.update_user.id);
+      setEmail(changed.data.update_user.email);
+      setFirstName(changed.data.update_user.firstName);
+      setLastName(changed.data.update_user.lastName);
+      setId(changed.data.update_user.id);
       return;
     }
   }, [changed]);
@@ -76,6 +102,7 @@ export default function UserInfo({ navigation, route }) {
   useEffect(() => {
     if (changedAddress.data) {
       setAddress({
+        id: changedAddress.data.update_address.id,
         firstLineAddress: changedAddress.data.update_address.firstLineAddress,
         secondLineAddress: changedAddress.data.update_address.secondLineAddress,
         city: changedAddress.data.update_address.city,
@@ -89,16 +116,22 @@ export default function UserInfo({ navigation, route }) {
 
   function toggle() {
     if (editMode) {
-      const queryVariables = {
-        user: {
-          phoneNumber: phoneNumber,
-          email: email,
-          password: 'pass',
-        },
-      };
-      changeUser({ variables: queryVariables });
+      // const queryVariables = {
+      //   user: {
+      //     firstName: firstName,
+      //     lastName: lastName,
+      //     phoneNumber: phoneNumber,
+      //     email: email,
+      //     id: id,
+      //     password: '$2b$10$4/OQTEhm2DI2a67Y06e.x.qloIXjQt825ckWU6GZKprV5.eqURDMi',
+      //   },
+      // };
+      // changeUser({ variables: queryVariables });
+      // console.log({ variables: queryVariables })
       changeUserAddress({ variables: {
-        AddressId: user.data.get_user_info.address.id,
+        address: address
+      } })
+      console.log({ variables: {
         address: address
       } })
     }
@@ -130,6 +163,26 @@ export default function UserInfo({ navigation, route }) {
             />
           ) : (
             <Text style={styles.displayText}>{email}</Text>
+          )}
+          <Text style={styles.headers}>First Name:</Text>
+          {editMode ? (
+            <TextInput
+              style={styles.textBoxes}
+              onChangeText={(text) => {setFirstName(text)}}
+              value={firstName}
+            />
+          ) : (
+            <Text style={styles.displayText}>{firstName}</Text>
+          )}
+          <Text style={styles.headers}>Last Name:</Text>
+          {editMode ? (
+            <TextInput
+              style={styles.textBoxes}
+              onChangeText={(text) => {setLastName(text)}}
+              value={lastName}
+            />
+          ) : (
+            <Text style={styles.displayText}>{lastName}</Text>
           )}
           <Text style={styles.headers}>Phone Number:</Text>
           {editMode ? (

@@ -47,13 +47,12 @@ mutation update_user (
 
 export const UPDATE_ADDRESS = gql`
 mutation update_address(
-    $AddressId:ID!
     $address:AddressUpdate!
   ) {
     update_address (
-      AddressId: $AddressId
       address: $address
     ){
+      id
       firstLineAddress
       secondLineAddress
       city
