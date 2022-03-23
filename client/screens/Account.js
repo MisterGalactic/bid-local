@@ -58,6 +58,11 @@ export default function Cart({ navigation, hideSide }) {
               <Text style={styles.sidebarText}>My details</Text>
               <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
             </ListItem>
+            <ListItem onPress={()=>{navigation.navigate('UserHistory')}}>
+              <Icon type="MaterialCommunityIcons" name="history" style={styles.sidebarIcon}/>
+              <Text style={styles.sidebarText}>Bidding History</Text>
+              <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
+            </ListItem>
             <ListItem onPress={()=>{navigation.navigate('UserWonItems')}}>
               <Icon type="MaterialCommunityIcons" name="crown" style={styles.sidebarIcon}/>
               <Text style={styles.sidebarText}>Won Items</Text>

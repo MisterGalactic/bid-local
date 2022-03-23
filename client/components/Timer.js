@@ -6,8 +6,18 @@ export default function Timer({deadline, start, style}) {
   const [waitDiff, setWaitDiff] = useState(start-new Date(Date.now()));
   const [time, setTime] = useState('');
 
+  // useEffect(()=>{
+  //   if (!time) {
+  //     console.log('deadline is', deadline)
+  //     console.log('startlin is', start)
+  //     console.log('timeDiff is',timeDiff)
+  //     console.log('waitDiff is',waitDiff)
+  //   }
+  // },[]);
+
+
   useEffect(()=>{
-    let timer = setTimeout(()=>setTime(updateTime(start>new Date(Date.now())? waitDiff : timeDiff)), 1000);
+    let timer = setTimeout(()=>setTime(updateTime(timeDiff)), 1000);
 
     return ()=>{
       clearTimeout(timer);
@@ -51,7 +61,7 @@ export default function Timer({deadline, start, style}) {
         return `${seconds} secs`;
       }
     } else {
-      return 'Ended';
+      return `Ended`;
     }
   }
   return (

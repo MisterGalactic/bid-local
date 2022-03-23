@@ -38,7 +38,7 @@ const FlatListBasics = ({inputData}) => {
     <View style={styles.container}>
       <FlatList
         data={inputData}
-        renderItem={({item}) => <Text style={styles.item}>{item.name} {item.amount}</Text>}
+        renderItem={({item}) => <Text style={styles.item}>{new Date(parseInt(item.time)).toLocaleString()} {item.name} {item.amount}</Text>}
       />
     </View>
   );
@@ -53,13 +53,15 @@ export default function Item({ navigation, route }) {
   const [history, setHistory] = useState([]);
   const [successBid, setSuccessBid] = useState('');
   const [typeError, setTypeError] = useState('');
+  const [exist, setExist] = useState(false);
   const [highestBidder, setHighestBidder] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
   const [changeItem] = useMutation(PLACE_A_BID);
   const [changeUser] = useMutation(BUY_CREDIT);
   const [createRecord, { data: createRecordData, error: createRecordError }] = useMutation(CREATE_RECORD);
-  const [updateRecord, { data: createUpdateData, error: createUpdateError }] = useMutation(UPDATE_RECORD);
+
+  const [updateRecord, { data: updateRecordData, error: updateRecordError }] = useMutation(UPDATE_RECORD);
 
   const user = useQuery(GET_USER_INFO);
   const [getCredit] = useLazyQuery(GET_USER_INFO, {
@@ -81,8 +83,28 @@ export default function Item({ navigation, route }) {
     }
   }, [subData])
 
+
+  function check(arr, userid) {
+    if (Array.isArray(arr)) {
+      const found = arr.some(el => el.id === userid);
+      if (found) {
+        setExist(true)
+        console.log("user exists!")
+        return found
+      } else {
+        console.log("user does not exists!")
+        return found
+      }
+    } else {
+      console.log("user does not exists!")
+    }
+  }
+
+
   useEffect(() => {
     if (data) {
+      console.log("checking if user in history", data.get_item_by_Id.history)
+      check(data?.get_item_by_Id?.history, user?.data?.get_user_info?.id)
       // if (data.get_item_by_Id.history !== [] && successBid === '') {
       //   setHistory(data.get_item_by_Id.history)
       // }
@@ -149,31 +171,58 @@ export default function Item({ navigation, route }) {
         return;
       }
       console.log(`successfully made offer of ${offerBid} for ${data.get_item_by_Id.name}!`)
-      setSuccessBid({"name":`${user.data.get_user_info.lastName}`,"amount":`${offerBid}`})
-      setHistory([...history,{"name":`${user.data.get_user_info.lastName}`,"amount":`${offerBid}`}])
+      setSuccessBid({"name":`${user?.data.get_user_info?.lastName}`,"amount":`${offerBid}`})
+      setHistory([...history,{"name":`${user?.data.get_user_info?.lastName}`,"amount":`${offerBid}`,"time":`${Date.now()}`}])
       changeItem({
         variables: {
           ItemId: route.params.id,
           biddingPrice: parseInt(offerBid),
-          lastName: user.data.get_user_info.lastName,
-          history: [...history,{"name":`${user.data.get_user_info.lastName}`,"amount":`${offerBid}`}]
+          lastName: user?.data.get_user_info?.lastName,
+          history: [...history,{"id":`${user?.data.get_user_info?.id}`,"name":`${user?.data.get_user_info?.lastName}`,"amount":`${offerBid}`,"time":`${Date.now()}`}]
         }
       });
-      createRecord({
-        variables: {
+
+      if (!exist) {
+        console.log("creating new record")
+        const createRecordVariables = {
+          UserId: user?.data.get_user_info?.id,
+          ItemId: route.params.id,
           record: {
-            ItemId: route.params.id,
-            biddingPrice: parseInt(offerBid)
-          }
-        }
-      });
-      console.log('createRecorrd: ', createRecordError);
+            UserId: user?.data.get_user_info?.id,
+            ItemId: route.params.id
+          },
+          auctionEnd: data.get_item_by_Id.auctionEnd,
+          auctionStart: data.get_item_by_Id.auctionStart,
+          biddingPrice: parseInt(offerBid)
+        };
+
+        createRecord({ variables: createRecordVariables });
+        console.log({ variables: createRecordVariables })
+        console.log('createRecordError: ', createRecordError);
+      } else {
+        console.log("updating existing record")
+        const updateRecordVariables = {
+          UserId: user?.data.get_user_info?.id,
+          ItemId: route.params.id,
+          record: {
+            UserId: user?.data.get_user_info?.id,
+            ItemId: route.params.id
+          },
+          biddingPrice: parseInt(offerBid)
+        };
+
+        updateRecord({ variables: updateRecordVariables });
+        console.log({ variables: updateRecordVariables })
+        console.log('updateRecordError: ', updateRecordError);
+      }
+
       changeUser({
         variables: {
-          UserId: user.data.get_user_info.id,
+          UserId: user?.data.get_user_info?.id,
           credit: parseInt(offerBid),
         }
       });
+
       setTimeout(() => handleRefresh(), 100)
     } else {
       setTypeError('Bidding time is over!');
@@ -188,11 +237,11 @@ export default function Item({ navigation, route }) {
   );
   if (error) return <Text>Error: {error}</Text>;
   if (data) {
-    let userArray = []
-    Object.keys(data.get_item_by_Id.history).forEach( key => { userArray.push( Object.keys(data.get_item_by_Id.history[key]) ) } )
-    let bidArray = []
-    Object.keys(data.get_item_by_Id.history).forEach( key => { bidArray.push(Object.values(data.get_item_by_Id.history[key])) } )
-    const Show = () => userArray.map(item => (<Text>{item}</Text>))
+    // let userArray = []
+    // Object.keys(data.get_item_by_Id.history).forEach( key => { userArray.push( Object.keys(data.get_item_by_Id.history[key]) ) } )
+    // let bidArray = []
+    // Object.keys(data.get_item_by_Id.history).forEach( key => { bidArray.push(Object.values(data.get_item_by_Id.history[key])) } )
+    // const Show = () => userArray.map(item => (<Text>{item}</Text>))
 
     return (
       <>
@@ -230,12 +279,12 @@ export default function Item({ navigation, route }) {
             <View style={{padding: 15}}>
               <Text style={styles.itemTitle}>{data.get_item_by_Id.name}</Text>
               <Text style={styles.itemPrice}>${data.get_item_by_Id.minimumBid}</Text>
-              <Text style={styles.itemPrice}>Your Credit: {user.data.get_user_info.credit} HKD</Text>
+              <Text style={styles.itemPrice}>Your Credit: {user?.data.get_user_info?.credit} HKD</Text>
               {
                 user && highestBidder ? (
                   <>
                     <Text>{data.get_item_by_Id.auctionEnd < new Date(Date.now()) ? 'You are the auction winner.' : 'You are the current highest bidder.'}</Text>
-                    {/* <Text>you: {user.data.get_user_info.id}</Text>
+                    {/* <Text>you: {user?.data.get_user_info?.id}</Text>
                     <Text>bidder: {data.get_item_by_Id.bidder}</Text> */}
                   </>
                 ) : (
@@ -245,7 +294,7 @@ export default function Item({ navigation, route }) {
                     :
                     <Text>{data.get_item_by_Id.auctionStart > new Date(Date.now()) ? 'Auction is scheduled.' : (data.get_item_by_Id.bidder ? 'You have been outbid.' : 'No bids have been placed yet.')}</Text>
                     }
-                    {/* <Text>you:{user.data.get_user_info.id}</Text>
+                    {/* <Text>you:{user?.data.get_user_info?.id}</Text>
                     <Text>bidder:{data.get_item_by_Id.bidder}</Text> */}
                   </>
                 )

@@ -28,7 +28,7 @@ export const BUY_CREDIT = gql`
 
 
 export const GET_ITEM_BY_ID = gql`
-query  get_item_by_Id ( $id: ID! ){
+query get_item_by_Id ( $id: ID! ){
   get_item_by_Id(id: $id){
     id
     name
@@ -65,15 +65,33 @@ export const GET_USER_INFO = gql`
   }
 `;
 
+export const CREATE_ITEM = gql`
+  mutation create_item($item: ItemUpdate!) {
+    create_item(item: $item) {
+      id,
+      name,
+      minPrice,
+      description,
+    }
+  }
+`;
+
+
 export const CREATE_RECORD = gql`
-  mutation create_record(
+  mutation create_record (
+    $UserId: ID!,
     $ItemId: ID!,
     $biddingPrice: Int,
+    $auctionEnd: String,
+    $auctionStart: String,
     $record: RecordUpdate!
     ) {
     create_record(
+      UserId: $UserId,
       ItemId: $ItemId,
       biddingPrice: $biddingPrice,
+      auctionEnd: $auctionEnd,
+      auctionStart: $auctionStart,
       record: $record
       ) {
       id
@@ -83,16 +101,19 @@ export const CREATE_RECORD = gql`
 
 export const UPDATE_RECORD = gql`
   mutation update_record (
+    $UserId: ID!,
     $ItemId: ID!,
-    $biddingPrice: Int,
-    $record: RecordUpdate!
+    $record: RecordUpdate!,
+    $biddingPrice: Int
   ) {
-    update_item (
+    update_record (
+      UserId: $UserId,
       ItemId: $ItemId,
-      biddingPrice: $biddingPrice,
-      record: $record
+      record: $record,
+      biddingPrice: $biddingPrice
     ) {
       id
+      history
     }
   }
 `;

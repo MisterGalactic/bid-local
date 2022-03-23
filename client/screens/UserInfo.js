@@ -19,12 +19,12 @@ export default function UserInfo({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState({
-    id: '',
     firstLineAddress: '',
     secondLineAddress: '',
     city: '',
     postcode: '',
-    country: ''
+    country: '',
+    id: ''
   });
   const [editMode, setEditMode] = useState(false);
   const [id, setId] = useState('');
@@ -67,13 +67,14 @@ export default function UserInfo({ navigation, route }) {
       setAddress(
         user.data.get_user_info.address
           ? {
-              id: user.data.get_user_info.address.id,
-              firstLineAddress: user.data.get_user_info.address.firstLineAddress,
+              firstLineAddress:
+                user.data.get_user_info.address.firstLineAddress,
               secondLineAddress:
                 user.data.get_user_info.address.secondLineAddress,
               city: user.data.get_user_info.address.city,
               postcode: user.data.get_user_info.address.postcode,
               country: user.data.get_user_info.address.country,
+              id: user.data.get_user_info.address.id
             }
           : {
               firstLineAddress: '',
@@ -102,12 +103,12 @@ export default function UserInfo({ navigation, route }) {
   useEffect(() => {
     if (changedAddress.data) {
       setAddress({
-        id: changedAddress.data.update_address.id,
         firstLineAddress: changedAddress.data.update_address.firstLineAddress,
         secondLineAddress: changedAddress.data.update_address.secondLineAddress,
         city: changedAddress.data.update_address.city,
         postcode: changedAddress.data.update_address.postcode,
         country: changedAddress.data.update_address.country,
+        id: changedAddress.data.update_address.id
       });
       return;
     }
@@ -116,25 +117,40 @@ export default function UserInfo({ navigation, route }) {
 
   function toggle() {
     if (editMode) {
-      // const queryVariables = {
-      //   user: {
-      //     firstName: firstName,
-      //     lastName: lastName,
-      //     phoneNumber: phoneNumber,
-      //     email: email,
-      //     id: id,
-      //     password: '$2b$10$4/OQTEhm2DI2a67Y06e.x.qloIXjQt825ckWU6GZKprV5.eqURDMi',
-      //   },
-      // };
-      // changeUser({ variables: queryVariables });
-      // console.log({ variables: queryVariables })
-      changeUserAddress({ variables: {
+      const queryVariables = {
+        user: {
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: phoneNumber,
+          email: email,
+          id: id,
+          password: '$2b$10$4/OQTEhm2DI2a67Y06e.x.qloIXjQt825ckWU6GZKprV5.eqURDMi'
+        },
+      };
+      changeUser({ variables: queryVariables });
+      console.log({ variables: queryVariables })
+
+
+      const queryAddressVariables = {
+        AddressId: user?.data.get_user_info?.address?.id,
         address: address
-      } })
-      console.log({ variables: {
-        address: address
-      } })
+      };
+      changeUserAddress({ variables: queryAddressVariables })
+      console.log({ variables: queryAddressVariables })
+
+
+      // changeUserAddress({ variables: {
+      //   AddressId: user?.data.get_user_info?.address?.id,
+      //   address: address
+      // } })
+      // console.log({ variables: {
+      //   AddressId: user?.data.get_user_info?.address?.id,
+      //   address: address
+      // } })
+
+
     }
+
     setEditMode(!editMode);
   }
 

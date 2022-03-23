@@ -5,6 +5,8 @@ import {
   InMemoryCache,
   split
 } from '@apollo/client';
+// import { onError } from "@apollo/client/link/error";
+import { onError } from "apollo-link-error";
 import { setContext } from '@apollo/client/link/context';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { APOLLO_SERVER_URI, APOLLO_WEB_SERVER_URI } from '@env';
@@ -88,6 +90,28 @@ export default function App() {
 
   const link = new HttpLink({ uri: uri });
 
+  const showErrorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors)
+      graphQLErrors.forEach(({ message, locations, path }) =>
+        console.log(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        )
+      );
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+  });
+
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    console.log("on error function called");
+    if (graphQLErrors)
+      graphQLErrors.forEach(({ message, locations, path }) =>
+        console.log(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        )
+      );
+
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+  });
+
   const splitLink = split(
     ({ query }) => {
       const definition = getMainDefinition(query);
@@ -98,9 +122,11 @@ export default function App() {
     },
     wsLink,
     link,
+    showErrorLink
   );
 
   const client = new ApolloClient({
+    // link: from([errorLink, link]),
     link: authLink.concat(splitLink),
     cache: new InMemoryCache(),
   });

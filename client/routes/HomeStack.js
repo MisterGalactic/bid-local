@@ -23,6 +23,7 @@ import ViewAll from '../screens/ViewAll';
 import ViewAllPost from '../screens/ViewAllPost';
 import BuyCredits from '../screens/BuyCredits';
 import PaymentScreen from '../screens/PaymentScreen';
+import UserHistory from '../screens/UserHistory';
 
 const Stack = createStackNavigator();
 
@@ -49,6 +50,7 @@ const HomeStack = ({ token, initial }) => {
         <Stack.Screen name="AddPost" component={AddPost} />
         <Stack.Screen name="UserWonItems" component={WinnerItems} />
         <Stack.Screen name="UsersItems" component={UsersItems} />
+        <Stack.Screen name="UserHistory" component={UserHistory} />
         <Stack.Screen
           name="Login"
           component={Login}
