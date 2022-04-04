@@ -23,6 +23,8 @@ import { Header, Left, Right, Body, Icon } from "native-base";
 import Navbar from '../components/Navbar';
 import { CREATE_ITEM, GET_CATEGORIES } from '../queries/addItem';
 
+import i18n from 'i18n-js';
+
 const windowWidth = Dimensions.get('window').width;
 
 export default function AddItem({ navigation, route }) {
@@ -127,7 +129,7 @@ export default function AddItem({ navigation, route }) {
   useEffect(() => {
     console.log('error: ', error);
     if (data) {
-      navigation.navigate('FinalizeItem', { id: data.create_item.id });
+      navigation.navigate('Item', { id: data.create_item.id, from: 'additem' });
     }
   }, [data]);
 
@@ -266,7 +268,7 @@ export default function AddItem({ navigation, route }) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
         <Text style={styles.loading}>Loading...</Text>
-        <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
+        <Image style={{top: '12%', alignSelf: 'center', height: '35%', width: '35%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
   } else {
@@ -279,12 +281,12 @@ export default function AddItem({ navigation, route }) {
           style={styles.container}
           contentContainerStyle={{ alignItems: 'center' }}
         >
-          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Title:</Text>
+          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>{i18n.t('title')}:</Text>
           <TextInput
             style={styles.textBoxes}
             onChangeText={(text) => setTitle(text)}
           />
-          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Starting Price:</Text>
+          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>{i18n.t('startingPrice')}:</Text>
           <TextInput
             style={styles.textBoxes}
             value={price}
@@ -298,7 +300,7 @@ export default function AddItem({ navigation, route }) {
           {
             end ? null :
           <>
-            <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Duration (Minutes):</Text>
+            <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>{i18n.t('duration')}:</Text>
             <TextInput
               style={styles.textBoxes}
               value={duration}
@@ -314,7 +316,7 @@ export default function AddItem({ navigation, route }) {
           {
             duration ? null :
           <>
-            <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Start Date & Time:</Text>
+            <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>{i18n.t('startDate')}</Text>
             {/* {showStart ? <Text>showStart true</Text> : <Text>showStart false</Text> } */}
             <View style={{
               borderWidth: 1,
@@ -376,7 +378,7 @@ export default function AddItem({ navigation, route }) {
                 )}
               </View>
             </View>
-            <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>End Date & Time:</Text>
+            <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>{i18n.t('endDate')}:</Text>
             {/* {showEnd ? <Text>showEnd true</Text> : <Text>showEnd false</Text> } */}
             { (secondsToHms((end - start)/1000)) ? <Text style={{ marginTop: 0 }}>{secondsToHms((end - start)/1000)}</Text> : null }
             <View style={{
@@ -442,12 +444,12 @@ export default function AddItem({ navigation, route }) {
             </View>
           </>
           }
-          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Description:</Text>
+          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>{i18n.t('description')}:</Text>
           <TextInput
             style={styles.textBoxes}
             onChangeText={(text) => setDescription(text)}
           />
-          <Text style={{ marginTop: 15 }}>Categories:</Text>
+          <Text style={{ marginTop: 15 }}>{i18n.t('categories')}:</Text>
           <View style={styles.selectedCategories}>
             {selectedCategories.map((cat, index) => (
               <Text key={index} style={styles.selectedCategory}>
@@ -470,10 +472,10 @@ export default function AddItem({ navigation, route }) {
                 marginTop: 5,
               }}
             >
-              Select Categories
+              {i18n.t('selectCat')}
             </Text>
           </TouchableWithoutFeedback>
-          <Text style={{ marginTop: 15 }}>Images:</Text>
+          <Text style={{ marginTop: 15 }}>{i18n.t('images')}:</Text>
           <View style={styles.itemView}>
             {images.length > 0
               ? images.map((img, index) => (
@@ -503,7 +505,7 @@ export default function AddItem({ navigation, route }) {
                 padding: 15,
               }}
             >
-              { isImageUploading ? 'Uploading Image' : 'ADD ITEM' }
+              { isImageUploading ? `${i18n.t('uploadingImage')}` : `${i18n.t('addItem')}` }
             </Text>
           </TouchableHighlight>
         </KeyboardAwareScrollView>
@@ -519,7 +521,7 @@ export default function AddItem({ navigation, route }) {
                   fontFamily: 'Roboto_medium',
                 }}
               >
-                CATEGORIES
+                {i18n.t('categories')}
               </Text>
               {categories.data
                 ? categories.data.get_categories.map((cat) => {
@@ -542,7 +544,7 @@ export default function AddItem({ navigation, route }) {
                   fontFamily: 'Roboto_medium',
                 }}
               >
-                Submit
+                {i18n.t('submit')}
               </Text>
             </TouchableHighlight>
           </View>
@@ -656,7 +658,7 @@ const styles = StyleSheet.create({
   loading: {
     fontFamily: 'Roboto_medium',
     fontSize: 50,
-    color: '#67A036',
+    color: 'gray',
     marginTop: '60%',
     textAlign: 'center',
     marginBottom: '-40%',

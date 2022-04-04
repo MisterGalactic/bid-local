@@ -44,7 +44,12 @@ const FlatListBasics = ({inputData}) => {
   );
 }
 
+import { useLocalizationContext } from '../context/LocalizationContext'
+import i18n from 'i18n-js';
+
 export default function Item({ navigation, route }) {
+
+  const { address, setAddress, translations, appLanguage, setAppLanguage } = useLocalizationContext()
 
   const { data: subData } = bidSubscription();
   const windowWidth = Dimensions.get('window').width;
@@ -82,6 +87,12 @@ export default function Item({ navigation, route }) {
       getItem()
     }
   }, [subData])
+
+  // useEffect(() => {
+  //   if (route.params.from === 'additem') {
+  //     console.log("they match")
+  //   }
+  // }, [])
 
 
   function check(arr, userid) {
@@ -166,7 +177,9 @@ export default function Item({ navigation, route }) {
   const handleMakeOffer = () => {
     if ( data.get_item_by_Id.auctionEnd > new Date(Date.now()) ) {
       console.log(`making offer of ${offerBid} for ${data.get_item_by_Id.name}`)
-      if (offerBid<=data.get_item_by_Id.minimumBid) {
+      if (
+        offerBid<data.get_item_by_Id.minimumBid && data.get_item_by_Id.bidder === null ||  offerBid<=data.get_item_by_Id.minimumBid && data.get_item_by_Id.bidder
+        ) {
         setTypeError('Bid is lower than current highest bid.');
         return;
       }
@@ -252,7 +265,7 @@ export default function Item({ navigation, route }) {
           </>
           : null
         }
-        <Navbar navigation={navigation} canGoBack={true} targetScreen={''} item={data} style={{zIndex: 1}}/>
+        <Navbar route={route} navigation={navigation} canGoBack={true} targetScreen={''} item={data} style={{zIndex: 1}}/>
         <ImageBackground source={require('../assets/login-background-keyboard.jpg')} style={{zIndex: -1, height: '100%', width: '100%', position: 'absolute', top:0, left:0}}/>
         <KeyboardAwareScrollView
           extraScrollHeight={20}
@@ -278,21 +291,22 @@ export default function Item({ navigation, route }) {
           <View style={styles.itemInfo}>
             <View style={{padding: 15}}>
               <Text style={styles.itemTitle}>{data.get_item_by_Id.name}</Text>
-              <Text style={styles.itemPrice}>${data.get_item_by_Id.minimumBid}</Text>
-              <Text style={styles.itemPrice}>Your Credit: {user?.data.get_user_info?.credit} HKD</Text>
+              <Text style={styles.itemPrice}>
+                ${data.get_item_by_Id.minPrice && data.get_item_by_Id.bidder === null ? data.get_item_by_Id.minPrice : data.get_item_by_Id.minimumBid }</Text>
+              <Text style={styles.itemPrice}>{i18n.t('yourCredit')}: {user?.data.get_user_info?.credit} HKD</Text>
               {
                 user && highestBidder ? (
                   <>
-                    <Text>{data.get_item_by_Id.auctionEnd < new Date(Date.now()) ? 'You are the auction winner.' : 'You are the current highest bidder.'}</Text>
+                    <Text>{data.get_item_by_Id.auctionEnd < new Date(Date.now()) ? `${i18n.t('auctionWinner')}` : `${i18n.t('highestBidder')}`}</Text>
                     {/* <Text>you: {user?.data.get_user_info?.id}</Text>
                     <Text>bidder: {data.get_item_by_Id.bidder}</Text> */}
                   </>
                 ) : (
                   <>
                     {data.get_item_by_Id.auctionEnd < new Date(Date.now()) ?
-                    <Text>{data.get_item_by_Id.bidder ? 'Auction has ended.' : 'Auction has ended with no winners.' }</Text>
+                    <Text>{data.get_item_by_Id.bidder ? `${i18n.t('auctionEnded')}` : `${i18n.t('noWinners')}` }</Text>
                     :
-                    <Text>{data.get_item_by_Id.auctionStart > new Date(Date.now()) ? 'Auction is scheduled.' : (data.get_item_by_Id.bidder ? 'You have been outbid.' : 'No bids have been placed yet.')}</Text>
+                    <Text>{data.get_item_by_Id.auctionStart > new Date(Date.now()) ? `${i18n.t('auctionScheduled')}` : (data.get_item_by_Id.bidder ? `${i18n.t('outbid')}` : `${i18n.t('noBidsYet')}`)}</Text>
                     }
                     {/* <Text>you:{user?.data.get_user_info?.id}</Text>
                     <Text>bidder:{data.get_item_by_Id.bidder}</Text> */}
@@ -300,7 +314,7 @@ export default function Item({ navigation, route }) {
                 )
               }
               <View style={styles.time}>
-                <Text style={{ color: 'white', fontSize: 16 }}>{data.get_item_by_Id.auctionStart > new Date(Date.now()) ? `Starts in:` : `Time Left:`}</Text>
+                <Text style={{ color: 'white', fontSize: 16 }}>{data.get_item_by_Id.auctionStart > new Date(Date.now()) ? `${i18n.t('startsIn')}:` : `${i18n.t('timeLeft')}:`}</Text>
                 <Timer style={{ color: 'white', fontSize: 25 }} start={data.get_item_by_Id.auctionStart} deadline={data.get_item_by_Id.auctionEnd}/>
               </View>
               {
@@ -312,7 +326,7 @@ export default function Item({ navigation, route }) {
                       value={offerBid}
                       onChangeText={(text) => handleCurrency(text)}
                       keyboardType="numeric"
-                      placeholder={(data.get_item_by_Id.minimumBid+1).toString()}
+                      placeholder={(data.get_item_by_Id.minPrice && data.get_item_by_Id.bidder === null ? data.get_item_by_Id.minimumBid : data.get_item_by_Id.minimumBid + 1 ).toString()}
                     />
                     <Text style={styles.bidCurrency}>$</Text>
                   </View>
@@ -322,7 +336,7 @@ export default function Item({ navigation, route }) {
                       handleMakeOffer();
                     }}
                   >
-                    <Text style={{ fontSize: 16, color: 'white' }}>MAKE OFFER</Text>
+                    <Text style={{ fontSize: 16, color: 'white' }}>{i18n.t('makeOffer')}</Text>
                   </TouchableHighlight>
                 </View>
               }
@@ -338,24 +352,24 @@ export default function Item({ navigation, route }) {
               </Text>
 
               <Text style={{ fontWeight: '700', fontSize: 18 }}>
-                Item Description:
+                {i18n.t('itemDescription')}:
               </Text>
               <Text style={{ fontSize: 16 }}>
                 {data.get_item_by_Id.description}
               </Text>
               <View style={styles.userInfo}>
-                <Text style={{ fontWeight: '700', fontSize: 18 }}>Seller Info</Text>
+                <Text style={{ fontWeight: '700', fontSize: 18 }}>{i18n.t('sellerInfo')}</Text>
                 <Text style={{ fontSize: 16 }}>
-                  <Text style={{ fontWeight: '700' }}>Name: </Text>
+                  <Text style={{ fontWeight: '700' }}>{i18n.t('name')}: </Text>
                   {data.get_item_by_Id.user.firstName}{' '}
                   {data.get_item_by_Id.user.lastName}
                 </Text>
                 <Text style={{ fontSize: 16 }}>
-                  <Text style={{ fontWeight: '700' }}>Email: </Text>
+                  <Text style={{ fontWeight: '700' }}>{i18n.t('email')}: </Text>
                   {data.get_item_by_Id.user.email}
                 </Text>
                 <Text style={{ fontSize: 16 }}>
-                  <Text style={{ fontWeight: '700' }}>Tel: </Text>
+                  <Text style={{ fontWeight: '700' }}>{i18n.t('tel')}: </Text>
                   {data.get_item_by_Id.user.phoneNumber}
                 </Text>
               </View>

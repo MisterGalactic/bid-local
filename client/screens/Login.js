@@ -14,7 +14,12 @@ import { Item, Input, Label, Button } from 'native-base';
 import { SIGN_IN } from '../queries/login';
 import { useMutation } from '@apollo/client';
 
+import { useLocalizationContext } from '../context/LocalizationContext'
+import i18n from 'i18n-js';
+
 export default function Login({ navigation, route }) {
+  const { address, setAddress, translations, appLanguage, setAppLanguage } = useLocalizationContext()
+
   const [initialEmail, setInitialEmail] = useState('');
   const [childData, setChild] = useState(1);
   const { token } = route.params;
@@ -84,11 +89,11 @@ export default function Login({ navigation, route }) {
           />
         </View>
         <View style={styles.title}>
-          <Text style={styles.title}>Sign In</Text>
+          <Text style={styles.title}>{i18n.t('signIn')}</Text>
         </View>
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
           <Item floatingLabel style={styles.labelContainer}>
-            <Label style={styles.label}>{'   '}Email</Label>
+            <Label style={styles.label}>{'   '}{i18n.t('email')}</Label>
             <Input
               keyboardType='email-address'
               autoCapitalize='none'
@@ -98,7 +103,7 @@ export default function Login({ navigation, route }) {
             />
           </Item>
           <Item floatingLabel style={styles.labelContainer}>
-            <Label style={styles.label}>{'   '}Password</Label>
+            <Label style={styles.label}>{'   '}{i18n.t('password')}</Label>
             <Input
               secureTextEntry={true}
               autoCapitalize='none'
@@ -115,19 +120,19 @@ export default function Login({ navigation, route }) {
                   color: 'white',
                 }}
               >
-                Login
+                {i18n.t('login')}
               </Text>
             </Button>
           </View>
           <TouchableOpacity style={styles.register} onPress={register}>
-            <Text style={styles.register}>Not signed up? Register here</Text>
+            <Text style={styles.register}>{i18n.t('notSignUp')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.register}
             onPress={() => {
               setIsShow(!isShow);
             }}
           >
-            <Text style={styles.register}>Forgot password?</Text>
+            <Text style={styles.register}>{i18n.t('forgotPassword')}</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
         <BottomPopup

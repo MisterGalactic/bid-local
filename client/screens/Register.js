@@ -12,7 +12,12 @@ import { Item, Input, Label, Button } from 'native-base';
 import { SIGN_UP } from '../queries/register';
 import { useMutation } from '@apollo/client';
 
+import { useLocalizationContext } from '../context/LocalizationContext'
+import i18n from 'i18n-js';
+
 export default function Register({ navigation }) {
+  const { address, setAddress, translations, appLanguage, setAppLanguage } = useLocalizationContext()
+
   const [registerEmail, setRegisterEmail] = useState('');
   // const [registerFirstName, setRegisterFirstName] = useState('');
   // const [registerLastName, setRegisterLastName] = useState('');
@@ -84,11 +89,11 @@ export default function Register({ navigation }) {
           />
         </View>
         <View style={styles.title}>
-          <Text style={styles.title}>Register</Text>
+          <Text style={styles.title}>{i18n.t('register')}</Text>
         </View>
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
           <Item floatingLabel style={styles.labelContainer}>
-            <Label style={styles.label}>{'   '}Email</Label>
+            <Label style={styles.label}>{'   '}{i18n.t('email')}</Label>
             <Input
               onChangeText={(text) => setRegisterEmail(text)}
               value={registerEmail}
@@ -96,7 +101,7 @@ export default function Register({ navigation }) {
             />
           </Item>
           <Item floatingLabel last style={styles.labelContainer}>
-            <Label style={styles.label}>Password</Label>
+            <Label style={styles.label}>{i18n.t('password')}</Label>
             <Input style={{ color: 'black', fontFamily: 'Roboto_medium' }} />
           </Item>
           <View>
@@ -108,12 +113,12 @@ export default function Register({ navigation }) {
                   color: 'white',
                 }}
               >
-                Register
+                {i18n.t('register')}
               </Text>
             </Button>
           </View>
           <TouchableOpacity style={styles.register} onPress={backToLogin}>
-            <Text style={styles.register}>Back to login</Text>
+            <Text style={styles.register}>{i18n.t('backToLogin')}</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
       </ImageBackground>

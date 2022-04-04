@@ -23,6 +23,8 @@ import Navbar from '../components/Navbar';
 import { CREATE_POST, GET_POSTCATEGORIES } from '../queries/addPost';
 import Editor from '../components/Editor';
 
+import i18n from 'i18n-js';
+
 const windowWidth = Dimensions.get('window').width;
 
 export default function AddPost({ navigation, route }) {
@@ -274,7 +276,7 @@ export default function AddPost({ navigation, route }) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
         <Text style={styles.loading}>Loading...</Text>
-        <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
+        <Image style={{top: '12%', alignSelf: 'center', height: '35%', width: '35%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
   } else {
@@ -285,7 +287,7 @@ export default function AddPost({ navigation, route }) {
           style={styles.container}
           contentContainerStyle={{ alignItems: 'center' }}
         >
-          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Title:</Text>
+          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>{i18n.t('title')}:</Text>
           <TextInput
             style={styles.textBoxes}
             onChangeText={(text) => setTitle(text)}
@@ -309,7 +311,7 @@ export default function AddPost({ navigation, route }) {
           {
             duration ? null :
           <>
-            <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>Publish Date & Time:</Text>
+            <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 17.5 }}>{i18n.t('pubDate')}:</Text>
             {/* {showStart ? <Text>showStart true</Text> : <Text>showStart false</Text> } */}
             <View style={{
               borderWidth: 1,
@@ -373,13 +375,13 @@ export default function AddPost({ navigation, route }) {
             </View>
           </>
           }
-          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 20 }}>Description:</Text>
+          <Text style={{ marginTop: 15, alignSelf: 'flex-start', paddingLeft: 20 }}>{i18n.t('description')}:</Text>
           <Editor parentCallback={handleCallback} />
           {/* <TextInput
             style={styles.textBoxes}
             onChangeText={(text) => setDescription(text)}
           /> */}
-          <Text style={{ marginTop: 15 }}>Categories:</Text>
+          <Text style={{ marginTop: 15 }}>{i18n.t('categories')}:</Text>
           <View style={styles.selectedPostCategories}>
             {selectedPostCategories.map((cat, index) => (
               <Text key={index} style={styles.selectedPostCategory}>
@@ -402,10 +404,10 @@ export default function AddPost({ navigation, route }) {
                 marginTop: 5,
               }}
             >
-              Select Categories
+              {i18n.t('selectCat')}
             </Text>
           </TouchableWithoutFeedback>
-          <Text style={{ marginTop: 15 }}>Images:</Text>
+          <Text style={{ marginTop: 15 }}>{i18n.t('images')}:</Text>
           <View style={styles.itemView}>
             {images.length > 0
               ? images.map((img, index) => (
@@ -435,7 +437,7 @@ export default function AddPost({ navigation, route }) {
                 padding: 15,
               }}
             >
-              { isImageUploading ? 'Uploading Image' : 'ADD ITEM' }
+              { isImageUploading ? `${i18n.t('uploadingImage')}` : `${i18n.t('submit')}` }
             </Text>
           </TouchableHighlight>
         </ScrollView>
@@ -451,7 +453,7 @@ export default function AddPost({ navigation, route }) {
                   fontFamily: 'Roboto_medium',
                 }}
               >
-                CATEGORIES
+                {i18n.t('categories')}
               </Text>
               {postcategories.data
                 ? postcategories.data.get_postcategories.map((cat) => {
@@ -474,7 +476,7 @@ export default function AddPost({ navigation, route }) {
                   fontFamily: 'Roboto_medium',
                 }}
               >
-                Submit
+                {i18n.t('submit')}
               </Text>
             </TouchableHighlight>
           </View>
@@ -590,7 +592,7 @@ const styles = StyleSheet.create({
   loading: {
     fontFamily: 'Roboto_medium',
     fontSize: 50,
-    color: '#67A036',
+    color: 'gray',
     marginTop: '60%',
     textAlign: 'center',
     marginBottom: '-40%',

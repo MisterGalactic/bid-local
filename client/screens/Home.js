@@ -19,9 +19,12 @@ import { GET_CATEGORIES, GET_ITEMS } from '../queries/home';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import bidSubscription from '../queries/subscription';
 
+import i18n from 'i18n-js';
+
 const windowWidth = Dimensions.get('window').width;
 
 export default function Home({ navigation }) {
+
   bidSubscription();
   const categories = useQuery(GET_CATEGORIES);
   const [currentCategory, setCurrentCategory] = useState('ALL');
@@ -84,7 +87,7 @@ export default function Home({ navigation }) {
               >
                 {
                   component.auctionStart > new Date(Date.now()) ?
-                  <Text style={styles.itemNotStart}>Scheduled</Text>
+                  <Text style={styles.itemNotStart}>{i18n.t('scheduled')}</Text>
                   :
                   <Timer
                     style={component.auctionStart > new Date(Date.now()) ? styles.itemNotStart : (component.auctionEnd < new Date(Date.now()) ? styles.itemFinished : styles.itemStarted)}

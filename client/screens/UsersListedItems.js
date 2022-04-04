@@ -15,6 +15,8 @@ import { GET_USER_ITEMS } from '../queries/usersListedItems';
 import { useLazyQuery } from '@apollo/client';
 import bidSubscription from '../queries/subscription';
 
+import i18n from 'i18n-js';
+
 export default function UsersItems({ navigation, route }) {
   bidSubscription();
   const [isLoading, setIsLoading] = useState(true);
@@ -58,7 +60,7 @@ export default function UsersItems({ navigation, route }) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
         <Text style={styles.loading}>Loading...</Text>
-        <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
+        <Image style={{top: '12%', alignSelf: 'center', height: '35%', width: '35%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
   if (error) return <Text>Error: {error}</Text>;
@@ -67,7 +69,7 @@ export default function UsersItems({ navigation, route }) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
         <Text style={styles.loading}>Loading...</Text>
-        <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
+        <Image style={{top: '12%', alignSelf: 'center', height: '35%', width: '35%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
   } else {
@@ -86,7 +88,7 @@ export default function UsersItems({ navigation, route }) {
             }}
             style={styles.box}
           >
-            <Text style={styles.text}>Add additional item</Text>
+            <Text style={styles.text}>{i18n.t('additional')}</Text>
             <Icon
               type="MaterialCommunityIcons"
               name="plus"
@@ -120,6 +122,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 15,
   },
+  loadingContainer: {
+    flex: 1,
+    minHeight: '100%',
+    flexDirection: 'column',
+    backgroundColor: '#fff',
+    padding: 15,
+  },
   box: {
     paddingLeft: 15,
     height: 100,
@@ -141,4 +150,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
   },
+  loading: {
+    fontFamily: 'Roboto_medium',
+    fontSize: 50,
+    color: 'gray',
+    marginTop: '60%',
+    textAlign: 'center',
+    marginBottom: '-40%',
+    zIndex: 1,
+  }
 });

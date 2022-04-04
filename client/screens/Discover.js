@@ -30,9 +30,14 @@ import { GET_CATEGORIES, GET_ITEMS } from '../queries/home';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import bidSubscription from '../queries/subscription';
 
+import { useLocalizationContext } from '../context/LocalizationContext'
+import i18n from 'i18n-js';
+
 const windowWidth = Dimensions.get('window').width;
 
 export default function Discover({ navigation }) {
+  const { address, setAddress, translations, appLanguage, setAppLanguage } = useLocalizationContext()
+
   bidSubscription();
   const filterCat = 'FEATURED'
   const [currentCategory, setCurrentCategory] = useState('ALL');
@@ -59,7 +64,7 @@ export default function Discover({ navigation }) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.loading}>Loading...</Text>
-        <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
+        <Image style={{top: '12%', alignSelf: 'center', height: '35%', width: '35%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
   if (categories.error) {
@@ -185,7 +190,7 @@ export default function Discover({ navigation }) {
                             // console.log(section.sectionCat);
                           }}
                         >
-                          <Text style={styles.viewHeader}>View All ({section.count}){'   '}</Text>
+                          <Text style={styles.viewHeader}>{i18n.t('viewAll')} ({section.count}){'   '}</Text>
                         </TouchableWithoutFeedback>
                       </Right>
                     </Header>
@@ -224,7 +229,7 @@ export default function Discover({ navigation }) {
                             // console.log(section.sectionCat);
                           }}
                         >
-                          <Text style={styles.viewHeader}>View All ({section.count}){'   '}</Text>
+                          <Text style={styles.viewHeader}>{i18n.t('viewAll')} ({section.count}){'   '}</Text>
                         </TouchableWithoutFeedback>
                       </Right>
                     </Header>

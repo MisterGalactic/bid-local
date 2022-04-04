@@ -1,3 +1,13 @@
+// import * as Localization from 'expo-localization';
+import i18n from 'i18n-js';
+// import { zh, en, es } from './i18n/supportedLanguages';
+// import { translations, DEFAULT_LANGUAGE } from './i18n/translations';
+import LocalizationProvider from './context/LocalizationContext'
+
+// i18n.fallbacks = true;
+// i18n.translations = { en, zh, es };
+// i18n.locale = Localization.locale;
+
 import {
   ApolloClient,
   ApolloProvider,
@@ -15,8 +25,9 @@ import { WebSocketLink } from 'apollo-link-ws';
 import AppLoading from 'expo-app-loading'
 import * as Font from 'expo-font';
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import Navigator from './routes/HomeStack';
+import { useLocalizationContext } from './context/LocalizationContext'
 
 console.log(APOLLO_SERVER_URI, APOLLO_WEB_SERVER_URI)
 
@@ -26,7 +37,9 @@ const getFonts = () => {
   });
 };
 
+
 export default function App() {
+  const { address, setAddress, translations, appLanguage, setAppLanguage } = useLocalizationContext()
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const email = useRef('');
   const token = useRef('');
@@ -65,6 +78,10 @@ export default function App() {
     }
   });
 
+  const clearAsyncStorage = async() => {
+    AsyncStorage.clear();
+  }
+
   useEffect(() => {
     getToken();
   }, []);
@@ -79,6 +96,9 @@ export default function App() {
       }
     }
     storeToken(token.current);
+    // AsyncStorage.setItem('storedAddress', 'notOver');
+    // AsyncStorage.setItem('junk', 'trash');
+    // clearAsyncStorage();
   }, [token]);
 
   const wsLink = new WebSocketLink({
@@ -132,23 +152,29 @@ export default function App() {
   });
 
   return (
-    <ApolloProvider client={client}>
-      {fontsLoaded ? (
-        initial !== ''
-        ?
-        <Navigator email={email} token={token} initial={initial}/>
-        :
-        null
-      ) : (
-        <AppLoading
-          startAsync={getFonts}
-          onError={console.warn}
-          onFinish={() => {
-            setFontsLoaded(true);
-          }}
-        />
-      )}
-    </ApolloProvider>
+    <LocalizationProvider>
+      <ApolloProvider client={client}>
+        {fontsLoaded ? (
+          initial !== ''
+          ?
+          <>
+            <Navigator email={email} token={token} initial={initial}/>
+            {/* <Text>{i18n.t('welcome')}</Text>
+            <Text>{translations.de.LANGUAGE_SETTINGS}</Text> */}
+          </>
+          :
+          null
+        ) : (
+          <AppLoading
+            startAsync={getFonts}
+            onError={console.warn}
+            onFinish={() => {
+              setFontsLoaded(true);
+            }}
+          />
+        )}
+      </ApolloProvider>
+    </LocalizationProvider>
   );
 }
 

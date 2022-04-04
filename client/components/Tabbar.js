@@ -10,9 +10,14 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useRoute} from '@react-navigation/native';
 
+import { useLocalizationContext } from '../context/LocalizationContext'
+import i18n from 'i18n-js';
+
 const windowWidth = Dimensions.get('window').width;
 
 export default function Tabbar({ navigation }) {
+  const { address, setAddress, translations, appLanguage, setAppLanguage } = useLocalizationContext()
+
   const [leftMargin, setLeftMargin] = useState(0);
   const route = useRoute();
 
@@ -34,14 +39,16 @@ export default function Tabbar({ navigation }) {
       <View style={styles.tabbar}>
         <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Home')}}>
           <Icon color={'gray'} name="shopping-bag" size={35} />
-          <Text style={styles.mytext}>Shop</Text>
+          <Text style={styles.mytext}>{i18n.t('shop')}</Text>
+          {/* <Text style={styles.mytext}>Shop{address}</Text> */}
         </TouchableOpacity>
         <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('DiscoverPost')}}>
           <Icon color={'gray'} name="explore" size={35} />
-          <Text style={styles.mytext}>Discover</Text>
+          <Text style={styles.mytext}>{i18n.t('discover')}</Text>
         </TouchableOpacity>
+        <View style={styles.containerButton}/>
         <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('LogoButton')}}>
-          <Text style={styles.mytext}>Button</Text>
+          <Text style={styles.myButton}>Button</Text>
           <Image
             source={require('../assets/circle_icon.png')}
             style={styles.logoPic}
@@ -49,11 +56,11 @@ export default function Tabbar({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('UserWonItems')}}>
           <Icon color={'gray'} name="shopping-cart" size={35} />
-          <Text style={styles.mytext}>Cart</Text>
+          <Text style={styles.mytext}>{i18n.t('cart')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate('Account')}}>
           <Icon color={'gray'} name="account-circle" size={35} />
-          <Text style={styles.mytext}>Account</Text>
+          <Text style={styles.mytext}>{i18n.t('account')}</Text>
         </TouchableOpacity>
       </View>
     </>
@@ -81,7 +88,28 @@ const styles = StyleSheet.create({
     paddingTop: 2,
     color: 'rgb(50,50,50)',
   },
+  containerButton: {
+    height: 66,
+    width: 66,
+    borderRadius: 66/2,
+    backgroundColor: 'red',
+    position: 'absolute',
+    left: windowWidth*0.5,
+    transform: [
+      { translateX: - 66/2 },
+    ],
+    marginTop: -16,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  myButton: {
+    fontSize: 14,
+    textAlign: 'center',
+    paddingTop: 2,
+    color: 'white'
+  },
   logoPic: {
+    // opacity: 0.5,
     position: 'absolute',
     bottom: '35%',
     width: 70,

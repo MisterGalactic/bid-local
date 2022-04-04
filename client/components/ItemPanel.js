@@ -65,7 +65,7 @@ export default function Panel(props) {
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
           <View style={{ marginRight: 'auto' }}>
             <Text style={styles.titleText}>{title}</Text>
-            <Text>{props.price + '€'}</Text>
+            <Text>{ '$'+props.price}</Text>
           </View>
           <View style={styles.timer}>
             <Text>Time:</Text>

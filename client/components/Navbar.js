@@ -4,7 +4,7 @@ import { Header, Button, Left, Right, Body, Icon } from "native-base";
 import { StyleSheet, ImageBackground, StatusBar, TouchableOpacity, Text, Dimensions, Share} from 'react-native';
 import SideBar from './SideBar';
 
-export default function Navbar({navigation, canGoBack, targetScreen, item, post}) {
+export default function Navbar({navigation, canGoBack, targetScreen, item, post, route}) {
   const [hideSide, setHideSide] = useState(true);
 
   const onShare = async () => {
@@ -36,9 +36,9 @@ export default function Navbar({navigation, canGoBack, targetScreen, item, post}
       <Left style={{flex: 1}}>
         {canGoBack
           ?
-          <Button transparent onPress={targetScreen ? ()=>{navigation.navigate(targetScreen)} : ()=>{navigation.goBack()} }>
+          <Button transparent onPress={targetScreen || route?.params?.from === 'additem' ? ()=>{navigation.navigate(targetScreen||'Home')} : ()=>{navigation.goBack()} }>
             {/* <ImageBackground source={require('../assets/arrow.png')} style={styles.arrow} resizeMode='contain'/> */}
-            <Icon type="MaterialCommunityIcons" name="less-than" style={styles.navIcon}/>
+            <Icon type="Ionicons" name="chevron-back" style={styles.navIcon}/>
           </Button>
           :
           null
@@ -90,15 +90,17 @@ const styles = StyleSheet.create({
   },
   navIcon: {
     // position: "absolute",
-    height: 30,
-    width: 30,
+    height: 50,
+    width: 50,
     color: '#383838',
-    fontSize: 24,
-    marginLeft: 10,
-    borderRadius: 30/2,
-    borderWidth: 1.5,
+    opacity: 0.7,
+    // fontSize: 24,
+    fontSize: 48,
+    // marginLeft: 5,
+    // borderRadius: 30/2,
+    // borderWidth: 1,
     borderColor: '#383838',
-    marginBottom: '10%',
+    marginBottom: '15%',
   },
   shareIcon: {
     // position: "absolute",

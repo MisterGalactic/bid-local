@@ -13,10 +13,13 @@ import {
 import { List, ListItem, Icon } from "native-base";
 import Navbar from '../components/Navbar';
 import Tabbar from '../components/Tabbar';
+import { useLocalizationContext } from '../context/LocalizationContext'
+import i18n from 'i18n-js';
 
 const windowWidth = Dimensions.get('window').width;
 
 export default function Cart({ navigation, hideSide }) {
+  const { address, setAddress, translations, appLanguage, setAppLanguage } = useLocalizationContext()
 
   const fadeAnim = useRef(new Animated.Value(300)).current
 
@@ -50,47 +53,52 @@ export default function Cart({ navigation, hideSide }) {
           <List>
             <ListItem onPress={()=>{navigation.navigate('Home')}}>
               <Icon type="MaterialCommunityIcons" name="home" style={styles.sidebarIcon}/>
-              <Text style={styles.sidebarText}>Home</Text>
+              <Text style={styles.sidebarText}>{i18n.t('home')}</Text>
               <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
             </ListItem>
             <ListItem onPress={()=>{navigation.navigate('UserInfo')}}>
               <Icon type="MaterialCommunityIcons" name="account" style={styles.sidebarIcon}/>
-              <Text style={styles.sidebarText}>My details</Text>
+              <Text style={styles.sidebarText}>{i18n.t('myDetails')}</Text>
               <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
             </ListItem>
             <ListItem onPress={()=>{navigation.navigate('UserHistory')}}>
               <Icon type="MaterialCommunityIcons" name="history" style={styles.sidebarIcon}/>
-              <Text style={styles.sidebarText}>Bidding History</Text>
+              <Text style={styles.sidebarText}>{i18n.t('biddingHistory')}</Text>
               <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
             </ListItem>
             <ListItem onPress={()=>{navigation.navigate('UserWonItems')}}>
               <Icon type="MaterialCommunityIcons" name="crown" style={styles.sidebarIcon}/>
-              <Text style={styles.sidebarText}>Won Items</Text>
+              <Text style={styles.sidebarText}>{i18n.t('wonItems')}</Text>
               <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
             </ListItem>
             <ListItem onPress={()=>{navigation.navigate('UsersItems')}}>
               <Icon type="MaterialCommunityIcons" name="format-list-bulleted-square" style={styles.sidebarIcon}/>
-              <Text style={styles.sidebarText}>User Items</Text>
+              <Text style={styles.sidebarText}>{i18n.t('userItems')}</Text>
               <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
             </ListItem>
             <ListItem onPress={()=>{navigation.navigate('PaymentScreen')}}>
               <Icon type="MaterialCommunityIcons" name="credit-card-plus-outline" style={styles.sidebarIcon}/>
-              <Text style={styles.sidebarText}>Buy Credits</Text>
+              <Text style={styles.sidebarText}>{i18n.t('buyCredits')}</Text>
               <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
             </ListItem>
             <ListItem onPress={()=>{navigation.navigate('AddItem')}}>
               <Icon type="MaterialCommunityIcons" name="plus" style={styles.sidebarIcon}/>
-              <Text style={styles.sidebarText}>Add Item</Text>
+              <Text style={styles.sidebarText}>{i18n.t('addItems')}</Text>
               <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
             </ListItem>
             <ListItem onPress={()=>{navigation.navigate('AddPost')}}>
               <Icon type="MaterialCommunityIcons" name="plus" style={styles.sidebarIcon}/>
-              <Text style={styles.sidebarText}>Add Blog</Text>
+              <Text style={styles.sidebarText}>{i18n.t('addBlog')}</Text>
+              <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
+            </ListItem>
+            <ListItem onPress={()=>{navigation.navigate('Language')}}>
+              <Icon type="MaterialCommunityIcons" name="earth" style={styles.sidebarIcon}/>
+              <Text style={styles.sidebarText}>{i18n.t('changeLanguage')}</Text>
               <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
             </ListItem>
             <ListItem onPress={()=>{navigation.navigate('Login')}}>
               <Icon type="MaterialCommunityIcons" name="logout" style={styles.sidebarIcon}/>
-              <Text style={styles.sidebarText}>Logout</Text>
+              <Text style={styles.sidebarText}>{i18n.t('logout')}</Text>
               <Icon type="MaterialCommunityIcons" name="greater-than" style={styles.navIcon}/>
             </ListItem>
           </List>

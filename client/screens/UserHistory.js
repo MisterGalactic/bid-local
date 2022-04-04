@@ -89,7 +89,7 @@ export default function UserHistory({ navigation, route }) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
         <Text style={styles.loading}>Loading...</Text>
-        <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
+        <Image style={{top: '12%', alignSelf: 'center', height: '35%', width: '35%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
   if (error) return <Text>Error: {error}</Text>;
@@ -98,12 +98,12 @@ export default function UserHistory({ navigation, route }) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
         <Text style={styles.loading}>Loading...</Text>
-        <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
+        <Image style={{top: '12%', alignSelf: 'center', height: '35%', width: '35%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
   } else {
     return (
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{backgroundColor: 'white', flex: 1}}>
         <Navbar navigation={navigation} canGoBack={true} />
         <ScrollView
           style={styles.container}
@@ -153,6 +153,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 15,
   },
+  loadingContainer: {
+    flex: 1,
+    minHeight: '100%',
+    flexDirection: 'column',
+    backgroundColor: '#fff',
+    padding: 15,
+  },
   box: {
     paddingLeft: 15,
     height: 100,
@@ -174,4 +181,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
   },
+  loading: {
+    fontFamily: 'Roboto_medium',
+    fontSize: 50,
+    color: 'gray',
+    marginTop: '60%',
+    textAlign: 'center',
+    marginBottom: '-40%',
+    zIndex: 1,
+  }
 });

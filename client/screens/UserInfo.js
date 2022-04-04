@@ -12,7 +12,12 @@ import Navbar from '../components/Navbar';
 import { GET_USER_INFO, UPDATE_USER, UPDATE_ADDRESS } from '../queries/userInfo';
 import { useQuery, useMutation } from '@apollo/client';
 
+import { useLocalizationContext } from '../context/LocalizationContext'
+import i18n from 'i18n-js';
+
 export default function UserInfo({ navigation, route }) {
+  const { translations, appLanguage, setAppLanguage } = useLocalizationContext()
+
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -162,7 +167,7 @@ export default function UserInfo({ navigation, route }) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
         <Text style={styles.loading}>Loading...</Text>
-        <Image style={{height: '70%', width: '100%'}} source={require('../assets/ecommerce.gif')} />
+        <Image style={{top: '12%', alignSelf: 'center', height: '35%', width: '35%'}} source={require('../assets/ecommerce.gif')} />
       </SafeAreaView>
     );
   } else {
@@ -170,7 +175,7 @@ export default function UserInfo({ navigation, route }) {
       <>
         <Navbar navigation={navigation} canGoBack={true} />
         <ScrollView style={styles.container}>
-          <Text style={styles.headers}>Email:</Text>
+          <Text style={styles.headers}>{i18n.t('email')}:</Text>
           {editMode ? (
             <TextInput
               style={styles.textBoxes}
@@ -180,7 +185,7 @@ export default function UserInfo({ navigation, route }) {
           ) : (
             <Text style={styles.displayText}>{email}</Text>
           )}
-          <Text style={styles.headers}>First Name:</Text>
+          <Text style={styles.headers}>{i18n.t('firstName')}:</Text>
           {editMode ? (
             <TextInput
               style={styles.textBoxes}
@@ -190,7 +195,7 @@ export default function UserInfo({ navigation, route }) {
           ) : (
             <Text style={styles.displayText}>{firstName}</Text>
           )}
-          <Text style={styles.headers}>Last Name:</Text>
+          <Text style={styles.headers}>{i18n.t('lastName')}:</Text>
           {editMode ? (
             <TextInput
               style={styles.textBoxes}
@@ -200,7 +205,7 @@ export default function UserInfo({ navigation, route }) {
           ) : (
             <Text style={styles.displayText}>{lastName}</Text>
           )}
-          <Text style={styles.headers}>Phone Number:</Text>
+          <Text style={styles.headers}>{i18n.t('phoneNumber')}:</Text>
           {editMode ? (
             <TextInput
               style={styles.textBoxes}
@@ -210,7 +215,7 @@ export default function UserInfo({ navigation, route }) {
           ) : (
             <Text style={styles.displayText}>{phoneNumber}</Text>
           )}
-          <Text style={styles.headers}>Address:</Text>
+          <Text style={styles.headers}>{i18n.t('address1')}:</Text>
           {editMode ? (
             <>
               <TextInput
@@ -218,25 +223,25 @@ export default function UserInfo({ navigation, route }) {
                 onChangeText={(text) => setAddress(addr => ({...addr, firstLineAddress: text }))}
                 value={address.firstLineAddress}
               />
-              <Text style={styles.headers}>Second Address:</Text>
+              <Text style={styles.headers}>{i18n.t('address2')}:</Text>
               <TextInput
                 style={styles.textBoxes}
                 onChangeText={(text) => setAddress(addr => ({...addr, secondLineAddress: text }))}
                 value={address.secondLineAddress}
               />
-              <Text style={styles.headers}>City:</Text>
+              <Text style={styles.headers}>{i18n.t('city')}:</Text>
               <TextInput
                 style={styles.textBoxes}
                 onChangeText={(text) => setAddress(addr => ({...addr, city: text }))}
                 value={address.city}
               />
-              <Text style={styles.headers}>Postcode:</Text>
+              <Text style={styles.headers}>{i18n.t('postcode')}:</Text>
               <TextInput
                 style={styles.textBoxes}
                 onChangeText={(text) => setAddress(addr => ({...addr, postcode: text}))}
                 value={address.postcode}
               />
-              <Text style={styles.headers}>Country:</Text>
+              <Text style={styles.headers}>{i18n.t('country')}:</Text>
               <TextInput
                 style={styles.textBoxes}
                 onChangeText={(text) => setAddress(addr => ({...addr, country: text }))}
@@ -249,30 +254,30 @@ export default function UserInfo({ navigation, route }) {
               {address.secondLineAddress
                 ?
                 <>
-                  <Text style={styles.headers}>Second Address:</Text>
+                  <Text style={styles.headers}>{i18n.t('address2')}:</Text>
                   <Text style={styles.displayText}>
                     {address.secondLineAddress}
                   </Text>
                 </>
                 : null
               }
-              <Text style={styles.headers}>City:</Text>
+              <Text style={styles.headers}>{i18n.t('city')}:</Text>
               <Text style={styles.displayText}>{address.city}</Text>
-              <Text style={styles.headers}>Postcode:</Text>
+              <Text style={styles.headers}>{i18n.t('postcode')}:</Text>
               <Text style={styles.displayText}>{address.postcode}</Text>
-              <Text style={styles.headers}>Country:</Text>
+              <Text style={styles.headers}>{i18n.t('country')}:</Text>
               <Text style={styles.displayText}>{address.country}</Text>
             </>
           )}
           {editMode ? (
             <Button
-              title="Press to Save Changes"
+              title= {i18n.t('savePress')}
               onPress={toggle}
               color="#EF476F"
             />
           ) : (
             <Button
-              title="Press to Edit Details"
+              title= {i18n.t('editPress')}
               onPress={toggle}
               color="#0C637F"
             />
@@ -320,7 +325,7 @@ const styles = StyleSheet.create({
   loading: {
     fontFamily: 'Roboto_medium',
     fontSize: 50,
-    color: '#67A036',
+    color: 'gray',
     marginTop: '60%',
     textAlign: 'center',
     marginBottom: '-40%',

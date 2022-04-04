@@ -38,6 +38,7 @@ query get_item_by_Id ( $id: ID! ){
     auctionStart
     auctionEnd
     minimumBid
+    minPrice
     description
     picUrl1
     picUrl2
