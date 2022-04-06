@@ -381,7 +381,7 @@ export default function Item({ navigation, route }) {
                   <TouchableHighlight
                     style={styles.bidButton}
                     onPress={() => {
-                      data.get_item_by_Id.minimumBid > user?.data.get_user_info?.credit ? setIsShowCredit(!isShowCredit) : (data.get_item_by_Id.minimumBid > 10000 ? setIsShowFee(!isShowFee) : handleMakeOffer()) ;
+                      data.get_item_by_Id.minimumBid > user?.data.get_user_info?.credit ? setIsShowCredit(!isShowCredit) : (data.get_item_by_Id.minimumBid > 10000 && !exist ? setIsShowFee(!isShowFee) : handleMakeOffer()) ;
                     }}
                   >
                     <Text style={{ fontSize: 16, color: 'white' }}>{i18n.t('makeOffer')}</Text>
