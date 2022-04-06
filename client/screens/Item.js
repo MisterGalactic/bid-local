@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useLazyQuery } from '@apollo/client';
 import React, { useEffect, useState, useCallback } from 'react';
+import CreditPopup from '../components/CreditPopup';
+import FeePopup from '../components/FeePopup';
 import {
   SafeAreaView,
   Image,
@@ -13,7 +15,8 @@ import {
   TouchableHighlight,
   RefreshControl,
   KeyboardAvoidingView,
-  FlatList
+  FlatList,
+  Alert
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Carousel from 'react-native-snap-carousel';
@@ -48,6 +51,52 @@ import { useLocalizationContext } from '../context/LocalizationContext'
 import i18n from 'i18n-js';
 
 export default function Item({ navigation, route }) {
+  const [isShowCredit, setIsShowCredit] = useState(false);
+  const [childDataCredit, setChildCredit] = useState(1);
+
+  let clickedSubmitCredit = false;
+
+  function closeCredit() {
+    setIsShowCredit(false)
+  }
+  function handleCreditCallback(fromChild) {
+    navigation.navigate('PaymentScreen')
+    clickedSubmitCredit = true
+    setChildCredit(fromChild+1)
+    console.log ('clickedSubmit',clickedSubmitCredit)
+    console.log(`fromChild`, fromChild)
+    console.log(`childData`, childDataCredit)
+    // if (childData>2) {
+    //   setTimeout(() => Alert.alert(`You have submitted too many requests. Please try again later. Requests: ${childData}`), 600);
+    // } else {
+    //   setTimeout(() => Alert.alert(`Please wait for 5 to 10 minutes. The password reset form will be sent directly to your email.`), 600);
+    // }
+  }
+
+
+  const [isShowFee, setIsShowFee] = useState(false);
+  const [childDataFee, setChildFee] = useState(1);
+
+  let clickedSubmitFee = false;
+
+  function closeFee() {
+    setIsShowFee(false)
+  }
+  function handleFeeCallback(fromChild) {
+    navigation.navigate('PaymentScreen')
+    clickedSubmitFee = true
+    setChildFee(fromChild+1)
+    console.log ('clickedSubmit',clickedSubmitFee)
+    console.log(`fromChild`, fromChild)
+    console.log(`childData`, childDataFee)
+    // if (childData>2) {
+    //   setTimeout(() => Alert.alert(`You have submitted too many requests. Please try again later. Requests: ${childData}`), 600);
+    // } else {
+    //   setTimeout(() => Alert.alert(`Please wait for 5 to 10 minutes. The password reset form will be sent directly to your email.`), 600);
+    // }
+  }
+
+
 
   const { address, setAddress, translations, appLanguage, setAppLanguage } = useLocalizationContext()
 
@@ -110,7 +159,6 @@ export default function Item({ navigation, route }) {
       console.log("user does not exists!")
     }
   }
-
 
   useEffect(() => {
     if (data) {
@@ -333,7 +381,7 @@ export default function Item({ navigation, route }) {
                   <TouchableHighlight
                     style={styles.bidButton}
                     onPress={() => {
-                      handleMakeOffer();
+                      data.get_item_by_Id.minimumBid > user?.data.get_user_info?.credit ? setIsShowCredit(!isShowCredit) : (data.get_item_by_Id.minimumBid > 10000 ? setIsShowFee(!isShowFee) : handleMakeOffer()) ;
                     }}
                   >
                     <Text style={{ fontSize: 16, color: 'white' }}>{i18n.t('makeOffer')}</Text>
@@ -357,7 +405,7 @@ export default function Item({ navigation, route }) {
               <Text style={{ fontSize: 16 }}>
                 {data.get_item_by_Id.description}
               </Text>
-              <View style={styles.userInfo}>
+              {/* <View style={styles.userInfo}>
                 <Text style={{ fontWeight: '700', fontSize: 18 }}>{i18n.t('sellerInfo')}</Text>
                 <Text style={{ fontSize: 16 }}>
                   <Text style={{ fontWeight: '700' }}>{i18n.t('name')}: </Text>
@@ -372,10 +420,26 @@ export default function Item({ navigation, route }) {
                   <Text style={{ fontWeight: '700' }}>{i18n.t('tel')}: </Text>
                   {data.get_item_by_Id.user.phoneNumber}
                 </Text>
-              </View>
+              </View> */}
             </View>
           </View>
         </KeyboardAwareScrollView>
+        <CreditPopup
+          show={isShowCredit}
+          title={`You don't have sufficient credits`}
+          animationType={"fade"}
+          closePopup={closeCredit}
+          haveOutsideTouch={true}
+          parentCallback={handleCreditCallback}
+        />
+        <FeePopup
+          show={isShowFee}
+          title={`Non-refundable auction fee`}
+          animationType={"fade"}
+          closePopup={closeFee}
+          haveOutsideTouch={true}
+          parentCallback={handleFeeCallback}
+        />
       </>
     );
   }

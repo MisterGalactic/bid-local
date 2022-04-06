@@ -62,7 +62,9 @@ export default class BottomPopup extends Component {
         <View>
           <Button
             rounded
-            onPress={() => this.props.closePopup(this.setState({ initialEmail: null, initialMobile: null},this.onTrigger))}
+            onPress={
+              () => this.props.closePopup(this.setState({ initialEmail: null, initialMobile: null},this.onTrigger))
+            }
             style={styles.button}
           >
             <Text

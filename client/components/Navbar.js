@@ -11,9 +11,22 @@ export default function Navbar({navigation, canGoBack, targetScreen, item, post,
     try {
       const result = await Share.share({
         message:
-        item ? `Hey! Check out this item currently on auction.${"\n"}Product Name: ${item.get_item_by_Id.name}${"\n"}Description: ${item.get_item_by_Id.description}${"\n"}Starting Bid: $${item.get_item_by_Id.minimumBid}${"\n"}Auction End: ${new Date( Number(item.get_item_by_Id.auctionEnd) ).toDateString()}`
+        item ? `Hey! Check out this item currently on auction.${"\n"}
+                Product Name: ${item.get_item_by_Id.name}${"\n"}
+                Description: ${item.get_item_by_Id.description}${"\n"}
+                Starting Bid: $${item.get_item_by_Id.minimumBid}${"\n"}
+                Auction End: ${new Date( Number(item.get_item_by_Id.auctionEnd) ).toDateString()}${"\n"}
+                Download the Central Win App here!${"\n"}
+                https://testflight.apple.com/join/n0C7yEop
+                `
         :
-        post ? `Hey! Check out this blog post.${"\n"}Date: ${new Date( Number(post.get_post_by_Id.auctionEnd) ).toDateString()}${"\n"}Text: ${post.get_post_by_Id.description}` : null,
+        post ? `Hey! Check out this blog post.${"\n"}
+                Date: ${new Date( Number(post.get_post_by_Id.auctionEnd) ).toDateString()}${"\n"}
+                Text: ${post.get_post_by_Id.description}${"\n"}
+                Download the Central Win App here!${"\n"}
+                https://testflight.apple.com/join/n0C7yEop
+                `
+                : null,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
